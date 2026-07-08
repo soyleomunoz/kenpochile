@@ -740,6 +740,9 @@ section { padding: 6rem 2rem; }
   padding: 2rem;
   transition: all 0.4s;
   position: relative; overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 .escuela-card::before {
   content: '';
@@ -756,13 +759,21 @@ section { padding: 6rem 2rem; }
   box-shadow: 0 15px 50px rgba(0,0,0,0.4);
 }
 .escuela-icon {
-  width: 48px; height: 48px;
-  background: rgba(228,87,46,0.15);
+  width: 52px; height: 52px;
+  background: rgba(255,255,255,0.06);
   border: 1px solid rgba(228,87,46,0.3);
-  border-radius: 8px;
+  border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
   color: var(--accent);
   margin-bottom: 1.2rem;
+  overflow: hidden;
+  padding: 3px;
+  flex-shrink: 0;
+}
+.escuela-icon img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  border-radius: 6px;
 }
 .escuela-nombre {
   font-family: 'Cinzel', serif;
@@ -795,6 +806,7 @@ section { padding: 6rem 2rem; }
   text-decoration: none; cursor: pointer;
   transition: all 0.3s;
   width: 100%; justify-content: center;
+  margin-top: auto;
 }
 .btn-escuela:hover {
   background: rgba(228,87,46,0.3);
@@ -1025,8 +1037,33 @@ section { padding: 6rem 2rem; }
   letter-spacing: 0.05em;
 }
 
-/* ── INSIGNIAS ── */
-#insignias { background: var(--bg-card); }
+/* ── INSIGNIAS (galería embebida al final de Nuestras Escuelas) ── */
+.subsection-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(228,87,46,0.4), transparent);
+  margin: 4.5rem 0 2.5rem;
+}
+.subsection-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.3rem, 2.5vw, 1.7rem);
+  font-weight: 700;
+  color: var(--text-main);
+  text-align: center;
+  margin-bottom: 0.6rem;
+}
+.subsection-title span {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.subsection-subtitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.05rem; font-style: italic;
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
 .insignias-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
@@ -2070,7 +2107,6 @@ footer {
     <li><a href="#maestros">Maestros</a></li>
     <li><a href="#escuelas">Escuelas</a></li>
     <li><a href="#seminarios">Seminarios</a></li>
-    <li><a href="#insignias">Insignias</a></li>
     <li><a href="#instructores">Instructores</a></li>
     <li><a href="#blogs">Noticias</a></li>
     <li><a href="#contacto" class="nav-cta">Inscríbete</a></li>
@@ -2087,7 +2123,6 @@ footer {
   <a href="#maestros" onclick="closeMobile()">Maestros</a>
   <a href="#escuelas" onclick="closeMobile()">Escuelas</a>
   <a href="#seminarios" onclick="closeMobile()">Seminarios</a>
-  <a href="#insignias" onclick="closeMobile()">Insignias</a>
   <a href="#instructores" onclick="closeMobile()">Instructores</a>
   <a href="#salud" onclick="closeMobile()">Salud y Bienestar</a>
   <a href="#blogs" onclick="closeMobile()">Noticias</a>
@@ -2417,6 +2452,11 @@ footer {
     <div class="escuelas-grid" id="escuelasGrid"></div>
     <p class="escuelas-empty" id="escuelasEmpty" style="display:none">No hay escuelas para este filtro todavía.</p>
     <div class="escuelas-pager" id="escuelasPager"></div>
+
+    <div class="subsection-divider"></div>
+    <h3 class="subsection-title">Galería de <span>Insignias</span></h3>
+    <p class="subsection-subtitle">Colección oficial de insignias del International Vidal Kenpo Studio.</p>
+    <div class="insignias-grid" id="insigniasGrid"></div>
   </div>
 </section>
 
@@ -2511,17 +2551,6 @@ footer {
         </div>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- Insignias -->
-<section id="insignias">
-  <div class="section-inner">
-    <div class="section-label">Galería Oficial</div>
-    <h2 class="section-title">Insignias <span>Kenpo</span></h2>
-    <div class="divider"></div>
-    <p class="section-subtitle">Colección oficial de insignias del International Vidal Kenpo Studio.</p>
-    <div class="insignias-grid" id="insigniasGrid"></div>
   </div>
 </section>
 
@@ -2860,7 +2889,6 @@ footer {
         <li><a href="#maestros">Maestros</a></li>
         <li><a href="#escuelas">Escuelas</a></li>
         <li><a href="#seminarios">Seminarios</a></li>
-        <li><a href="#insignias">Insignias</a></li>
         <li><a href="#instructores">Instructores</a></li>
         <li><a href="#blogs">Blog</a></li>
       </ul>
@@ -3128,27 +3156,27 @@ function shuffleArray(arr) {
 
 // ── ESCUELAS (datos reales de kenpochile.cl/escuelas) ──
 const ESCUELAS = [
-  { nombre: 'International Chilean Kenpo Orellana Studio', director: 'Felipe Orellana', region: 'Región de Coquimbo', comuna: null, lugar: 'Vicuña, Provincia de Elqui' },
-  { nombre: 'Escuela Kenpo Karate Illapel', director: 'Alejandro Luna', region: 'Región de Coquimbo', comuna: null, lugar: 'Illapel, Provincia de Choapa' },
-  { nombre: 'International Véliz Kenpo Studio', director: 'Edgardo Véliz', region: 'Región de Valparaíso', comuna: null, lugar: 'Concón' },
-  { nombre: 'International Zumaeta Kenpo Studio', director: 'Rodrigo Zumaeta', region: 'Región Metropolitana', comuna: 'Las Condes', lugar: 'Las Condes' },
-  { nombre: 'International Rising Dragons Kenpo Studio', director: 'María Elena Araya', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú' },
-  { nombre: 'International Fighter Dragons Kenpo Studio', director: 'Karina Gatica', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú' },
-  { nombre: 'International Caliga Kenpo Studio', director: 'Aaron Torres', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú' },
-  { nombre: 'International Cornejo Kenpo Studio', director: 'Daniel Cornejo', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú' },
-  { nombre: 'International Manríquez Kenpo Studio', director: 'Miguel Ángel Manríquez', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú' },
-  { nombre: 'International Pérez Kenpo Studio', director: 'Francisco Pérez y Marcelo Pérez', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú' },
-  { nombre: 'International Lorca Kenpo Studio', director: 'Roberto Lorca Pacheco', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú' },
-  { nombre: 'Taller de Kenpo Karate — Municipalidad de Maipú', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú · Depto. de Deportes' },
-  { nombre: 'Instituto Nacional de Deportes', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú' },
-  { nombre: 'Gimnasio Alemán', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: null, lugar: 'Región Metropolitana' },
-  { nombre: 'DUOC UC', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: null, lugar: 'Sedes Alameda, Maipú y Plaza Oeste' },
-  { nombre: 'International UZ Kenpo Studio', director: 'Felipe Urra', region: 'Región Metropolitana', comuna: 'San Ramón', lugar: 'San Ramón' },
-  { nombre: 'International Lagos Kenpo Karate Studio', director: 'Carlos Lagos', region: 'Región Metropolitana', comuna: 'Huechuraba', lugar: 'Huechuraba' },
-  { nombre: 'Internacional Lions Warriors Kenpo Studio', director: 'Christian Vidal', region: 'Región de Ñuble', comuna: null, lugar: 'San Nicolás, Provincia de Punilla' },
-  { nombre: 'Internacional GTF Kenpo Studio', director: 'Gisela Torres', region: 'Región del Biobío', comuna: null, lugar: 'San Pedro de la Paz, Provincia de Concepción' },
-  { nombre: 'Internacional Kenpo Karate Calbuco', director: 'Ramón Morales', region: 'Región de Los Lagos', comuna: null, lugar: 'Calbuco, Provincia de Llanquihue' },
-  { nombre: 'International Pinto Kenpo Studio', director: 'Matías Raúl Pinto', region: 'Argentina', comuna: 'Córdoba', lugar: 'Córdoba, Provincia de Córdoba' },
+  { nombre: 'International Chilean Kenpo Orellana Studio', director: 'Felipe Orellana', region: 'Región de Coquimbo', comuna: null, lugar: 'Vicuña, Provincia de Elqui', insignia: 'Insignia-International-Orellana-Kenpo-Studio.webp' },
+  { nombre: 'Escuela Kenpo Karate Illapel', director: 'Alejandro Luna', region: 'Región de Coquimbo', comuna: null, lugar: 'Illapel, Provincia de Choapa', insignia: 'Insignia-Illapel.webp' },
+  { nombre: 'International Véliz Kenpo Studio', director: 'Edgardo Véliz', region: 'Región de Valparaíso', comuna: null, lugar: 'Concón', insignia: 'Insignia-Edgardo-Concon.webp' },
+  { nombre: 'International Zumaeta Kenpo Studio', director: 'Rodrigo Zumaeta', region: 'Región Metropolitana', comuna: 'Las Condes', lugar: 'Las Condes', insignia: 'Insignia-Rodrigo-Zumaeta-transp.webp' },
+  { nombre: 'International Rising Dragons Kenpo Studio', director: 'María Elena Araya', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'International-Rising-Dragons-Kenpo-Studio.webp' },
+  { nombre: 'International Fighter Dragons Kenpo Studio', director: 'Karina Gatica', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'Insignia-Karina-Gatica.webp' },
+  { nombre: 'International Caliga Kenpo Studio', director: 'Aaron Torres', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'Torres_lineaje.webp' },
+  { nombre: 'International Cornejo Kenpo Studio', director: 'Daniel Cornejo', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'INTERNATIONAL-CORNEJO-v2.webp' },
+  { nombre: 'International Manríquez Kenpo Studio', director: 'Miguel Ángel Manríquez', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'International-Manriquez-Kenpo-Studio.webp' },
+  { nombre: 'International Pérez Kenpo Studio', director: 'Francisco Pérez y Marcelo Pérez', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'Insignia-Hermanos-Perez.webp' },
+  { nombre: 'International Lorca Kenpo Studio', director: 'Roberto Lorca Pacheco', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'Insignia-Roberto-Lorca.webp' },
+  { nombre: 'Taller de Kenpo Karate — Municipalidad de Maipú', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú · Depto. de Deportes', insignia: 'maipu_2021.webp' },
+  { nombre: 'Instituto Nacional de Deportes', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'IND.webp' },
+  { nombre: 'Gimnasio Alemán', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: null, lugar: 'Región Metropolitana', insignia: 'Gym-Aleman.webp' },
+  { nombre: 'DUOC UC', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: null, lugar: 'Sedes Alameda, Maipú y Plaza Oeste', insignia: 'Insignia-Duoc-v2-1.webp' },
+  { nombre: 'International UZ Kenpo Studio', director: 'Felipe Urra', region: 'Región Metropolitana', comuna: 'San Ramón', lugar: 'San Ramón', insignia: 'Insignia-Felipe-Urra-v2.webp' },
+  { nombre: 'International Lagos Kenpo Karate Studio', director: 'Carlos Lagos', region: 'Región Metropolitana', comuna: 'Huechuraba', lugar: 'Huechuraba', insignia: 'Insignia-Carlos-Lagos.webp' },
+  { nombre: 'Internacional Lions Warriors Kenpo Studio', director: 'Christian Vidal', region: 'Región de Ñuble', comuna: null, lugar: 'San Nicolás, Provincia de Punilla', insignia: 'INTERNATIONAL-LIONS-WARRIORS.webp' },
+  { nombre: 'Internacional GTF Kenpo Studio', director: 'Gisela Torres', region: 'Región del Biobío', comuna: null, lugar: 'San Pedro de la Paz, Provincia de Concepción', insignia: 'Insignia-Gisela-Torres-03.webp' },
+  { nombre: 'Internacional Kenpo Karate Calbuco', director: 'Ramón Morales', region: 'Región de Los Lagos', comuna: null, lugar: 'Calbuco, Provincia de Llanquihue', insignia: 'Insignia-Calbuco.webp' },
+  { nombre: 'International Pinto Kenpo Studio', director: 'Matías Raúl Pinto', region: 'Argentina', comuna: 'Córdoba', lugar: 'Córdoba, Provincia de Córdoba', insignia: 'International-Pinto-Kenpo-Studio.webp' },
 ];
 // Orden aleatorio fijo para esta carga de página, usado solo cuando la etiqueta "Todas" está activa.
 const ESCUELAS_SHUFFLED = shuffleArray(ESCUELAS);
@@ -3299,7 +3327,7 @@ function renderEscuelasGridAndPager() {
     empty.style.display = 'none';
     grid.innerHTML = pageItems.map(e => `
       <div class="escuela-card">
-        <div class="escuela-icon"><svg class="icon" style="width:1.4rem;height:1.4rem"><use href="#icon-landmark"/></svg></div>
+        <div class="escuela-icon"><img src="img/escuelas-insignias/${e.insignia}" alt="Insignia ${e.nombre}" loading="lazy" decoding="async"></div>
         <div class="escuela-nombre">${e.nombre}</div>
         <div class="escuela-director">Dir. ${e.director}</div>
         <div class="escuela-ciudad"><svg class="icon"><use href="#icon-map-pin"/></svg> ${e.lugar}, ${e.region}</div>
