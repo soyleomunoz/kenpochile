@@ -1123,6 +1123,56 @@ section { padding: 6rem 2rem; }
   .lightbox-next { right: 0.5rem; }
 }
 
+/* ── MODAL FOTO INSTRUCTOR ── */
+.instructor-modal {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.92);
+  z-index: 10000;
+  align-items: center; justify-content: center;
+  backdrop-filter: blur(10px);
+}
+.instructor-modal.open { display: flex; }
+.instructor-modal .lightbox-nav { display: none; }
+.instructor-modal.is-gallery .lightbox-nav { display: flex; }
+.instructor-modal-content {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 420px; width: 90%;
+  text-align: center;
+}
+.instructor-modal-avatar {
+  position: relative;
+  width: 100%; max-width: 320px;
+  margin: 0 auto;
+  aspect-ratio: 3/4;
+  border-radius: 10px;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(228,87,46,0.25) 0%, var(--bg-dark) 100%);
+}
+.instructor-modal-avatar img#instModalImg {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.instructor-modal-name {
+  font-family: 'Cinzel', serif;
+  font-size: 1.3rem; font-weight: 700;
+  color: var(--text-main);
+  margin-top: 1.2rem;
+}
+.instructor-modal-grade {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem; font-style: italic;
+  color: var(--accent);
+  margin-top: 0.4rem;
+}
+@media (max-width: 640px) {
+  .instructor-modal-content { padding: 1.5rem 1.25rem; }
+}
+
 /* ── FRASE DESTACADA ── */
 #frase {
   padding: 5rem 2rem;
@@ -1461,8 +1511,13 @@ section { padding: 6rem 2rem; }
   border-radius: 8px;
   overflow: hidden;
   position: relative;
+  cursor: pointer;
   transition: all 0.4s;
   animation: fade-up 0.4s ease both;
+}
+.instructor-card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 .instructor-card::before {
   content: '';
@@ -1502,6 +1557,17 @@ section { padding: 6rem 2rem; }
 .instructor-belt {
   position: absolute; top: 0.6rem; right: 0.6rem;
   z-index: 3;
+}
+.instructor-belt .instructor-belt-img {
+  position: static; inset: auto; z-index: auto;
+  display: block;
+  width: 2.9rem; height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.65));
+}
+.instructor-belt .instructor-belt-img-lg { width: 5rem; }
+@media (max-width: 480px) {
+  .instructor-belt .instructor-belt-img { width: 2.3rem; }
 }
 .instructor-name {
   padding: 0.8rem 0.8rem 1rem;
@@ -2305,6 +2371,22 @@ footer {
   <button class="lightbox-nav lightbox-next" onclick="navInsignia(1)" aria-label="Siguiente insignia"><svg class="icon"><use href="#icon-chevron-right"/></svg></button>
 </div>
 
+<!-- Modal Foto Instructor -->
+<div id="instructorModal" class="instructor-modal" role="dialog" aria-modal="true" aria-labelledby="instModalName">
+  <button type="button" class="lightbox-nav lightbox-prev" onclick="navInstructorModal(-1)" aria-label="Instructor anterior"><svg class="icon"><use href="#icon-chevron-left"/></svg></button>
+  <div class="instructor-modal-content">
+    <button type="button" class="lightbox-close" onclick="closeInstructorModal()" aria-label="Cerrar"><svg class="icon"><use href="#icon-x"/></svg></button>
+    <div class="instructor-modal-avatar">
+      <img id="instModalImg" src="" alt="">
+      <span class="instructor-belt" id="instModalBeltWrap"></span>
+    </div>
+    <div class="instructor-modal-name" id="instModalName"></div>
+    <div class="instructor-modal-grade" id="instModalGrade"></div>
+    <div class="lightbox-counter" id="instModalCounter"></div>
+  </div>
+  <button type="button" class="lightbox-nav lightbox-next" onclick="navInstructorModal(1)" aria-label="Siguiente instructor"><svg class="icon"><use href="#icon-chevron-right"/></svg></button>
+</div>
+
 <!-- Frase Destacada -->
 <section id="frase">
   <div class="section-inner reveal">
@@ -2926,11 +3008,16 @@ document.addEventListener('keydown', e => {
   }
   if (e.key === 'Escape') {
     closeLightbox();
+    closeInstructorModal();
     closeMobile();
   }
   if (document.getElementById('lightbox').classList.contains('lightbox-gallery')) {
     if (e.key === 'ArrowLeft') navInsignia(-1);
     if (e.key === 'ArrowRight') navInsignia(1);
+  }
+  if (document.getElementById('instructorModal').classList.contains('open')) {
+    if (e.key === 'ArrowLeft') navInstructorModal(-1);
+    if (e.key === 'ArrowRight') navInstructorModal(1);
   }
 });
 
@@ -3393,6 +3480,7 @@ let instructorGrado = 'Todos';
 let instructorPage = 1;
 let instructorSuggestionMatches = [];
 let instructorSuggestionIndex = -1;
+let currentInstructorPageItems = [];
 
 function normalizarTexto(s) {
   return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
@@ -3407,6 +3495,27 @@ function beltIconHTML(belt) {
   return belt
     ? `<span class="belt-icon" style="background:${belt.bg};color:${belt.text}">${belt.label}</span>`
     : `<svg class="icon" style="width:1.1rem;height:1.1rem;color:var(--accent)"><use href="#icon-star"/></svg>`;
+}
+// Imagen real del cinturón por grado (img/cinturones/). Grados sin cinturón físico asociado
+// (Nuevos, Honorarios) conservan el indicador de color/estrella original vía beltIconHTML.
+const CINTURON_POR_GRADO = {
+  '6° Degree': 'negro5.png',
+  '4° Degree': 'negro4.png',
+  '3° Degree': 'negro3.png',
+  '2° Degree': 'negro2.png',
+  '1° Degree': 'negro1.png',
+  'Negro (Prob.)': 'negro.png',
+  'Café 1ro': 'cafe1.png',
+  'Café 2do': 'cafe2.png',
+  'Café 3ro': 'cafe3.png',
+  'Verde': 'verde.png',
+  'Púrpura': 'purpura.png',
+};
+function beltBadgeHTML(inst, size) {
+  const archivo = CINTURON_POR_GRADO[inst.grado];
+  if (!archivo) return beltIconHTML(inst.belt);
+  const cls = size === 'lg' ? 'instructor-belt-img instructor-belt-img-lg' : 'instructor-belt-img';
+  return `<img class="${cls}" src="img/cinturones/${archivo}" alt="Cinturón ${inst.grado}" loading="lazy" decoding="async">`;
 }
 const INSTRUCTOR_FOTOS = {
   'María Elena Araya': 'Maria-Elena-Araya.webp',
@@ -3457,14 +3566,14 @@ function instructorFotoSrc(nombre) {
   const archivo = INSTRUCTOR_FOTOS[nombre];
   return archivo ? `img/members/${encodeURIComponent(archivo)}` : '';
 }
-function instructorCardHTML(inst) {
+function instructorCardHTML(inst, idx) {
   const src = instructorFotoSrc(inst.nombre);
   return `
-    <div class="instructor-card">
+    <div class="instructor-card" data-idx="${idx}" role="button" tabindex="0" aria-label="Ver foto de ${inst.nombre}">
       <div class="instructor-avatar">
         ${src ? `<img src="${src}" alt="${inst.nombre}" loading="lazy" decoding="async" onerror="this.remove()">` : ''}
         <span class="instructor-initials">${instructorIniciales(inst.nombre)}</span>
-        <span class="instructor-belt">${beltIconHTML(inst.belt)}</span>
+        <span class="instructor-belt">${beltBadgeHTML(inst)}</span>
       </div>
       <div class="instructor-name">${inst.nombre}</div>
     </div>`;
@@ -3525,6 +3634,7 @@ function renderInstructoresGridAndPager() {
 
   const grid = document.getElementById('instructoresGrid');
   const empty = document.getElementById('instructoresEmpty');
+  currentInstructorPageItems = pageItems;
   if (pageItems.length === 0) {
     grid.innerHTML = '';
     empty.style.display = 'block';
@@ -3673,6 +3783,53 @@ document.addEventListener('click', e => {
     closeInstructorSearch();
   }
 });
+// ── MODAL FOTO INSTRUCTOR ──
+let instructorModalIndex = -1;
+let instructorModalTrigger = null;
+function updateInstructorModalContent() {
+  const inst = currentInstructorPageItems[instructorModalIndex];
+  const img = document.getElementById('instModalImg');
+  img.src = instructorFotoSrc(inst.nombre);
+  img.alt = inst.nombre;
+  document.getElementById('instModalBeltWrap').innerHTML = beltBadgeHTML(inst, 'lg');
+  document.getElementById('instModalName').textContent = inst.nombre;
+  const grupo = INSTRUCTOR_GRUPOS.find(g => g.grado === inst.grado);
+  document.getElementById('instModalGrade').textContent = grupo ? grupo.titulo : inst.grado;
+  const total = currentInstructorPageItems.length;
+  document.getElementById('instModalCounter').textContent = total > 1 ? `${instructorModalIndex + 1} / ${total}` : '';
+}
+function openInstructorModal(idx) {
+  if (idx < 0 || idx >= currentInstructorPageItems.length) return;
+  instructorModalTrigger = document.activeElement;
+  instructorModalIndex = idx;
+  updateInstructorModalContent();
+  const modal = document.getElementById('instructorModal');
+  modal.classList.toggle('is-gallery', currentInstructorPageItems.length > 1);
+  modal.classList.add('open');
+  modal.querySelector('.lightbox-close').focus();
+}
+function closeInstructorModal() {
+  const modal = document.getElementById('instructorModal');
+  if (!modal.classList.contains('open')) return;
+  modal.classList.remove('open', 'is-gallery');
+  instructorModalIndex = -1;
+  if (instructorModalTrigger) { instructorModalTrigger.focus(); instructorModalTrigger = null; }
+}
+function navInstructorModal(delta) {
+  if (instructorModalIndex === -1) return;
+  const total = currentInstructorPageItems.length;
+  instructorModalIndex = (instructorModalIndex + delta + total) % total;
+  updateInstructorModalContent();
+}
+document.getElementById('instructorModal').addEventListener('click', function(e) {
+  if (e.target === this) closeInstructorModal();
+});
+instructoresGrid.addEventListener('click', e => {
+  const card = e.target.closest('.instructor-card');
+  if (!card) return;
+  openInstructorModal(Number(card.dataset.idx));
+});
+
 SECTION_SEARCH_OPENERS.instructores = openInstructorSearch;
 renderInstructoresSection();
 
