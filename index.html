@@ -1490,15 +1490,6 @@ section { padding: 6rem 2rem; }
   color: var(--text-main);
   box-shadow: 0 0 15px var(--glow-primary);
 }
-.belt-icon {
-  width: 32px; height: 14px;
-  border-radius: 3px;
-  display: inline-flex; align-items: center; justify-content: center;
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 0.6rem; font-weight: 800;
-  flex-shrink: 0;
-  box-shadow: 0 0 0 1px rgba(0,0,0,0.35) inset, 0 2px 6px rgba(0,0,0,0.3);
-}
 .instructores-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -3442,37 +3433,35 @@ renderSeminariosGridAndPager();
 })();
 
 // ── INSTRUCTORES (Members IVKS/CKF 2026, datos reales de kenpochile.cl/members) ──
-const BELT_BLACK = { bg: '#141414', text: '#F5A623' };
-const BELT_BROWN = { bg: '#6B3F1D', text: '#F5E6D3' };
 const INSTRUCTOR_GRUPOS = [
-  { grado: '6° Degree', titulo: '6th Degree Black Belt «Professor of the Arts»', belt: { ...BELT_BLACK, label: '6' },
+  { grado: '6° Degree', titulo: '6th Degree Black Belt «Professor of the Arts»',
     miembros: ['María Elena Araya'] },
-  { grado: '4° Degree', titulo: '4th Degree Black Belt «Senior Instructor»', belt: { ...BELT_BLACK, label: '4' },
+  { grado: '4° Degree', titulo: '4th Degree Black Belt «Senior Instructor»',
     miembros: ['Edgardo Véliz', 'Ramón Morales'] },
-  { grado: '3° Degree', titulo: '3rd Degree Black Belt «Head Instructor»', belt: { ...BELT_BLACK, label: '3' },
+  { grado: '3° Degree', titulo: '3rd Degree Black Belt «Head Instructor»',
     miembros: ['Gladys Vergara', 'Felipe Orellana', 'Sergio Rodríguez', 'Alfredo Ruiz', 'Fabián Terán'] },
-  { grado: '2° Degree', titulo: '2nd Degree Black Belt «Associate Instructor»', belt: { ...BELT_BLACK, label: '2' },
+  { grado: '2° Degree', titulo: '2nd Degree Black Belt «Associate Instructor»',
     miembros: ['Leonardo Muñoz', 'Aaron Torres', 'Oscar Olivares'] },
-  { grado: '1° Degree', titulo: '1st Degree Black Belt «Junior Instructor»', belt: { ...BELT_BLACK, label: '1' },
+  { grado: '1° Degree', titulo: '1st Degree Black Belt «Junior Instructor»',
     miembros: ['Miguel Ángel Manríquez', 'Rodrigo Zumaeta', 'Francisco Pérez', 'Marcelo Pérez', 'Moisés Catalán', 'Sebastián Opazo', 'Jin Reyes', 'Felipe Urra', 'Juan Carlos Castro', 'Carlos Lagos'] },
-  { grado: 'Negro (Prob.)', titulo: 'Black Belt «Probationary Black Belt»', belt: { ...BELT_BLACK, label: '●' },
+  { grado: 'Negro (Prob.)', titulo: 'Black Belt «Probationary Black Belt»',
     miembros: ['Christian Vidal', 'Daniel Cornejo', 'Karina Gatica', 'Roberto Lorca', 'Gisela Torres', 'Andrew Villarroel Torres', 'Diego Estay'] },
-  { grado: 'Café 1ro', titulo: '1st Degree Brown Belt', belt: { ...BELT_BROWN, label: '1' },
+  { grado: 'Café 1ro', titulo: '1st Degree Brown Belt',
     miembros: ['Jorge Huichalaf', 'Pedro Molina'] },
-  { grado: 'Café 2do', titulo: '2nd Degree Brown Belt', belt: { ...BELT_BROWN, label: '2' },
+  { grado: 'Café 2do', titulo: '2nd Degree Brown Belt',
     miembros: ['Rafael Henríquez', 'Juan González', 'Alonso Olivares'] },
-  { grado: 'Café 3ro', titulo: '3rd Brown Belt', belt: { ...BELT_BROWN, label: '3' },
+  { grado: 'Café 3ro', titulo: '3rd Brown Belt',
     miembros: ['Nelson Carrión López', 'Paulina Luengo', 'José Luis Moncada'] },
-  { grado: 'Verde', titulo: 'Green Belt', belt: { bg: '#2E7D32', text: '#F0FFF2', label: '●' },
+  { grado: 'Verde', titulo: 'Green Belt',
     miembros: ['Maurizio Estay', 'Solange Rodríguez'] },
-  { grado: 'Púrpura', titulo: 'Purple Belt', belt: { bg: '#6A1B9A', text: '#F3E5FF', label: '●' },
+  { grado: 'Púrpura', titulo: 'Purple Belt',
     miembros: ['Pablo Gajardo'] },
-  { grado: 'Nuevos', titulo: 'Nuevos Members', belt: { bg: '#EDEDED', text: '#141414', label: 'N' },
+  { grado: 'Nuevos', titulo: 'Nuevos Members',
     miembros: ['Marta Burgos'] },
-  { grado: 'Honorarios', titulo: 'Membresías honorarias (Q.E.P.D)', belt: null,
+  { grado: 'Honorarios', titulo: 'Membresías honorarias (Q.E.P.D)',
     miembros: ['Juan Carlos Lastra Dinamarca', 'Daniel Alejandro Flores Salinas', 'Rodrigo Pizarro'] },
 ];
-const INSTRUCTORES = INSTRUCTOR_GRUPOS.flatMap(g => g.miembros.map(nombre => ({ nombre, grado: g.grado, belt: g.belt })));
+const INSTRUCTORES = INSTRUCTOR_GRUPOS.flatMap(g => g.miembros.map(nombre => ({ nombre, grado: g.grado })));
 // Orden aleatorio fijo para esta carga de página, usado solo cuando la etiqueta "Todos" está activa.
 const INSTRUCTORES_SHUFFLED = shuffleArray(INSTRUCTORES);
 const INSTRUCTORES_PAGE_SIZE = 6;
@@ -3491,13 +3480,8 @@ function instructorSlug(nombre) {
 function instructorIniciales(nombre) {
   return nombre.split(' ').filter(Boolean).slice(0, 2).map(p => p[0]).join('').toUpperCase();
 }
-function beltIconHTML(belt) {
-  return belt
-    ? `<span class="belt-icon" style="background:${belt.bg};color:${belt.text}">${belt.label}</span>`
-    : `<svg class="icon" style="width:1.1rem;height:1.1rem;color:var(--accent)"><use href="#icon-star"/></svg>`;
-}
 // Imagen real del cinturón por grado (img/cinturones/). Grados sin cinturón físico asociado
-// (Nuevos, Honorarios) conservan el indicador de color/estrella original vía beltIconHTML.
+// (Nuevos, Honorarios) no muestran ninguna imagen ni ícono en la tarjeta.
 const CINTURON_POR_GRADO = {
   '6° Degree': 'negro5.png',
   '4° Degree': 'negro4.png',
@@ -3513,7 +3497,7 @@ const CINTURON_POR_GRADO = {
 };
 function beltBadgeHTML(inst, size) {
   const archivo = CINTURON_POR_GRADO[inst.grado];
-  if (!archivo) return beltIconHTML(inst.belt);
+  if (!archivo) return '';
   const cls = size === 'lg' ? 'instructor-belt-img instructor-belt-img-lg' : 'instructor-belt-img';
   return `<img class="${cls}" src="img/cinturones/${archivo}" alt="Cinturón ${inst.grado}" loading="lazy" decoding="async">`;
 }
