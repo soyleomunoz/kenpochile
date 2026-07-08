@@ -1,0 +1,5 @@
+2787 ['👤', '📧'] msg += `👤 Nombre: ${nombre}\n📧 Email: ${email}\n`;
+2788 ['📱'] if(tel) msg += `📱 Teléfono: ${tel}\n`;
+2789 ['📍'] msg += `📍 Ciudad: ${ciudad}\n`;
+2790 ['🏯'] if(escuela) msg += `🏯 Escuela de interés: ${escuela}\n`;
+2791 ['💬'] if(mensaje) msg += `\n💬 Mensaje: ${mensaje}`;

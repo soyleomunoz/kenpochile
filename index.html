@@ -1,0 +1,3934 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KenpoChile.cl | International Vidal Kenpo Studio | Kenpo Karate en Chile</title>
+<meta name="description" content="Escuela internacional de Kenpo Karate en Chile. Aprende disciplina, respeto y defensa personal con maestros certificados. International Vidal Kenpo Studio.">
+<meta name="keywords" content="Kenpo Karate Chile, artes marciales Chile, defensa personal, Roberto Vidal, Chinese Karate Federation">
+<meta property="og:title" content="KenpoChile.cl | International Vidal Kenpo Studio">
+<meta property="og:description" content="Kenpo Karate auténtico en Chile. Disciplina, respeto y defensa personal bajo la guía de maestros certificados.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kenpochile.cl">
+<meta property="og:image" content="https://kenpochile.cl/img/header/maestro.png">
+<meta property="og:locale" content="es_CL">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="KenpoChile.cl | International Vidal Kenpo Studio">
+<meta name="twitter:description" content="Kenpo Karate auténtico en Chile. Disciplina, respeto y defensa personal bajo la guía de maestros certificados.">
+<meta name="twitter:image" content="https://kenpochile.cl/img/header/maestro.png">
+<meta name="theme-color" content="#14100D">
+<link rel="canonical" href="https://kenpochile.cl/">
+<meta name="robots" content="index, follow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%2314100D' stroke='%23F5A623' stroke-width='3'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='26' font-weight='900' fill='%23F5A623' text-anchor='middle'%3EKC%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #E4572E;
+  --secondary: #F97316;
+  --accent: #F5A623;
+  --bg-dark: #14100D;
+  --bg-card: #241A14;
+  --text-main: #FFF7ED;
+  --text-muted: #D9C4B4;
+  --border: rgba(228,87,46,0.3);
+  --glass: rgba(36,26,20,0.7);
+  --glow-primary: rgba(228,87,46,0.45);
+  --glow-gold: rgba(245,166,35,0.45);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  background: var(--bg-dark);
+  color: var(--text-main);
+  font-family: 'Rajdhani', sans-serif;
+  overflow-x: hidden;
+  cursor: default;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-dark); }
+::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 2px; }
+
+/* ── ACCESSIBILITY UTILITIES ── */
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+.skip-link {
+  position: fixed; top: -100px; left: 1rem; z-index: 10001;
+  background: var(--accent); color: var(--bg-dark);
+  font-family: 'Rajdhani', sans-serif; font-weight: 700;
+  padding: 0.7rem 1.2rem; border-radius: 4px; text-decoration: none;
+  transition: top 0.2s ease;
+}
+.skip-link:focus { top: 1rem; }
+
+/* Visible keyboard focus on every interactive element */
+a:focus-visible, button:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Inline icon sprite usage */
+.icon {
+  width: 1.1em; height: 1.1em;
+  display: inline-block; flex-shrink: 0;
+  fill: none; stroke: currentColor;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  vertical-align: -0.15em;
+}
+.icon-fill { fill: currentColor; stroke: none; }
+
+/* Placeholder links/items not yet live: honest "disabled" affordance, not a fake link */
+.is-soon {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+}
+
+/* ── NAVBAR ── */
+#navbar {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 1000;
+  padding: 1rem 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: all 0.4s ease;
+  background: transparent;
+}
+#navbar.scrolled {
+  background: rgba(20,16,13,0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0.6rem 2rem;
+  box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 0.8rem;
+  text-decoration: none;
+}
+.nav-logo-emblem {
+  width: 44px; height: 44px;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem; font-weight: 900;
+  color: var(--accent);
+  background: rgba(228,87,46,0.2);
+  box-shadow: 0 0 15px var(--glow-gold);
+}
+.nav-logo-text {
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem; font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: 0.05em;
+}
+.nav-logo-text span { color: var(--accent); }
+.nav-links {
+  display: flex; align-items: center; gap: 0.2rem;
+  list-style: none;
+}
+.nav-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.8rem; font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.4rem 0.7rem;
+  border-radius: 4px;
+  transition: all 0.3s;
+  position: relative;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute; bottom: 0; left: 50%; right: 50%;
+  height: 1px; background: var(--accent);
+  transition: all 0.3s;
+}
+.nav-links a:hover { color: var(--accent); }
+.nav-links a:hover::after { left: 10%; right: 10%; }
+.nav-cta {
+  background: var(--primary);
+  color: var(--text-main) !important;
+  padding: 0.5rem 1.2rem !important;
+  border-radius: 4px !important;
+  border: 1px solid rgba(228,87,46,0.5);
+  box-shadow: 0 0 15px var(--glow-primary);
+  transition: all 0.3s !important;
+}
+.nav-cta:hover {
+  background: #F2711F !important;
+  box-shadow: 0 0 25px var(--glow-primary) !important;
+  transform: translateY(-1px);
+}
+.nav-cta::after { display: none !important; }
+.hamburger {
+  display: none; flex-direction: column; justify-content: center; gap: 5px;
+  cursor: pointer; padding: 4px;
+  width: 44px; height: 44px;
+  background: none; border: none;
+}
+.hamburger span {
+  display: block; width: 24px; height: 2px;
+  background: var(--text-main);
+  transition: all 0.3s;
+  border-radius: 2px;
+}
+.hamburger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.active span:nth-child(2) { opacity: 0; }
+.hamburger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.mobile-menu {
+  display: none;
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(20,16,13,0.98);
+  z-index: 999;
+  flex-direction: column; align-items: center; justify-content: center;
+  gap: 2rem;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  color: var(--text-main);
+  text-decoration: none;
+  font-family: 'Cinzel', serif;
+  font-size: 1.4rem;
+  letter-spacing: 0.1em;
+  transition: color 0.3s;
+}
+.mobile-menu a:hover { color: var(--accent); }
+.mobile-close {
+  position: absolute; top: 1.5rem; right: 2rem;
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  background: none; border: none; color: var(--text-main);
+}
+.mobile-close .icon { width: 1.4rem; height: 1.4rem; }
+
+/* ── HERO ── */
+#hero {
+  position: relative; min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  width: 100%;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 45% at 50% 88%, rgba(245,166,35,0.5) 0%, rgba(228,87,46,0.28) 35%, transparent 70%),
+    radial-gradient(ellipse at 15% 30%, rgba(228,87,46,0.3) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 15%, rgba(249,115,22,0.22) 0%, transparent 50%),
+    linear-gradient(180deg, #0D0A08 0%, #1C120B 55%, #2E1B0E 85%, #3A2010 100%);
+}
+.hero-pattern {
+  position: absolute; inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 80px, rgba(228,87,46,0.03) 80px, rgba(228,87,46,0.03) 81px),
+    repeating-linear-gradient(90deg, transparent, transparent 80px, rgba(228,87,46,0.03) 80px, rgba(228,87,46,0.03) 81px);
+}
+.hero-particles {
+  position: absolute; inset: 0; overflow: hidden;
+}
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  animation: float-particle linear infinite;
+  opacity: 0;
+}
+.hero-content {
+  position: relative; z-index: 2;
+  text-align: center;
+  padding: 2rem;
+  max-width: 1600px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 2rem;
+}
+.hero-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.hero-side-img {
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 4px 30px rgba(228,87,46,0.5));
+}
+.hero-side-left { justify-self: end; }
+.hero-side-right { justify-self: start; }
+@media (max-width: 900px) {
+  .hero-content {
+    grid-template-columns: 1fr;
+  }
+  .hero-side-left,
+  .hero-side-right { display: none; }
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  background: rgba(228,87,46,0.2);
+  border: 1px solid rgba(228,87,46,0.5);
+  border-radius: 50px;
+  padding: 0.4rem 1.2rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 2rem;
+  animation: fade-up 0.8s ease 0.2s both;
+}
+.hero-badge::before {
+  content: ''; width: 6px; height: 6px;
+  background: var(--accent); border-radius: 50%;
+  animation: pulse-dot 2s ease infinite;
+}
+.hero-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(2.5rem, 8vw, 7rem);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+  animation: fade-up 0.8s ease 0.4s both;
+}
+.hero-title .line1 { display: block; color: var(--text-main); }
+.hero-title .line2 {
+  display: block;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-img-title {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  filter: drop-shadow(0 4px 24px rgba(228,87,46,0.5));
+}
+.hero-subtitle {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: clamp(0.85rem, 2vw, 1.1rem);
+  font-weight: 500;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 3rem;
+  animation: fade-up 0.8s ease 0.6s both;
+}
+.hero-subtitle span { color: var(--accent); }
+.hero-ctas {
+  display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+  animation: fade-up 0.8s ease 0.8s both;
+}
+.hero-trust {
+  display: flex; align-items: center; gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1.2rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.8rem; font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  animation: fade-up 0.8s ease 1s both;
+}
+.hero-trust .icon { color: var(--accent); }
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), #F2711F);
+  color: var(--text-main);
+  padding: 0.9rem 2.5rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.9rem; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  border: none; cursor: pointer;
+  box-shadow: 0 4px 25px var(--glow-primary);
+  transition: all 0.3s;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 35px var(--glow-primary);
+}
+.btn-outline {
+  background: transparent;
+  color: var(--text-main);
+  padding: 0.9rem 2.5rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.9rem; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  border: 1px solid rgba(245,166,35,0.4);
+  cursor: pointer;
+  transition: all 0.3s;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+}
+.btn-outline:hover {
+  border-color: var(--accent);
+  background: rgba(245,166,35,0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px var(--glow-gold);
+}
+.hero-scroll {
+  position: absolute; bottom: 2rem; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+  animation: fade-up 0.8s ease 1.2s both;
+}
+.scroll-line {
+  width: 1px; height: 60px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  animation: scroll-pulse 2s ease infinite;
+}
+.scroll-text {
+  font-size: 0.65rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--text-muted);
+  writing-mode: vertical-rl;
+}
+.hero-deco {
+  position: absolute; right: 5%; top: 50%;
+  transform: translateY(-50%);
+  width: 200px; height: 200px;
+  border: 1px solid rgba(228,87,46,0.2);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  animation: rotate-slow 20s linear infinite;
+  opacity: 0.5;
+}
+.hero-deco::after {
+  content: '鍵法';
+  font-size: 3rem;
+  color: rgba(228,87,46,0.4);
+  animation: rotate-slow 20s linear infinite reverse;
+}
+
+/* ── STATS BAR ── */
+.stats-bar {
+  background: rgba(36,26,20,0.8);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+  padding: 1.5rem 2rem;
+}
+.stats-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; justify-content: space-around; flex-wrap: wrap; gap: 1rem;
+}
+.stat-item { text-align: center; }
+.stat-num {
+  font-family: 'Cinzel', serif;
+  font-size: 2rem; font-weight: 900;
+  color: var(--accent);
+  display: block;
+}
+.stat-label {
+  font-size: 0.7rem; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--text-muted);
+}
+
+/* ── SECTION BASE ── */
+section { padding: 6rem 2rem; }
+#inicio { padding: 0; }
+
+.section-inner { max-width: 1200px; margin: 0 auto; }
+.section-label {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--secondary);
+  margin-bottom: 1rem;
+}
+.section-label::before {
+  content: '';
+  width: 30px; height: 1px;
+  background: var(--secondary);
+}
+.section-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  color: var(--text-main);
+}
+.section-title span {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.section-subtitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem; font-style: italic;
+  color: var(--text-muted);
+  line-height: 1.7;
+  white-space: nowrap;
+}
+.divider {
+  width: 60px; height: 3px;
+  background: linear-gradient(to right, var(--primary), var(--accent));
+  margin: 1.5rem 0;
+  border-radius: 2px;
+}
+
+/* ── INSTITUCIONAL ── */
+#institucional { background: var(--bg-dark); }
+.institucional-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 4rem; align-items: center;
+}
+.inst-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem; line-height: 1.85;
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+}
+.inst-cita {
+  border-left: 3px solid var(--primary);
+  padding: 1.5rem 2rem;
+  background: rgba(228,87,46,0.05);
+  border-radius: 0 8px 8px 0;
+  margin: 2rem 0;
+}
+.inst-cita p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.05rem; line-height: 1.7;
+  font-style: italic; color: var(--text-main);
+}
+.inst-visual {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.inst-visual-img {
+  max-width: 600px;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+  margin: 0 auto;
+}
+.kanji-display {
+  width: 100%; aspect-ratio: 1;
+  background: radial-gradient(ellipse at center, rgba(228,87,46,0.15) 0%, transparent 70%);
+  border: 1px solid rgba(228,87,46,0.2);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+}
+.kanji-big {
+  font-size: 12rem;
+  color: rgba(228,87,46,0.15);
+  font-family: serif;
+  position: absolute;
+  animation: float-kanji 6s ease-in-out infinite;
+}
+.kanji-small {
+  font-size: 2.5rem;
+  color: var(--accent);
+  position: relative; z-index: 1;
+  text-align: center;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+}
+.philosophy-tags {
+  display: flex; flex-direction: column; gap: 0.6rem; margin-top: 2rem;
+}
+.tags-row {
+  display: flex; flex-wrap: wrap; gap: 0.6rem;
+}
+.tags-row-full { justify-content: flex-start; }
+.tags-row-full .tag { flex: 1; text-align: center; }
+.tags-row-compact { justify-content: flex-start; }
+.tag {
+  background: rgba(228,87,46,0.15);
+  border: 1px solid rgba(228,87,46,0.3);
+  border-radius: 50px;
+  padding: 0.35rem 1rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.8rem; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--accent);
+  transition: all 0.3s;
+}
+.tag:hover {
+  background: rgba(228,87,46,0.3);
+  box-shadow: 0 0 15px var(--glow-primary);
+}
+
+/* ── QUOTE EPIC ── */
+#quote-epic {
+  padding: 5rem 2rem;
+  background: linear-gradient(135deg, rgba(228,87,46,0.1) 0%, rgba(20,16,13,1) 40%, rgba(249,115,22,0.05) 100%);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+  position: relative; overflow: hidden;
+}
+.quote-bg {
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(-45deg, transparent, transparent 40px, rgba(228,87,46,0.02) 40px, rgba(228,87,46,0.02) 41px);
+}
+.quote-content { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; }
+.quote-mark {
+  font-family: 'Cinzel', serif;
+  font-size: 6rem; line-height: 0.5;
+  color: rgba(228,87,46,0.3);
+  display: block; margin-bottom: 1rem;
+}
+.quote-main {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.2rem, 2.5vw, 1.7rem);
+  font-style: italic; line-height: 1.7;
+  color: var(--text-main);
+  margin-bottom: 1.5rem;
+}
+.quote-en {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(0.95rem, 1.8vw, 1.2rem);
+  font-style: italic; line-height: 1.6;
+  color: var(--text-muted);
+  margin-bottom: 2.5rem;
+}
+.quote-author {
+  display: inline-flex; flex-direction: column; align-items: center; gap: 0.3rem;
+}
+.quote-author-name {
+  font-family: 'Cinzel', serif;
+  font-size: 1rem; font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+}
+.quote-author-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.75rem; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--text-muted);
+}
+
+/* ── MAESTROS ── */
+#maestros { background: var(--bg-card); }
+.maestros-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+.maestro-card {
+  background: var(--bg-dark);
+  border: 1px solid rgba(228,87,46,0.15);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  cursor: pointer;
+  position: relative;
+}
+.maestro-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(228,87,46,0.5);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 30px var(--glow-primary);
+}
+.maestro-img {
+  width: 100%; aspect-ratio: 3/4;
+  background: linear-gradient(135deg, rgba(228,87,46,0.3) 0%, rgba(20,16,13,1) 100%);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+}
+.maestro-avatar{
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+}
+
+.maestro-avatar img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 0;
+}
+.maestro-initials {
+  font-family: 'Cinzel', serif;
+  font-size: 2.6rem; font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  text-shadow: 0 0 25px var(--glow-gold);
+  display: flex; align-items: center; justify-content: center;
+  width: 96px; height: 96px;
+  border: 1px solid rgba(245,166,35,0.4);
+  border-radius: 50%;
+  background: rgba(228,87,46,0.15);
+}
+.maestro-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, var(--bg-dark) 0%, transparent 50%);
+}
+.maestro-belt {
+  position: absolute; top: 1rem; right: 1rem;
+  background: rgba(20,16,13,0.8);
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  padding: 0.2rem 0.6rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--accent);
+}
+.maestro-info { padding: 1.5rem; }
+.maestro-name {
+  font-family: 'Cinzel', serif;
+  font-size: 1rem; font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.3rem;
+}
+.maestro-grade {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.8rem; font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--secondary);
+  margin-bottom: 1rem;
+}
+.maestro-link {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--accent);
+  text-decoration: none;
+  transition: gap 0.3s;
+}
+.maestro-link:hover { gap: 0.8rem; }
+
+/* ── ESCUELAS ── */
+#escuelas { background: var(--bg-dark); }
+.escuelas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+.escuela-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(228,87,46,0.15);
+  border-radius: 8px;
+  padding: 2rem;
+  transition: all 0.4s;
+  position: relative; overflow: hidden;
+}
+.escuela-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(to right, var(--primary), var(--accent));
+  transform: scaleX(0);
+  transition: transform 0.4s;
+}
+.escuela-card:hover::before { transform: scaleX(1); }
+.escuela-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(228,87,46,0.4);
+  box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+}
+.escuela-icon {
+  width: 48px; height: 48px;
+  background: rgba(228,87,46,0.15);
+  border: 1px solid rgba(228,87,46,0.3);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--accent);
+  margin-bottom: 1.2rem;
+}
+.escuela-nombre {
+  font-family: 'Cinzel', serif;
+  font-size: 1rem; font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.4rem;
+}
+.escuela-director {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.85rem; font-weight: 500;
+  color: var(--secondary);
+  margin-bottom: 0.3rem;
+}
+.escuela-ciudad {
+  display: flex; align-items: center; gap: 0.4rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.8rem; color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+.btn-escuela {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: rgba(228,87,46,0.15);
+  border: 1px solid rgba(228,87,46,0.4);
+  border-radius: 4px;
+  padding: 0.5rem 1.2rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.8rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--accent);
+  text-decoration: none; cursor: pointer;
+  transition: all 0.3s;
+  width: 100%; justify-content: center;
+}
+.btn-escuela:hover {
+  background: rgba(228,87,46,0.3);
+  box-shadow: 0 0 20px var(--glow-primary);
+}
+.escuela-card { animation: fade-up 0.4s ease both; }
+
+.escuelas-filter-row {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 1.2rem;
+}
+.escuelas-filter-row:first-of-type { margin-top: 2.5rem; }
+.pais-tab, .region-tab, .comuna-chip {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pais-tab .count, .region-tab .count, .comuna-chip .count { opacity: 0.6; font-weight: 600; margin-left: 0.35em; }
+.pais-tab {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 0.65rem 1rem;
+  font-size: 0.85rem; letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+.pais-tab:hover { color: var(--accent); border-color: rgba(228,87,46,0.4); }
+.pais-tab.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--text-main);
+  box-shadow: 0 0 15px var(--glow-primary);
+}
+.region-tab {
+  background: transparent;
+  border: 1px solid rgba(228,87,46,0.25);
+  padding: 0.5rem 0.7rem;
+  font-size: 0.72rem; letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+.region-tab:hover { color: var(--accent); border-color: var(--accent); }
+.region-tab.active {
+  background: rgba(228,87,46,0.18);
+  border-color: var(--primary);
+  color: var(--text-main);
+}
+.comuna-chip {
+  background: transparent;
+  border: 1px solid rgba(245,166,35,0.25);
+  padding: 0.4rem 0.7rem;
+  font-size: 0.7rem; letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+.comuna-chip:hover { color: var(--accent); border-color: var(--accent); }
+.comuna-chip.active {
+  background: rgba(228,87,46,0.18);
+  border-color: var(--primary);
+  color: var(--text-main);
+}
+@media (max-width: 700px) {
+  .escuelas-filter-row { grid-template-columns: repeat(auto-fit, minmax(110px,1fr)) !important; }
+  .escuelas-filter-row.instructor-tabs { grid-template-columns: repeat(auto-fill, minmax(110px,1fr)) !important; }
+}
+.escuelas-empty {
+  margin-top: 3rem; text-align: center;
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  color: var(--text-muted); font-size: 1.05rem;
+}
+.escuelas-pager {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0.4rem; margin-top: 2.5rem; flex-wrap: wrap;
+}
+.pager-btn {
+  min-width: 40px; height: 40px;
+  padding: 0 0.7rem;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.85rem; font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.pager-btn:hover:not(:disabled) { color: var(--accent); border-color: var(--accent); }
+.pager-btn.active {
+  background: var(--primary); border-color: var(--primary); color: var(--text-main);
+}
+.pager-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* ── SEMINARIOS ── */
+#seminarios { background: var(--bg-card); }
+.seminarios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+.seminario-card {
+  background: var(--bg-dark);
+  border: 1px solid rgba(228,87,46,0.15);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.4s;
+}
+.seminario-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(245,166,35,0.3);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+.seminario-img {
+  aspect-ratio: 16/9;
+  background: linear-gradient(135deg, rgba(228,87,46,0.4) 0%, rgba(249,115,22,0.2) 50%, rgba(20,16,13,1) 100%);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+}
+.seminario-img-icon {
+  color: var(--accent);
+  opacity: 0.5;
+}
+.seminario-fecha {
+  position: absolute; top: 1rem; left: 1rem;
+  background: var(--primary);
+  border-radius: 4px;
+  padding: 0.3rem 0.8rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--text-main);
+}
+.seminario-body { padding: 1.5rem; }
+.seminario-titulo {
+  font-family: 'Cinzel', serif;
+  font-size: 1.05rem; font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+}
+.seminario-maestros {
+  display: flex; align-items: center; gap: 0.4rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.8rem; font-weight: 600;
+  color: var(--secondary);
+  margin-bottom: 0.4rem;
+}
+.seminario-lugar {
+  display: flex; align-items: center; gap: 0.4rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.8rem; color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+.seminario-desc {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem; line-height: 1.6;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+.btn-ver {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  color: var(--accent);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.8rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  text-decoration: none;
+  transition: gap 0.3s;
+  cursor: pointer;
+  background: none; border: none;
+}
+.btn-ver:hover { gap: 0.9rem; }
+
+/* ── VIDEOS ── */
+#videos { background: var(--bg-dark); }
+.videos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+.video-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(228,87,46,0.15);
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.4s;
+}
+.video-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(245,166,35,0.3);
+  box-shadow: 0 15px 50px rgba(0,0,0,0.5);
+}
+.video-thumb {
+  aspect-ratio: 16/9;
+  background: linear-gradient(135deg, #1C120B, #14100D);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.video-play {
+  width: 60px; height: 60px;
+  background: rgba(245,166,35,0.9);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.3s;
+}
+.video-play svg { width: 24px; fill: var(--bg-dark); margin-left: 4px; }
+.video-card:hover .video-play {
+  background: var(--accent);
+  box-shadow: 0 0 30px var(--glow-gold);
+  transform: scale(1.1);
+}
+.video-info { padding: 1.2rem; }
+.video-title {
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem; font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.3rem;
+}
+.video-meta {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.75rem; color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+/* ── INSIGNIAS ── */
+#insignias { background: var(--bg-card); }
+.insignias-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 1rem;
+  margin-top: 3rem;
+}
+.insignia-item {
+  aspect-ratio: 1;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  position: relative;
+}
+.insignia-item img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  transition: transform 0.35s ease, filter 0.35s ease;
+}
+.insignia-item:hover img,
+.insignia-item:focus-visible img {
+  transform: scale(1.12);
+  filter: drop-shadow(0 8px 20px var(--glow-gold));
+}
+.insignia-item:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 6px;
+  border-radius: 8px;
+}
+/* ── LIGHTBOX ── */
+#lightbox {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.92);
+  z-index: 10000;
+  align-items: center; justify-content: center;
+  backdrop-filter: blur(10px);
+}
+#lightbox.open { display: flex; }
+.lightbox-content {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 500px; width: 90%;
+  text-align: center;
+}
+.lightbox-close {
+  position: absolute; top: 1rem; right: 1rem;
+  background: none; border: none;
+  color: var(--text-muted); font-size: 1.5rem;
+  cursor: pointer; transition: color 0.3s;
+}
+.lightbox-close:hover { color: var(--text-main); }
+.lightbox-icon { font-size: 5rem; margin-bottom: 1rem; }
+.lightbox-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.2rem; color: var(--text-main);
+  margin-bottom: 0.5rem;
+}
+.lightbox-desc {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem; color: var(--text-muted); font-style: italic;
+}
+.lightbox-counter {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--accent);
+  margin-top: 1rem;
+}
+.lightbox-nav {
+  display: none;
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 48px; height: 48px;
+  align-items: center; justify-content: center;
+  background: rgba(36,26,20,0.85);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all 0.3s;
+  z-index: 10001;
+}
+.lightbox-nav:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  box-shadow: 0 0 20px var(--glow-primary);
+}
+.lightbox-prev { left: 1.5rem; }
+.lightbox-next { right: 1.5rem; }
+#lightbox.lightbox-gallery .lightbox-nav { display: flex; }
+@media (max-width: 640px) {
+  .lightbox-nav { width: 44px; height: 44px; }
+  .lightbox-prev { left: 0.5rem; }
+  .lightbox-next { right: 0.5rem; }
+}
+
+/* ── FRASE DESTACADA ── */
+#frase {
+  padding: 5rem 2rem;
+  background: linear-gradient(135deg, rgba(228,87,46,0.15) 0%, rgba(20,16,13,0.9) 100%);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+.frase-text {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.4rem, 3.5vw, 2.5rem);
+  font-weight: 700;
+  color: var(--text-main);
+  max-width: 800px; margin: 0 auto 1.5rem;
+  line-height: 1.3;
+}
+.frase-author {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem; font-style: italic;
+  color: var(--accent);
+}
+
+/* ── BLOGS ── */
+#blogs { background: linear-gradient(135deg, rgba(249,115,22,0.1) 0%, var(--bg-dark) 45%, rgba(228,87,46,0.08) 100%); }
+.blogs-tabs {
+  display: flex; gap: 0.5rem; margin-bottom: 3rem;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.blog-tab {
+  padding: 0.7rem 1.5rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.85rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-muted);
+  cursor: pointer;
+  border: none; background: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s;
+  margin-bottom: -1px;
+}
+.blog-tab.active, .blog-tab:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.blog-panel { display: none; }
+.blog-panel.active { display: block; }
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+.blog-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(228,87,46,0.15);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.4s;
+}
+.blog-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(228,87,46,0.4);
+  box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+}
+.blog-img {
+  aspect-ratio: 16/9;
+  background: linear-gradient(135deg, rgba(228,87,46,0.3), rgba(36,26,20,1));
+  display: flex; align-items: center; justify-content: center;
+  color: var(--accent);
+}
+.blog-img .icon { width: 2.2rem; height: 2.2rem; }
+.blog-body { padding: 1.5rem; }
+.blog-meta {
+  display: flex; align-items: center; gap: 1rem;
+  margin-bottom: 0.8rem;
+}
+.blog-cat {
+  background: rgba(228,87,46,0.2);
+  border: 1px solid rgba(228,87,46,0.3);
+  border-radius: 50px;
+  padding: 0.15rem 0.7rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--accent);
+}
+.blog-date {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.75rem; color: var(--text-muted);
+}
+.blog-title {
+  font-family: 'Cinzel', serif;
+  font-size: 0.95rem; font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.5rem; line-height: 1.4;
+}
+.blog-excerpt {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem; line-height: 1.6;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+.blog-link {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--accent);
+  text-decoration: none; transition: gap 0.3s;
+  background: none; border: none; cursor: pointer;
+}
+.blog-link:hover { gap: 0.8rem; }
+
+/* ── BUSCADOR DE SECCIÓN (compartido: instructores, maestros, escuelas, seminarios, videos, blogs) ── */
+.section-title-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+}
+.section-title-row .section-title { margin-bottom: 0; }
+.section-search-box {
+  position: relative;
+  flex-shrink: 0;
+  width: 2.6rem; height: 2.6rem;
+  transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.section-search-box.open { width: clamp(180px, 32vw, 320px); }
+.section-search-toggle {
+  position: absolute; top: 0; left: 0; z-index: 2;
+  display: flex; align-items: center; justify-content: center;
+  width: 2.6rem; height: 2.6rem;
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.3s, border-color 0.3s;
+}
+.section-search-toggle .icon { width: 1.1rem; height: 1.1rem; }
+.section-search-toggle:hover { color: var(--accent); border-color: rgba(228,87,46,0.4); }
+.section-search-box.open .section-search-toggle {
+  color: var(--accent);
+  border-color: rgba(228,87,46,0.4);
+}
+.section-search-box input {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  padding: 0 1.2rem 0 2.9rem;
+  color: var(--text-main);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease 0.1s, border-color 0.3s, box-shadow 0.3s;
+}
+.section-search-box.open input {
+  opacity: 1;
+  pointer-events: auto;
+}
+.section-search-box input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(228,87,46,0.15);
+}
+.section-search-suggestions {
+  display: none;
+  position: absolute; top: calc(100% + 0.5rem); left: 0; right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  z-index: 20;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+}
+.section-search-suggestions.open { display: block; }
+.section-search-suggestion {
+  display: flex; align-items: center; gap: 0.6rem;
+  width: 100%;
+  padding: 0.65rem 1.1rem;
+  background: none; border: none;
+  text-align: left; cursor: pointer;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.85rem; color: var(--text-main);
+  transition: background 0.2s;
+}
+.section-search-suggestion:hover, .section-search-suggestion.active { background: rgba(228,87,46,0.15); }
+.section-search-suggestion strong { color: var(--accent); }
+.section-search-suggestion .section-search-suggestion-meta {
+  margin-left: auto; flex-shrink: 0;
+  font-size: 0.68rem; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+@keyframes search-found-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(228,87,46,0.6); }
+  50% { box-shadow: 0 0 0 3px rgba(228,87,46,0.1); }
+}
+.search-found { animation: search-found-pulse 0.9s ease-in-out 2; }
+
+/* ── TOOLTIP DEL BUSCADOR: qué se puede buscar + atajos de teclado ── */
+.search-tip {
+  position: absolute;
+  bottom: calc(100% + 14px);
+  right: 0; left: auto;
+  width: max-content;
+  max-width: 220px;
+  background: var(--bg-dark);
+  border: 1px solid rgba(228,87,46,0.4);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(6px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  z-index: 30;
+  text-align: left;
+}
+.search-tip::before {
+  content: '';
+  position: absolute;
+  top: 100%; right: 14px;
+  border: 6px solid transparent;
+  border-top-color: rgba(228,87,46,0.4);
+}
+.search-tip::after {
+  content: '';
+  position: absolute;
+  top: calc(100% - 1px); right: 15px;
+  border: 5px solid transparent;
+  border-top-color: var(--bg-dark);
+}
+.search-tip-title {
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.25rem;
+}
+.search-tip-desc {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.78rem; color: var(--text-main);
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border);
+}
+.search-tip-keys { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+.search-tip-keys li { display: flex; align-items: center; gap: 0.5rem; }
+.search-tip-keys span {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.72rem; color: var(--text-muted);
+}
+.search-tip-keys kbd {
+  flex-shrink: 0;
+  min-width: 1.5rem;
+  text-align: center;
+  padding: 0.1rem 0.4rem;
+  background: rgba(228,87,46,0.15);
+  border: 1px solid rgba(228,87,46,0.35);
+  border-radius: 4px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.68rem; font-weight: 700;
+  color: var(--accent);
+}
+.section-search-toggle:hover + .search-tip,
+.section-search-toggle:focus-visible + .search-tip {
+  opacity: 1; visibility: visible;
+  transform: translateY(0);
+}
+.section-search-box.open .search-tip { opacity: 0 !important; visibility: hidden !important; }
+@media (max-width: 600px) {
+  .search-tip { max-width: 180px; }
+}
+
+/* ── INSTRUCTORES ── */
+#instructores {
+  background: linear-gradient(135deg, rgba(228,87,46,0.12) 0%, var(--bg-dark) 45%, rgba(245,166,35,0.08) 100%);
+  position: relative;
+}
+.escuelas-filter-row.instructor-tabs {
+  margin-top: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+}
+.instructor-tab {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  padding: 0.5rem 0.9rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.03em; text-transform: uppercase;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: center;
+  white-space: nowrap;
+}
+.instructor-tab .count { opacity: 0.6; font-weight: 600; margin-left: 0.3em; }
+.instructor-tab:hover { color: var(--accent); border-color: rgba(228,87,46,0.4); }
+.instructor-grado-subtitle {
+  margin-top: 1.3rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem; font-style: italic;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.instructor-tab.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--text-main);
+  box-shadow: 0 0 15px var(--glow-primary);
+}
+.belt-icon {
+  width: 32px; height: 14px;
+  border-radius: 3px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.6rem; font-weight: 800;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.35) inset, 0 2px 6px rgba(0,0,0,0.3);
+}
+.instructores-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+.instructor-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(228,87,46,0.15);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.4s;
+  animation: fade-up 0.4s ease both;
+}
+.instructor-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 3px; z-index: 2;
+  background: linear-gradient(to right, var(--primary), var(--accent));
+  transform: scaleX(0);
+  transition: transform 0.4s;
+}
+.instructor-card:hover::before { transform: scaleX(1); }
+.instructor-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(228,87,46,0.4);
+  box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+}
+.instructor-avatar {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3/4;
+  background: linear-gradient(135deg, rgba(228,87,46,0.25) 0%, var(--bg-dark) 100%);
+  overflow: hidden;
+}
+.instructor-avatar img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+.instructor-initials {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cinzel', serif;
+  font-size: 2rem; font-weight: 700;
+  color: var(--accent);
+  text-shadow: 0 0 20px var(--glow-gold);
+}
+.instructor-belt {
+  position: absolute; top: 0.6rem; right: 0.6rem;
+  z-index: 3;
+}
+.instructor-name {
+  padding: 0.8rem 0.8rem 1rem;
+  font-family: 'Cinzel', serif;
+  font-size: 0.85rem; font-weight: 700;
+  color: var(--text-main);
+  text-align: center;
+  line-height: 1.3;
+}
+.instructores-empty {
+  margin-top: 3rem; text-align: center;
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  color: var(--text-muted); font-size: 1.05rem;
+}
+
+/* ── SALUD ── */
+#salud { background: var(--bg-dark); }
+.salud-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+.salud-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(228,87,46,0.15);
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.4s;
+}
+.salud-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(245,166,35,0.3);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+}
+.salud-icon {
+  width: 64px; height: 64px;
+  background: rgba(228,87,46,0.15);
+  border: 1px solid rgba(228,87,46,0.3);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--accent);
+  margin: 0 auto 1.2rem;
+}
+.salud-icon .icon { width: 1.7rem; height: 1.7rem; }
+.salud-title {
+  font-family: 'Cinzel', serif;
+  font-size: 0.95rem; font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.7rem;
+}
+.salud-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem; line-height: 1.6;
+  color: var(--text-muted);
+}
+
+/* ── FAQ ── */
+#faq { background: var(--bg-card); }
+.faq-list { margin-top: 3rem; }
+.faq-item {
+  border: 1px solid rgba(228,87,46,0.15);
+  border-radius: 8px;
+  margin-bottom: 0.8rem;
+  overflow: hidden;
+  transition: border-color 0.3s;
+}
+.faq-item.open { border-color: rgba(228,87,46,0.4); }
+.faq-q {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.2rem 1.5rem;
+  cursor: pointer;
+  font-family: 'Cinzel', serif;
+  font-size: 0.95rem; font-weight: 600;
+  color: var(--text-main);
+  background: none; border: none; width: 100%;
+  text-align: left; gap: 1rem;
+  transition: color 0.3s;
+}
+.faq-q:hover { color: var(--accent); }
+.faq-icon {
+  min-width: 24px; height: 24px;
+  border: 1px solid rgba(228,87,46,0.3);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; color: var(--accent);
+  transition: transform 0.3s;
+}
+.faq-item.open .faq-icon { transform: rotate(45deg); }
+.faq-a {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.3s;
+  padding: 0 1.5rem;
+}
+.faq-item.open .faq-a { max-height: 300px; padding: 0 1.5rem 1.2rem; }
+.faq-a p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem; line-height: 1.7;
+  color: var(--text-muted);
+}
+
+/* ── CONTACTO ── */
+#contacto { background: var(--bg-dark); }
+.contact-grid {
+  display: grid; grid-template-columns: 1fr 1.5fr;
+  gap: 4rem; align-items: start;
+  margin-top: 3rem;
+}
+.contact-info h3 {
+  font-family: 'Cinzel', serif;
+  font-size: 1.4rem; font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 1rem;
+}
+.contact-info p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.05rem; line-height: 1.7;
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+}
+.contact-links { display: flex; flex-direction: column; gap: 1rem; }
+.contact-link {
+  display: flex; align-items: center; gap: 1rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.9rem;
+  transition: color 0.3s;
+}
+.contact-link:hover { color: var(--accent); }
+.contact-link-icon {
+  width: 40px; height: 40px;
+  background: rgba(228,87,46,0.15);
+  border: 1px solid rgba(228,87,46,0.3);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+.contact-form {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2.5rem;
+}
+.form-row {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.form-group { margin-bottom: 1rem; }
+.form-group label {
+  display: block;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.4rem;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  background: var(--bg-dark);
+  border: 1px solid rgba(228,87,46,0.2);
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  color: var(--text-main);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.9rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  outline: none;
+  -webkit-appearance: none;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(228,87,46,0.1);
+}
+.form-group select option { background: var(--bg-card); }
+.form-group textarea { resize: vertical; min-height: 120px; }
+.form-group.full { grid-column: 1 / -1; }
+.form-error {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.75rem; color: #ef4444;
+  margin-top: 0.25rem; display: none;
+}
+.form-group.invalid .form-error { display: block; }
+.form-group.invalid input,
+.form-group.invalid select,
+.form-group.invalid textarea { border-color: #ef4444; }
+.btn-submit {
+  width: 100%;
+  background: linear-gradient(135deg, var(--primary), #F2711F);
+  color: var(--text-main);
+  padding: 1rem;
+  border: none; border-radius: 6px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1rem; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 4px 20px var(--glow-primary);
+  transition: all 0.3s;
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+}
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px var(--glow-primary);
+}
+
+/* ── FOOTER ── */
+footer {
+  background: #0D0A08;
+  border-top: 1px solid var(--border);
+  padding: 4rem 2rem 2rem;
+}
+.footer-grid {
+  max-width: 1200px; margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  gap: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid rgba(228,87,46,0.1);
+  margin-bottom: 2rem;
+}
+.footer-brand p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem; line-height: 1.7;
+  color: var(--text-muted);
+  margin: 1rem 0 1.5rem;
+}
+.footer-social {
+  display: flex; gap: 0.7rem;
+}
+.social-btn {
+  width: 44px; height: 44px;
+  background: rgba(228,87,46,0.15);
+  border: 1px solid rgba(228,87,46,0.3);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; color: var(--accent);
+  text-decoration: none;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.social-btn:hover {
+  background: rgba(228,87,46,0.3);
+  box-shadow: 0 0 15px var(--glow-primary);
+  transform: translateY(-2px);
+}
+.social-btn.is-soon:hover {
+  background: rgba(228,87,46,0.15);
+  box-shadow: none;
+  transform: none;
+}
+.footer-col h4 {
+  font-family: 'Cinzel', serif;
+  font-size: 0.85rem; font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 1.2rem;
+}
+.footer-links { list-style: none; }
+.footer-links li { margin-bottom: 0.6rem; }
+.footer-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.85rem;
+  transition: color 0.3s;
+}
+.footer-links a:hover { color: var(--accent); }
+.footer-empresas {
+  max-width: 1200px; margin: 0 auto 2rem;
+  padding: 2rem 0;
+  border-bottom: 1px solid rgba(228,87,46,0.1);
+}
+.footer-empresas h4 {
+  font-family: 'Cinzel', serif;
+  font-size: 0.8rem; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 1.2rem;
+}
+.empresas-logos {
+  display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: center;
+}
+.empresa-logo {
+  background: rgba(36,26,20,0.8);
+  border: 1px solid rgba(228,87,46,0.15);
+  border-radius: 6px;
+  padding: 0.8rem 1.5rem;
+  font-family: 'Cinzel', serif;
+  font-size: 0.8rem; font-weight: 700;
+  color: var(--text-muted);
+  transition: all 0.3s;
+  text-decoration: none;
+  cursor: pointer;
+}
+.empresa-logo:hover {
+  border-color: rgba(245,166,35,0.3);
+  color: var(--accent);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+.footer-bottom {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 1rem;
+}
+.footer-copy {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.8rem; color: var(--text-muted);
+}
+.footer-dev {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.8rem; color: var(--text-muted);
+}
+.footer-dev a {
+  color: var(--secondary);
+  text-decoration: none;
+  font-weight: 700;
+  transition: color 0.3s;
+}
+.footer-dev a:hover { color: var(--accent); }
+
+/* ── FLOATING BUTTONS ── */
+.float-whatsapp {
+  position: fixed; bottom: 2rem; right: 2rem;
+  z-index: 999;
+  width: 58px; height: 58px;
+  background: #25D366;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+  text-decoration: none;
+  color: white;
+  animation: pulse-wa 2s ease infinite;
+  transition: transform 0.3s;
+}
+.float-whatsapp:hover { transform: scale(1.1); }
+.float-whatsapp svg { width: 28px; fill: white; }
+
+.float-dev {
+  position: fixed; bottom: 2rem; left: 2rem;
+  z-index: 999;
+  background: rgba(20,16,13,0.95);
+  border: 1px solid rgba(245,166,35,0.5);
+  border-radius: 50px;
+  padding: 0.5rem 1.2rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  text-decoration: none;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s;
+  box-shadow: 0 0 12px rgba(245,166,35,0.2);
+}
+.float-dev span {
+  color: var(--accent);
+  font-size: 0.85rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 8px rgba(245,166,35,0.6);
+}
+.float-dev:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px rgba(245,166,35,0.4);
+  transform: translateY(-2px);
+}
+
+.scroll-top {
+  position: fixed; bottom: 7.5rem; right: 2rem;
+  z-index: 999;
+  width: 44px; height: 44px;
+  background: rgba(228,87,46,0.8);
+  border: 1px solid rgba(228,87,46,0.5);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  opacity: 0; pointer-events: none;
+  transition: all 0.3s;
+  backdrop-filter: blur(10px);
+}
+.scroll-top.visible { opacity: 1; pointer-events: all; }
+.scroll-top:hover {
+  background: var(--primary);
+  box-shadow: 0 4px 20px var(--glow-primary);
+  transform: translateY(-2px);
+}
+.scroll-top svg { width: 18px; stroke: var(--text-main); fill: none; stroke-width: 2; }
+
+#inicio {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes float-kanji {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(5deg); }
+}
+@keyframes rotate-slow {
+  from { transform: translateY(-50%) rotate(0deg); }
+  to { transform: translateY(-50%) rotate(360deg); }
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+@keyframes scroll-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+@keyframes float-particle {
+  0% { opacity: 0; transform: translateY(100vh) scale(0); }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.3; }
+  100% { opacity: 0; transform: translateY(-20px) scale(1.5); }
+}
+@keyframes pulse-wa {
+  0%, 100% { box-shadow: 0 4px 20px rgba(37,211,102,0.4), 0 0 0 0 rgba(37,211,102,0.4); }
+  50% { box-shadow: 0 4px 20px rgba(37,211,102,0.4), 0 0 0 20px rgba(37,211,102,0); }
+}
+
+/* ── REVEAL ANIMATION ── */
+.reveal {
+  opacity: 0; transform: translateY(40px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1; transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .institucional-grid { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .hero-deco { display: none; }
+  .form-row { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  section { padding: 4rem 1.2rem; }
+  .section-subtitle { white-space: normal; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .footer-bottom { flex-direction: column; text-align: center; }
+  .insignias-grid { grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); }
+  .blogs-tabs { overflow-x: auto; }
+}
+</style>
+</head>
+<body>
+
+<a href="#inicio" class="skip-link">Saltar al contenido principal</a>
+
+<!-- Icon sprite (reused via <use>) -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <symbol id="icon-map-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="icon-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></symbol>
+  <symbol id="icon-shield" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5.5 3.8 10.7 8 12 4.2-1.3 8-6.5 8-12V5l-8-3Z"/></symbol>
+  <symbol id="icon-activity" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol>
+  <symbol id="icon-focus" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="icon-leaf" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 9"/></symbol>
+  <symbol id="icon-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="icon-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></symbol>
+  <symbol id="icon-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+  <symbol id="icon-video" viewBox="0 0 24 24"><path d="m22 8-6 4 6 4V8Z"/><rect x="2" y="6" width="14" height="12" rx="2"/></symbol>
+  <symbol id="icon-clipboard" viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></symbol>
+  <symbol id="icon-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></symbol>
+  <symbol id="icon-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+  <symbol id="icon-message" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol>
+  <symbol id="icon-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4Z"/><path d="M5 4H3v2a4 4 0 0 0 4 4M19 4h2v2a4 4 0 0 1-4 4"/></symbol>
+  <symbol id="icon-landmark" viewBox="0 0 24 24"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 21 7 3 7"/></symbol>
+  <symbol id="icon-newspaper" viewBox="0 0 24 24"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8z"/></symbol>
+  <symbol id="icon-graduation" viewBox="0 0 24 24"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></symbol>
+  <symbol id="icon-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="icon-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="icon-chevron-left" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></symbol>
+  <symbol id="icon-chevron-right" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></symbol>
+  <symbol id="icon-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></symbol>
+  <symbol id="icon-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></symbol>
+  <symbol id="icon-whatsapp" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" class="icon-fill"/></symbol>
+  <symbol id="icon-facebook" viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.5 9.95v-7.04H7.9V12h2.6V9.8c0-2.56 1.52-3.98 3.86-3.98 1.12 0 2.3.2 2.3.2v2.53h-1.3c-1.28 0-1.68.8-1.68 1.62V12h2.86l-.46 2.91h-2.4v7.04A10 10 0 0 0 22 12Z" class="icon-fill"/></symbol>
+  <symbol id="icon-instagram" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.2" class="icon-fill"/></symbol>
+  <symbol id="icon-youtube" viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-2C18.88 4 12 4 12 4s-6.88 0-8.59.42a2.78 2.78 0 0 0-1.95 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.41 19c1.71.42 8.59.42 8.59.42s6.88 0 8.59-.42a2.78 2.78 0 0 0 1.95-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33Z" class="icon-fill"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="#14100D" stroke="none"/></symbol>
+</svg>
+
+<!-- Navbar -->
+<nav id="navbar">
+  <a href="#inicio" class="nav-logo">
+    <div class="nav-logo-emblem">KC</div>
+    <div class="nav-logo-text">Kenpo<span>Chile</span>.cl</div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#inicio">Inicio</a></li>
+    <li><a href="#maestros">Maestros</a></li>
+    <li><a href="#escuelas">Escuelas</a></li>
+    <li><a href="#seminarios">Seminarios</a></li>
+    <li><a href="#insignias">Insignias</a></li>
+    <li><a href="#instructores">Instructores</a></li>
+    <li><a href="#blogs">Noticias</a></li>
+    <li><a href="#contacto" class="nav-cta">Inscríbete</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" id="mobileClose" aria-label="Cerrar menú"><svg class="icon"><use href="#icon-x"/></svg></button>
+  <a href="#inicio" onclick="closeMobile()">Inicio</a>
+  <a href="#maestros" onclick="closeMobile()">Maestros</a>
+  <a href="#escuelas" onclick="closeMobile()">Escuelas</a>
+  <a href="#seminarios" onclick="closeMobile()">Seminarios</a>
+  <a href="#insignias" onclick="closeMobile()">Insignias</a>
+  <a href="#instructores" onclick="closeMobile()">Instructores</a>
+  <a href="#salud" onclick="closeMobile()">Salud y Bienestar</a>
+  <a href="#blogs" onclick="closeMobile()">Noticias</a>
+  <a href="#contacto" onclick="closeMobile()">Contacto</a>
+</div>
+
+<!-- Hero -->
+<section id="inicio">
+  <div id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-pattern"></div>
+    <div class="hero-particles" id="heroParticles"></div>
+    
+    <div class="hero-content">
+      <div class="hero-side-left">
+        <img src="img/header/insignias.png" alt="Insignias Kenpo" class="hero-side-img" width="640" height="480" loading="eager" fetchpriority="high">
+      </div>
+      <div class="hero-center">
+        <div class="hero-badge">Chinese Karate Federation · International Vidal Kenpo Studio</div>
+        <h1 class="hero-title">
+          <span class="sr-only">Kenpo Karate en Chile</span>
+          <span class="line1" aria-hidden="true"><img src="img/header/titulo.png" alt="" class="hero-img-title" width="500" height="150" loading="eager" fetchpriority="high"></span>
+          <span class="line2" aria-hidden="true"><img src="img/header/subtitulo.png" alt="" class="hero-img-title" width="600" height="100" loading="eager"></span>
+        </h1>
+        <p class="hero-subtitle">
+          Disciplina · <span>Respeto</span> · Defensa Personal · <span>Legado</span>
+        </p>
+        <div class="hero-ctas">
+          <a href="#escuelas" class="btn-primary"><svg class="icon"><use href="#icon-search"/></svg> Encontrar Escuela</a>
+          <a href="#contacto" class="btn-outline">Inscríbete Ahora →</a>
+        </div>
+        <p class="hero-trust">
+          <svg class="icon"><use href="#icon-check"/></svg> Clase de prueba gratuita, sin compromiso
+        </p>
+      </div>
+      <div class="hero-side-right">
+        <img src="img/header/maestro.png" alt="Maestro Kenpo" class="hero-side-img" width="480" height="960" loading="eager">
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      <span class="scroll-text">scroll</span>
+    </div>
+  </div>
+</section>
+
+<!-- Stats -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item reveal">
+      <span class="stat-num">8°</span>
+      <span class="stat-label">Grado Black Belt</span>
+    </div>
+    <div class="stat-item reveal reveal-delay-1">
+      <span class="stat-num">+20</span>
+      <span class="stat-label">Años de Tradición</span>
+    </div>
+    <div class="stat-item reveal reveal-delay-2">
+      <span class="stat-num">20+</span>
+      <span class="stat-label">Escuelas en Chile</span>
+    </div>
+    <div class="stat-item reveal reveal-delay-3">
+      <span class="stat-num">∞</span>
+      <span class="stat-label">Vías del Kenpo</span>
+    </div>
+  </div>
+</div>
+
+<!-- Institucional -->
+<section id="institucional">
+  <div class="section-inner">
+    <div class="institucional-grid">
+      <div>
+        <div class="section-label">Sobre Nosotros</div>
+        <h2 class="section-title">International<br><span>Vidal Kenpo Studio</span></h2>
+        <div class="divider"></div>
+        <p class="inst-text">
+          Es un gusto poder brindarte una manera efectiva de enseñanza orientado hacia las artes marciales! Te dejamos cordialmente invitad@ a que te unas a alguna de nuestras escuelas, donde aprenderás ha desarrollar las habilidades necesarias para defenderte y estar alerta a un entorno desafiante. También aprenderás a formar disciplina, carácter, respeto, constancia, perseverancia y tantos otros talentos que provienen del gran legado que nuestro fundador, Senior Grandmaster Edmund Kealoha Parker nos entregó. Nos vemos en prácticas!
+        </p>
+        <div class="inst-cita">
+          <p>Organización de artes marciales enfocada en la enseñanza del Kenpo Karate a través de distintas escuelas ubicadas a lo largo de Chile, bajo la línea tradicional y profesional de la Chinese Karate Federation.</p>
+        </div>
+        <div class="philosophy-tags">
+          <div class="tags-row tags-row-full">
+            <span class="tag">Disciplina</span>
+            <span class="tag">Respeto</span>
+            <span class="tag">Autocontrol</span>
+          </div>
+          <div class="tags-row tags-row-compact">
+            <span class="tag">Perseverancia</span>
+            <span class="tag">Defensa Personal</span>
+            <span class="tag">Formación Integral</span>
+          </div>
+        </div>
+      </div>
+      <div class="inst-visual">
+        <img src="img/lineaje.png" alt="Línea de linaje del Kenpo, desde Edmund Parker hasta International Vidal Kenpo Studio" class="inst-visual-img" width="980" height="926" loading="lazy" decoding="async">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Quote Epic -->
+<section id="quote-epic">
+  <div class="quote-bg"></div>
+  <div class="quote-content reveal">
+    <span class="quote-mark">❝</span>
+    <p class="quote-main">«Vengo hacia ti con las manos vacías, no tengo armas, pero si soy obligado a defenderme, a defender mis principios o mi honor, si es cuestión de vida o muerte, de derecho o de injusticia, entonces aquí están mis armas, el karate, las manos vacías»</p>
+    <p class="quote-en">«I come to you with only Karate, empty hands. I have no weapons, but should I be forced to defend myself, my principles or my honor, should it be a matter of life or death, right or wrong, then here are my weapons, Karate empty hands»</p>
+    <div class="quote-author">
+      <span class="quote-author-name">Senior Grandmaster Edmund Kealoha Parker</span>
+      <span class="quote-author-title">Fundador del American Kenpo Karate</span>
+    </div>
+  </div>
+</section>
+
+<!-- Maestros -->
+<section id="maestros">
+  <div class="section-inner">
+    <div class="section-label">Equipo Directivo</div>
+    <div class="section-title-row">
+      <h2 class="section-title">Nuestros <span>Maestros</span></h2>
+      <div class="section-search-box" id="maestroSearchBox">
+        <input type="text" id="maestroSearch" placeholder="Buscar maestro por nombre..." aria-label="Buscar maestro por nombre" autocomplete="off">
+        <button type="button" class="section-search-toggle" id="maestroSearchToggle" aria-label="Buscar maestro" aria-describedby="maestroSearchTip" aria-expanded="false" aria-controls="maestroSearchBox">
+          <svg class="icon"><use href="#icon-search"/></svg>
+        </button>
+        <div class="search-tip" id="maestroSearchTip" role="tooltip">
+          <p class="search-tip-title">Buscar maestro</p>
+          <p class="search-tip-desc">Por nombre del maestro</p>
+          <ul class="search-tip-keys">
+            <li><kbd>B</kbd><span>Abrir buscador</span></li>
+            <li><kbd>↑↓</kbd><span>Navegar sugerencias</span></li>
+            <li><kbd>Enter</kbd><span>Seleccionar</span></li>
+          </ul>
+        </div>
+        <div class="section-search-suggestions" id="maestroSuggestions"></div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <p class="section-subtitle">Instructores certificados con décadas de experiencia en la tradición del Kenpo Karate bajo la Chinese Karate Federation.</p>
+    <div class="maestros-grid" id="maestrosGrid">
+      <!-- Maestro Principal -->
+      <div class="maestro-card reveal" onclick="openBio('Ed Parker','Founder of American Kenpo Karate','Ed Parker fue el fundador del American Kenpo Karate y una de las figuras más influyentes en las artes marciales modernas. Su legado continúa inspirando a generaciones de practicantes alrededor del mundo gracias a su enfoque innovador, práctico y filosófico del Kenpo.')">
+        <div class="maestro-img">
+          <div class="maestro-avatar">
+            <img src="img/maestros/edparker.png" alt="Ed Parker" width="200" height="300" loading="lazy" decoding="async">
+          </div>
+          <div class="maestro-overlay"></div>
+          <div class="maestro-belt">10° Dan</div>
+        </div>
+        <div class="maestro-info">
+          <div class="maestro-name">Ed Parker</div>
+          <div class="maestro-grade">Founder of American Kenpo Karate</div>
+          <a class="maestro-link">Ver Biografía →</a>
+        </div>
+      </div>
+      <div class="maestro-card reveal reveal-delay-1" onclick="openBio('Michael Robert Pick','10th Degree Black Belt · Grandmaster','Comenzó su entrenamiento en 1957 bajo la tutela directa de Ed Parker en Pasadena, California, y fue el único cinturón negro promovido personalmente con el propio cinturón del Gran Maestro. Veterano del Cuerpo de Marines en Vietnam, alcanzó el 10° Dan y el título de Segundo Gran Maestro del American Kenpo en 1997.')">
+        <div class="maestro-img">
+          <div class="maestro-avatar">
+            <img src="img/maestros/robertpick.webp" alt="Michael Robert Pick" width="200" height="300" loading="lazy" decoding="async">
+          </div>
+          <div class="maestro-overlay"></div>
+          <div class="maestro-belt">10° Dan</div>
+        </div>
+        <div class="maestro-info">
+          <div class="maestro-name">Michael Robert Pick</div>
+          <div class="maestro-grade">10th Degree Black Belt · Grandmaster</div>
+          <a class="maestro-link">Ver Biografía →</a>
+        </div>
+      </div>
+      <div class="maestro-card reveal reveal-delay-2" onclick="openBio('Sean P. Kelley','9th Degree Black Belt · Master of the Arts','Head instructor y presidente de la Chinese Karate Federation, formado bajo el sistema de Ed Parker desde 1978. Hoy ostenta el 9° Dan «Master of the Arts» y ha enseñado en Estados Unidos, Canadá, Sudamérica, Reino Unido e Irlanda.')">
+        <div class="maestro-img">
+          <div class="maestro-avatar">
+            <img src="img/maestros/seankelley.webp" alt="Sean P. Kelley" width="200" height="300" loading="lazy" decoding="async">
+          </div>
+          <div class="maestro-overlay"></div>
+          <div class="maestro-belt">9° Dan</div>
+        </div>
+        <div class="maestro-info">
+          <div class="maestro-name">Sean P. Kelley</div>
+          <div class="maestro-grade">9th Degree Black Belt · Master of the Arts</div>
+          <a class="maestro-link">Ver Biografía →</a>
+        </div>
+      </div>
+      <div class="maestro-card reveal reveal-delay-3" onclick="openBio('Rainer Schulte','10th Degree Black Belt · Vicepresidente CKF','Recibió su primer cinturón negro de manos de Ed Parker en 1970 y hoy es 10° Dan y Vicepresidente de la Chinese Karate Federation. Fue el encargado de introducir el American Kenpo en Europa, estableciendo la primera filial de la IKKA en Alemania.')">
+        <div class="maestro-img">
+          <div class="maestro-avatar">
+            <img src="img/maestros/rainershulte.webp" alt="Rainer Schulte" width="200" height="300" loading="lazy" decoding="async">
+          </div>
+          <div class="maestro-overlay"></div>
+          <div class="maestro-belt">10° Dan</div>
+        </div>
+        <div class="maestro-info">
+          <div class="maestro-name">Rainer Schulte</div>
+          <div class="maestro-grade">10th Degree Black Belt · Vicepresidente CKF</div>
+          <a class="maestro-link">Ver Biografía →</a>
+        </div>
+      </div>
+      <div class="maestro-card reveal" onclick="openBio('Bill «Superfoot» Wallace','Grandmaster · PKA Champion','Campeón invicto de la Asociación Profesional de Karate (PKA), reconocido mundialmente como «Superfoot» por la velocidad de sus patadas de pierna izquierda, registradas en más de 60 millas por hora. Triple integrante del Salón de la Fama de Black Belt Magazine.')">
+        <div class="maestro-img">
+          <div class="maestro-avatar">
+            <img src="img/maestros/billwallace.webp" alt="Bill «Superfoot» Wallace" width="200" height="300" loading="lazy" decoding="async">
+          </div>
+          <div class="maestro-overlay"></div>
+          <div class="maestro-belt">Grandmaster</div>
+        </div>
+        <div class="maestro-info">
+          <div class="maestro-name">Bill «Superfoot» Wallace</div>
+          <div class="maestro-grade">Grandmaster · PKA Champion</div>
+          <a class="maestro-link">Ver Biografía →</a>
+        </div>
+      </div>
+      <div class="maestro-card reveal reveal-delay-1" onclick="openBio('Arturo Petit','8th Degree Black Belt · Fundador del Kenpo en Chile','Primer chileno en obtener el cinturón negro de Kenpo (1964) e introductor del Kenpo Karate en Chile y Sudamérica. Alcanzó el 8° Dan en 1995 y formó a generaciones de instructores hasta su fallecimiento en 2000.')">
+        <div class="maestro-img">
+          <div class="maestro-avatar">
+            <img src="img/maestros/arturopetit.webp" alt="Arturo Petit" width="200" height="300" loading="lazy" decoding="async">
+          </div>
+          <div class="maestro-overlay"></div>
+          <div class="maestro-belt">8° Dan</div>
+        </div>
+        <div class="maestro-info">
+          <div class="maestro-name">Arturo Petit</div>
+          <div class="maestro-grade">8th Degree Black Belt · Fundador del Kenpo en Chile</div>
+          <a class="maestro-link">Ver Biografía →</a>
+        </div>
+      </div>
+      <div class="maestro-card reveal reveal-delay-2" onclick="openBio('Roberto Vidal C.','8th Degree Black Belt · Associate Master of the Arts','Representante de la Chinese Karate Federation para Chile y Sudamérica, formado bajo el Maestro Arturo Petit desde 1976. Alcanzó el 8° Dan «Associate Master of the Arts» en 2023 y fue incorporado al Kenpo Karate Hall of Fame en 2018.')">
+        <div class="maestro-img">
+          <div class="maestro-avatar">
+            <img src="img/maestros/robertovidal.webp" alt="Roberto Vidal C." width="200" height="300" loading="lazy" decoding="async">
+          </div>
+          <div class="maestro-overlay"></div>
+          <div class="maestro-belt">8° Dan</div>
+        </div>
+        <div class="maestro-info">
+          <div class="maestro-name">Roberto Vidal C.</div>
+          <div class="maestro-grade">8th Degree Black Belt · Associate Master of the Arts</div>
+          <a class="maestro-link">Ver Biografía →</a>
+        </div>
+      </div>
+      <div class="maestro-card reveal reveal-delay-3" onclick="openBio('Frank Trejo','10th Degree Black Belt · Grandmaster','Excampeón de kickboxing con récord profesional de 21-1 y creador del sistema «Kenpo Fusión», que combina boxeo, kickboxing, karate, judo y lucha en el suelo. Entrenó bajo Ed Parker desde 1969 y alcanzó el 10° Dan.')">
+        <div class="maestro-img">
+          <div class="maestro-avatar">
+            <img src="img/maestros/franktrejo.webp" alt="Frank Trejo" width="200" height="300" loading="lazy" decoding="async">
+          </div>
+          <div class="maestro-overlay"></div>
+          <div class="maestro-belt">10° Dan</div>
+        </div>
+        <div class="maestro-info">
+          <div class="maestro-name">Frank Trejo</div>
+          <div class="maestro-grade">10th Degree Black Belt · Grandmaster</div>
+          <a class="maestro-link">Ver Biografía →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Lightbox Bios / Insignias -->
+<div id="lightbox" role="dialog" aria-modal="true" aria-labelledby="lbTitle">
+  <button class="lightbox-nav lightbox-prev" onclick="navInsignia(-1)" aria-label="Insignia anterior"><svg class="icon"><use href="#icon-chevron-left"/></svg></button>
+  <div class="lightbox-content">
+    <button class="lightbox-close" onclick="closeLightbox()" aria-label="Cerrar"><svg class="icon"><use href="#icon-x"/></svg></button>
+    <div class="lightbox-icon" id="lbIcon"><svg class="icon" style="width:5rem;height:5rem"><use href="#icon-user"/></svg></div>
+    <img id="lbImage" alt="" style="display:none;max-width:320px;width:100%;border-radius:8px;margin:0 auto 1rem">
+    <div class="lightbox-title" id="lbTitle"></div>
+    <div class="maestro-grade" id="lbGrade" style="margin:0.5rem 0 1rem"></div>
+    <div class="lightbox-desc" id="lbDesc"></div>
+    <div class="lightbox-counter" id="lbCounter"></div>
+  </div>
+  <button class="lightbox-nav lightbox-next" onclick="navInsignia(1)" aria-label="Siguiente insignia"><svg class="icon"><use href="#icon-chevron-right"/></svg></button>
+</div>
+
+<!-- Frase Destacada -->
+<section id="frase">
+  <div class="section-inner reveal">
+    <p class="frase-text">❝ El Karate es práctica, sin práctica no hay Karate ❞</p>
+    <p class="frase-author">— Roberto Vidal C., 8th Degree Black Belt · «Associate Master of the Arts»</p>
+  </div>
+</section>
+
+<!-- Escuelas -->
+<section id="escuelas">
+  <div class="section-inner">
+    <div class="section-label">Afiliadas en Chile y Argentina</div>
+    <div class="section-title-row">
+      <h2 class="section-title">Nuestras <span>Escuelas</span></h2>
+      <div class="section-search-box" id="escuelaSearchBox">
+        <input type="text" id="escuelaSearch" placeholder="Buscar escuela por nombre..." aria-label="Buscar escuela por nombre" autocomplete="off">
+        <button type="button" class="section-search-toggle" id="escuelaSearchToggle" aria-label="Buscar escuela" aria-describedby="escuelaSearchTip" aria-expanded="false" aria-controls="escuelaSearchBox">
+          <svg class="icon"><use href="#icon-search"/></svg>
+        </button>
+        <div class="search-tip" id="escuelaSearchTip" role="tooltip">
+          <p class="search-tip-title">Buscar escuela</p>
+          <p class="search-tip-desc">Por nombre de la escuela</p>
+          <ul class="search-tip-keys">
+            <li><kbd>B</kbd><span>Abrir buscador</span></li>
+            <li><kbd>↑↓</kbd><span>Navegar sugerencias</span></li>
+            <li><kbd>Enter</kbd><span>Seleccionar</span></li>
+          </ul>
+        </div>
+        <div class="section-search-suggestions" id="escuelaSuggestions"></div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <p class="section-subtitle">Encuentra la escuela más cercana y comienza tu camino en el Kenpo Karate.</p>
+    <div class="escuelas-filter-row" id="paisTabs"></div>
+    <div class="escuelas-filter-row" id="regionRow"></div>
+    <div class="escuelas-filter-row" id="comunaChips"></div>
+    <div class="escuelas-grid" id="escuelasGrid"></div>
+    <p class="escuelas-empty" id="escuelasEmpty" style="display:none">No hay escuelas para este filtro todavía.</p>
+    <div class="escuelas-pager" id="escuelasPager"></div>
+  </div>
+</section>
+
+<!-- Seminarios -->
+<section id="seminarios">
+  <div class="section-inner">
+    <div class="section-label">Eventos Especiales</div>
+    <div class="section-title-row">
+      <h2 class="section-title">Seminarios <span>Internacionales IVKS/CKF</span></h2>
+      <div class="section-search-box" id="seminarioSearchBox">
+        <input type="text" id="seminarioSearch" placeholder="Buscar por título o maestro invitado..." aria-label="Buscar seminario por título o maestro invitado" autocomplete="off">
+        <button type="button" class="section-search-toggle" id="seminarioSearchToggle" aria-label="Buscar seminario" aria-describedby="seminarioSearchTip" aria-expanded="false" aria-controls="seminarioSearchBox">
+          <svg class="icon"><use href="#icon-search"/></svg>
+        </button>
+        <div class="search-tip" id="seminarioSearchTip" role="tooltip">
+          <p class="search-tip-title">Buscar seminario</p>
+          <p class="search-tip-desc">Por título, maestro invitado o año</p>
+          <ul class="search-tip-keys">
+            <li><kbd>B</kbd><span>Abrir buscador</span></li>
+            <li><kbd>↑↓</kbd><span>Navegar sugerencias</span></li>
+            <li><kbd>Enter</kbd><span>Seleccionar</span></li>
+          </ul>
+        </div>
+        <div class="section-search-suggestions" id="seminarioSuggestions"></div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <p class="section-subtitle">Un recorrido por los seminarios internacionales IVKS/CKF realizados en Chile desde 2006, con maestros invitados de la Chinese Karate Federation.</p>
+    <div class="seminarios-grid" id="seminariosGrid"></div>
+    <p class="escuelas-empty" id="seminariosEmpty" style="display:none">No se encontraron seminarios.</p>
+    <div class="escuelas-pager" id="seminariosPager"></div>
+  </div>
+</section>
+
+<!-- Videos -->
+<section id="videos">
+  <div class="section-inner">
+    <div class="section-label">Canal YouTube</div>
+    <div class="section-title-row">
+      <h2 class="section-title">Videos <span>Destacados</span></h2>
+      <div class="section-search-box" id="videoSearchBox">
+        <input type="text" id="videoSearch" placeholder="Buscar video por título..." aria-label="Buscar video por título" autocomplete="off">
+        <button type="button" class="section-search-toggle" id="videoSearchToggle" aria-label="Buscar video" aria-describedby="videoSearchTip" aria-expanded="false" aria-controls="videoSearchBox">
+          <svg class="icon"><use href="#icon-search"/></svg>
+        </button>
+        <div class="search-tip" id="videoSearchTip" role="tooltip">
+          <p class="search-tip-title">Buscar video</p>
+          <p class="search-tip-desc">Por título del video</p>
+          <ul class="search-tip-keys">
+            <li><kbd>B</kbd><span>Abrir buscador</span></li>
+            <li><kbd>↑↓</kbd><span>Navegar sugerencias</span></li>
+            <li><kbd>Enter</kbd><span>Seleccionar</span></li>
+          </ul>
+        </div>
+        <div class="section-search-suggestions" id="videoSuggestions"></div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <p class="section-subtitle">Contenido de entrenamiento, demostraciones y filosofía marcial.</p>
+    <div class="videos-grid" id="videosGrid">
+      <div class="video-card reveal" onclick="window.open('https://youtube.com','_blank')">
+        <div class="video-thumb" style="background:linear-gradient(135deg,rgba(228,87,46,0.5),rgba(20,16,13,1))">
+          <div class="video-play">
+            <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+          </div>
+        </div>
+        <div class="video-info">
+          <div class="video-title">Introducción al Kenpo Karate Tradicional</div>
+          <div class="video-meta">International Vidal Kenpo Studio</div>
+        </div>
+      </div>
+      <div class="video-card reveal reveal-delay-1" onclick="window.open('https://youtube.com','_blank')">
+        <div class="video-thumb" style="background:linear-gradient(135deg,rgba(249,115,22,0.3),rgba(20,16,13,1))">
+          <div class="video-play">
+            <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+          </div>
+        </div>
+        <div class="video-info">
+          <div class="video-title">Técnicas de Defensa Personal — Kenpo Nivel 1</div>
+          <div class="video-meta">Maestro Roberto Vidal C.</div>
+        </div>
+      </div>
+      <div class="video-card reveal reveal-delay-2" onclick="window.open('https://youtube.com','_blank')">
+        <div class="video-thumb" style="background:linear-gradient(135deg,rgba(228,87,46,0.3),rgba(245,166,35,0.2),rgba(20,16,13,1))">
+          <div class="video-play">
+            <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+          </div>
+        </div>
+        <div class="video-info">
+          <div class="video-title">Seminario Internacional de Kenpo — Resumen</div>
+          <div class="video-meta">Chinese Karate Federation · Chile</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Insignias -->
+<section id="insignias">
+  <div class="section-inner">
+    <div class="section-label">Galería Oficial</div>
+    <h2 class="section-title">Insignias <span>Kenpo</span></h2>
+    <div class="divider"></div>
+    <p class="section-subtitle">Colección oficial de insignias del International Vidal Kenpo Studio.</p>
+    <div class="insignias-grid" id="insigniasGrid"></div>
+  </div>
+</section>
+
+<!-- Instructores -->
+<section id="instructores">
+  <div class="section-inner">
+    <div class="section-label">Members IVKS/CKF 2026</div>
+    <div class="section-title-row">
+      <h2 class="section-title">Nuestros <span>Instructores</span></h2>
+      <div class="section-search-box" id="instructorSearchBox">
+        <input type="text" id="instructorSearch" placeholder="Buscar instructor por nombre..." aria-label="Buscar instructor por nombre" autocomplete="off">
+        <button type="button" class="section-search-toggle" id="instructorSearchToggle" aria-label="Buscar instructor" aria-describedby="instructorSearchTip" aria-expanded="false" aria-controls="instructorSearchBox">
+          <svg class="icon"><use href="#icon-search"/></svg>
+        </button>
+        <div class="search-tip" id="instructorSearchTip" role="tooltip">
+          <p class="search-tip-title">Buscar instructor</p>
+          <p class="search-tip-desc">Por nombre del instructor</p>
+          <ul class="search-tip-keys">
+            <li><kbd>B</kbd><span>Abrir buscador</span></li>
+            <li><kbd>↑↓</kbd><span>Navegar sugerencias</span></li>
+            <li><kbd>Enter</kbd><span>Seleccionar</span></li>
+          </ul>
+        </div>
+        <div class="section-search-suggestions" id="instructorSuggestions"></div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <p class="section-subtitle">Cuerpo de instructores activos del International Vidal Kenpo Studio / Chinese Karate Federation, organizado por grado.</p>
+    <div class="escuelas-filter-row instructor-tabs" id="instructorTabs"></div>
+    <p class="instructor-grado-subtitle" id="instructorGradoSubtitle" style="display:none"></p>
+    <div class="instructores-grid" id="instructoresGrid"></div>
+    <p class="instructores-empty" id="instructoresEmpty" style="display:none">No se encontraron instructores con ese nombre.</p>
+    <div class="escuelas-pager" id="instructoresPager"></div>
+  </div>
+</section>
+
+<!-- Salud y Bienestar -->
+<section id="salud">
+  <div class="section-inner">
+    <div class="section-label">Desarrollo Integral</div>
+    <h2 class="section-title">Salud y <span>Bienestar</span></h2>
+    <div class="divider"></div>
+    <p class="section-subtitle">El Kenpo es mucho más que combate. Es un estilo de vida que transforma cuerpo, mente y espíritu.</p>
+    <div class="salud-grid">
+      <div class="salud-card reveal">
+        <div class="salud-icon"><svg class="icon"><use href="#icon-activity"/></svg></div>
+        <div class="salud-title">Condición Física</div>
+        <div class="salud-text">Mejora tu fuerza, flexibilidad, coordinación y resistencia cardiovascular a través de entrenamientos dinámicos y progresivos.</div>
+      </div>
+      <div class="salud-card reveal reveal-delay-1">
+        <div class="salud-icon"><svg class="icon"><use href="#icon-focus"/></svg></div>
+        <div class="salud-title">Equilibrio Mental</div>
+        <div class="salud-text">El Kenpo enseña concentración, control del estrés y claridad mental. La meditación y el kata calman la mente y fortalecen el carácter.</div>
+      </div>
+      <div class="salud-card reveal reveal-delay-2">
+        <div class="salud-icon"><svg class="icon"><use href="#icon-shield"/></svg></div>
+        <div class="salud-title">Defensa Personal</div>
+        <div class="salud-text">Aprende técnicas efectivas y probadas de autodefensa aplicadas a situaciones reales, aumentando tu seguridad y confianza.</div>
+      </div>
+      <div class="salud-card reveal reveal-delay-3">
+        <div class="salud-icon"><svg class="icon"><use href="#icon-leaf"/></svg></div>
+        <div class="salud-title">Nutrición y Hábitos</div>
+        <div class="salud-text">Guía de alimentación saludable orientada al rendimiento marcial. Buenos hábitos que potencian tu entrenamiento y tu vida diaria.</div>
+      </div>
+      <div class="salud-card reveal">
+        <div class="salud-icon"><svg class="icon"><use href="#icon-users"/></svg></div>
+        <div class="salud-title">Desarrollo Familiar</div>
+        <div class="salud-text">El Kenpo une familias. Padres e hijos comparten el camino marcial, reforzando valores, comunicación y respeto mutuo.</div>
+      </div>
+      <div class="salud-card reveal reveal-delay-1">
+        <div class="salud-icon"><svg class="icon"><use href="#icon-star"/></svg></div>
+        <div class="salud-title">Filosofía de Vida</div>
+        <div class="salud-text">Los principios del Kenpo —respeto, constancia, humildad y honor— son herramientas poderosas para enfrentar los desafíos de la vida moderna.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Blogs -->
+<section id="blogs">
+  <div class="section-inner">
+    <div class="section-label">Contenido Editorial</div>
+    <div class="section-title-row">
+      <h2 class="section-title">Noticias y <span>Blogs</span></h2>
+      <div class="section-search-box" id="blogSearchBox">
+        <input type="text" id="blogSearch" placeholder="Buscar artículo por título..." aria-label="Buscar artículo por título" autocomplete="off">
+        <button type="button" class="section-search-toggle" id="blogSearchToggle" aria-label="Buscar artículo" aria-describedby="blogSearchTip" aria-expanded="false" aria-controls="blogSearchBox">
+          <svg class="icon"><use href="#icon-search"/></svg>
+        </button>
+        <div class="search-tip" id="blogSearchTip" role="tooltip">
+          <p class="search-tip-title">Buscar artículo</p>
+          <p class="search-tip-desc">Por título del artículo</p>
+          <ul class="search-tip-keys">
+            <li><kbd>B</kbd><span>Abrir buscador</span></li>
+            <li><kbd>↑↓</kbd><span>Navegar sugerencias</span></li>
+            <li><kbd>Enter</kbd><span>Seleccionar</span></li>
+          </ul>
+        </div>
+        <div class="section-search-suggestions" id="blogSuggestions"></div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div id="blogsContent">
+    <div class="blogs-tabs">
+      <button class="blog-tab active" data-tab="tab-noticias" onclick="switchTab(this,'tab-noticias')">Blog de Noticias</button>
+      <button class="blog-tab" data-tab="tab-historia" onclick="switchTab(this,'tab-historia')">Blog de Historia</button>
+      <button class="blog-tab" data-tab="tab-salud" onclick="switchTab(this,'tab-salud')">Salud y Bienestar</button>
+    </div>
+    <div class="blog-panel active" id="tab-noticias">
+      <div class="blog-grid">
+        <div class="blog-card reveal">
+          <div class="blog-img"><svg class="icon"><use href="#icon-newspaper"/></svg></div>
+          <div class="blog-body">
+            <div class="blog-meta"><span class="blog-cat">Noticias</span><span class="blog-date">Junio 2025</span></div>
+            <div class="blog-title">Nuevas Escuelas Afiliadas en el Sur de Chile</div>
+            <div class="blog-excerpt">El International Vidal Kenpo Studio suma nuevas escuelas en la región de la Araucanía, consolidando su presencia nacional bajo la Chinese Karate Federation.</div>
+            <button class="blog-link" onclick="interesEvento('Nuevas Escuelas Afiliadas en el Sur de Chile')">Leer Más →</button>
+          </div>
+        </div>
+        <div class="blog-card reveal reveal-delay-1">
+          <div class="blog-img"><svg class="icon"><use href="#icon-trophy"/></svg></div>
+          <div class="blog-body">
+            <div class="blog-meta"><span class="blog-cat">Eventos</span><span class="blog-date">Mayo 2025</span></div>
+            <div class="blog-title">Resultados del Campeonato Nacional Kenpo 2025</div>
+            <div class="blog-excerpt">Estudiantes de KenpoChile obtienen destacadas posiciones en el campeonato nacional, reflejando el alto nivel técnico de nuestras escuelas.</div>
+            <button class="blog-link" onclick="interesEvento('Resultados del Campeonato Nacional Kenpo 2025')">Leer Más →</button>
+          </div>
+        </div>
+        <div class="blog-card reveal reveal-delay-2">
+          <div class="blog-img"><svg class="icon"><use href="#icon-graduation"/></svg></div>
+          <div class="blog-body">
+            <div class="blog-meta"><span class="blog-cat">Graduaciones</span><span class="blog-date">Abril 2025</span></div>
+            <div class="blog-title">Ceremonia de Cinturones Negros — Santiago 2025</div>
+            <div class="blog-excerpt">Una emotiva ceremonia marcó el ascenso de 12 nuevos cinturones negros del International Vidal Kenpo Studio, un logro de dedicación y sacrificio.</div>
+            <button class="blog-link" onclick="interesEvento('Ceremonia de Cinturones Negros — Santiago 2025')">Leer Más →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="blog-panel" id="tab-historia">
+      <div class="blog-grid">
+        <div class="blog-card reveal">
+          <div class="blog-img"><svg class="icon"><use href="#icon-award"/></svg></div>
+          <div class="blog-body">
+            <div class="blog-meta"><span class="blog-cat">Historia</span><span class="blog-date">Marzo 2025</span></div>
+            <div class="blog-title">El Legado de Edmund K. Parker: Padre del American Kenpo</div>
+            <div class="blog-excerpt">Exploramos la vida y obra del Grandmaster que transformó el Kenpo en el sistema marcial más completo y racional del siglo XX.</div>
+            <button class="blog-link" onclick="interesEvento('El Legado de Edmund K. Parker: Padre del American Kenpo')">Leer Más →</button>
+          </div>
+        </div>
+        <div class="blog-card reveal reveal-delay-1">
+          <div class="blog-img"><svg class="icon"><use href="#icon-landmark"/></svg></div>
+          <div class="blog-body">
+            <div class="blog-meta"><span class="blog-cat">Orígenes</span><span class="blog-date">Febrero 2025</span></div>
+            <div class="blog-title">Del Shaolin al Kenpo: Raíces del Arte Marcial</div>
+            <div class="blog-excerpt">Un viaje a través de los siglos para entender cómo las antiguas tradiciones chinas y japonesas confluyeron en el Kenpo moderno.</div>
+            <button class="blog-link" onclick="interesEvento('Del Shaolin al Kenpo: Raíces del Arte Marcial')">Leer Más →</button>
+          </div>
+        </div>
+        <div class="blog-card reveal reveal-delay-2">
+          <div class="blog-img"><svg class="icon"><use href="#icon-landmark"/></svg></div>
+          <div class="blog-body">
+            <div class="blog-meta"><span class="blog-cat">Chile</span><span class="blog-date">Enero 2025</span></div>
+            <div class="blog-title">20 Años de Kenpo en Chile: Una Historia de Dedicación</div>
+            <div class="blog-excerpt">La historia del International Vidal Kenpo Studio y cómo el Kenpo auténtico llegó y arraigó en tierras chilenas de la mano del Maestro Roberto Vidal.</div>
+            <button class="blog-link" onclick="interesEvento('20 Años de Kenpo en Chile: Una Historia de Dedicación')">Leer Más →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="blog-panel" id="tab-salud">
+      <div class="blog-grid">
+        <div class="blog-card reveal">
+          <div class="blog-img"><svg class="icon"><use href="#icon-leaf"/></svg></div>
+          <div class="blog-body">
+            <div class="blog-meta"><span class="blog-cat">Nutrición</span><span class="blog-date">Junio 2025</span></div>
+            <div class="blog-title">Alimentación del Artista Marcial: Guía Básica</div>
+            <div class="blog-excerpt">Cómo nutrir el cuerpo para rendir al máximo en el entrenamiento de Kenpo. Principios de alimentación funcional aplicada a las artes marciales.</div>
+            <button class="blog-link" onclick="interesEvento('Alimentación del Artista Marcial: Guía Básica')">Leer Más →</button>
+          </div>
+        </div>
+        <div class="blog-card reveal reveal-delay-1">
+          <div class="blog-img"><svg class="icon"><use href="#icon-focus"/></svg></div>
+          <div class="blog-body">
+            <div class="blog-meta"><span class="blog-cat">Mental</span><span class="blog-date">Mayo 2025</span></div>
+            <div class="blog-title">El Kenpo como Herramienta contra el Estrés</div>
+            <div class="blog-excerpt">Estudio sobre cómo la práctica regular del Kenpo Karate reduce los niveles de cortisol y mejora la resiliencia mental ante situaciones desafiantes.</div>
+            <button class="blog-link" onclick="interesEvento('El Kenpo como Herramienta contra el Estrés')">Leer Más →</button>
+          </div>
+        </div>
+        <div class="blog-card reveal reveal-delay-2">
+          <div class="blog-img"><svg class="icon"><use href="#icon-activity"/></svg></div>
+          <div class="blog-body">
+            <div class="blog-meta"><span class="blog-cat">Fitness</span><span class="blog-date">Abril 2025</span></div>
+            <div class="blog-title">Rutina de Acondicionamiento Físico para Kenpoistas</div>
+            <div class="blog-excerpt">Programa de entrenamiento complementario diseñado específicamente para potenciar las habilidades físicas requeridas en el Kenpo Karate.</div>
+            <button class="blog-link" onclick="interesEvento('Rutina de Acondicionamiento Físico para Kenpoistas')">Leer Más →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="section-inner">
+    <div class="section-label">Preguntas Frecuentes</div>
+    <h2 class="section-title">Todo lo que <span>Necesitas Saber</span></h2>
+    <div class="divider"></div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">¿Desde qué edad se puede practicar Kenpo Karate? <span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>El Kenpo Karate es apto para todas las edades. Ofrecemos programas especializados desde los 4 años para los más pequeños, pasando por adolescentes y adultos de cualquier edad. ¡Nunca es tarde para comenzar!</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">¿Necesito experiencia previa en artes marciales? <span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>No se requiere ninguna experiencia previa. Nuestras escuelas reciben a principiantes absolutos y los guían desde los fundamentos más básicos del Kenpo hasta los niveles más avanzados.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">¿Qué diferencia al Kenpo de otras artes marciales? <span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>El Kenpo es un sistema lógico y científico de defensa personal que se adapta a la realidad contemporánea. A diferencia de otros estilos, el Kenpo no es rígido: enfatiza la fluidez, la velocidad y la eficiencia en situaciones reales, combinando elementos de múltiples tradiciones marciales.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">¿Cuántas veces a la semana se entrena? <span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>Recomendamos al menos 2-3 sesiones por semana para un progreso óptimo. Sin embargo, cada escuela tiene su propio horario y se puede adaptar a la disponibilidad de cada estudiante.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">¿La Chinese Karate Federation tiene reconocimiento internacional? <span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>Sí, la Chinese Karate Federation es una organización reconocida internacionalmente, con afiliados en múltiples países. Los grados obtenidos bajo esta federación tienen validez y reconocimiento a nivel mundial.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">¿Cómo me inscribo en una escuela? <span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>Puedes inscribirte a través del formulario de contacto en este sitio, por WhatsApp, o visitando directamente la escuela más cercana a tu ubicación. Te invitamos a una clase de prueba sin costo.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contacto -->
+<section id="contacto">
+  <div class="section-inner">
+    <div class="section-label">Únete al Kenpo</div>
+    <h2 class="section-title">Comienza tu <span>Camino</span></h2>
+    <div class="divider"></div>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <h3>International Vidal Kenpo Studio</h3>
+        <p>Completa el formulario y nos pondremos en contacto contigo a la brevedad para orientarte sobre la escuela más cercana y el programa más adecuado para ti.</p>
+        <div class="contact-links">
+          <a href="#" data-whatsapp-link class="contact-link" target="_blank" rel="noopener">
+            <div class="contact-link-icon"><svg class="icon"><use href="#icon-whatsapp"/></svg></div>
+            <span>WhatsApp: <span id="waDisplay"></span></span>
+          </a>
+          <a href="mailto:contacto@kenpochile.cl" class="contact-link">
+            <div class="contact-link-icon"><svg class="icon"><use href="#icon-mail"/></svg></div>
+            <span>contacto@kenpochile.cl</span>
+          </a>
+          <span class="contact-link is-soon" title="Listado por escuela disponible en la sección Escuelas">
+            <div class="contact-link-icon"><svg class="icon"><use href="#icon-map-pin"/></svg></div>
+            <span>Escuelas a lo largo de Chile</span>
+          </span>
+          <span class="contact-link is-soon" title="Próximamente: ficha de la federación">
+            <div class="contact-link-icon"><svg class="icon"><use href="#icon-landmark"/></svg></div>
+            <span>Chinese Karate Federation</span>
+          </span>
+        </div>
+      </div>
+      <div class="contact-form">
+        <form id="contactForm" onsubmit="handleSubmit(event)" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Nombre Completo *</label>
+              <input type="text" id="f-nombre" placeholder="Tu nombre" required>
+              <div class="form-error">Por favor ingresa tu nombre.</div>
+            </div>
+            <div class="form-group">
+              <label>Email *</label>
+              <input type="email" id="f-email" placeholder="tu@email.com" required>
+              <div class="form-error">Por favor ingresa un email válido.</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Teléfono</label>
+              <input type="tel" id="f-tel" placeholder="+56 9 XXXX XXXX">
+              <div class="form-error"></div>
+            </div>
+            <div class="form-group">
+              <label>Ciudad *</label>
+              <input type="text" id="f-ciudad" placeholder="Tu ciudad" required>
+              <div class="form-error">Por favor ingresa tu ciudad.</div>
+            </div>
+          </div>
+          <div class="form-group form-row">
+            <div class="form-group" style="margin:0;grid-column:1/-1">
+              <label>Escuela de Interés</label>
+              <select id="f-escuela">
+                <option value="">Selecciona una escuela</option>
+                <option value="La más cercana a mí">La más cercana a mí</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Mensaje</label>
+            <textarea id="f-mensaje" placeholder="¿Tienes alguna pregunta o comentario?"></textarea>
+          </div>
+          <button type="submit" class="btn-submit"><svg class="icon"><use href="#icon-whatsapp"/></svg> Enviar y Contactar por WhatsApp</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="nav-logo" style="margin-bottom:1rem">
+        <div class="nav-logo-emblem">KC</div>
+        <div class="nav-logo-text">Kenpo<span>Chile</span>.cl</div>
+      </div>
+      <p>International Vidal Kenpo Studio. Enseñanza auténtica del Kenpo Karate en Chile, bajo la línea de la Chinese Karate Federation. Disciplina, respeto y legado marcial.</p>
+      <div class="footer-social">
+        <span class="social-btn is-soon" title="Facebook — próximamente" aria-label="Facebook, próximamente disponible"><svg class="icon"><use href="#icon-facebook"/></svg></span>
+        <span class="social-btn is-soon" title="Instagram — próximamente" aria-label="Instagram, próximamente disponible"><svg class="icon"><use href="#icon-instagram"/></svg></span>
+        <span class="social-btn is-soon" title="YouTube — próximamente" aria-label="YouTube, próximamente disponible"><svg class="icon"><use href="#icon-youtube"/></svg></span>
+        <a class="social-btn" data-whatsapp-link href="#" target="_blank" rel="noopener" aria-label="WhatsApp"><svg class="icon"><use href="#icon-whatsapp"/></svg></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Navegación</h4>
+      <ul class="footer-links">
+        <li><a href="#inicio">Inicio</a></li>
+        <li><a href="#maestros">Maestros</a></li>
+        <li><a href="#escuelas">Escuelas</a></li>
+        <li><a href="#seminarios">Seminarios</a></li>
+        <li><a href="#insignias">Insignias</a></li>
+        <li><a href="#instructores">Instructores</a></li>
+        <li><a href="#blogs">Blog</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Programa</h4>
+      <ul class="footer-links">
+        <li><span class="is-soon" title="Próximamente">Programa Técnico</span></li>
+        <li><span class="is-soon" title="Próximamente">Grados y Cinturones</span></li>
+        <li><span class="is-soon" title="Próximamente">Competencias</span></li>
+        <li><a href="#salud">Salud y Bienestar</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contacto</h4>
+      <ul class="footer-links">
+        <li><a href="mailto:contacto@kenpochile.cl">contacto@kenpochile.cl</a></li>
+        <li><a data-whatsapp-link href="#" target="_blank" rel="noopener">WhatsApp</a></li>
+        <li><a href="#escuelas">Escuelas en Chile</a></li>
+        <li><span class="is-soon" title="Próximamente">Chinese Karate Federation</span></li>
+        <li><a href="#contacto">Formulario de Contacto</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-empresas">
+    <h4>Empresas Amigas</h4>
+    <div class="empresas-logos">
+      <a class="empresa-logo" href="https://gestixpro.cl" target="_blank">GestixPro</a>
+      <span class="empresa-logo is-soon" title="Próximamente">Partner Marcial 2</span>
+      <span class="empresa-logo is-soon" title="Próximamente">Proveedor Oficial</span>
+      <span class="empresa-logo is-soon" title="Próximamente">Sponsor Kenpo</span>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© <span id="footerYear"></span> KenpoChile.cl — Todos los derechos reservados.</div>
+    <div class="footer-dev">Hecho con dedicación en Chile · Desarrollado por <a href="https://gestixpro.cl" target="_blank">GestixPro</a></div>
+  </div>
+</footer>
+
+<!-- Floating Buttons -->
+<a class="float-whatsapp" data-whatsapp-link href="#" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
+  <svg class="icon" style="width:28px;height:28px;stroke:none"><use href="#icon-whatsapp"/></svg>
+</a>
+
+<a class="float-dev" href="https://gestixpro.cl" target="_blank">Desarrollado por <span>GestixPro</span></a>
+
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Volver arriba">
+  <svg viewBox="0 0 24 24"><polyline points="18,15 12,9 6,15"/></svg>
+</button>
+
+<script>
+// ── CONFIG (fuente única de verdad para datos de contacto) ──
+// TODO: reemplazar "whatsapp" por el número real del estudio (formato 56XXXXXXXXX, sin "+").
+const CONFIG = {
+  whatsapp: '56900000000',
+  whatsappDisplay: '+56 9 0000 0000',
+  defaultMessage: 'Hola, quiero información sobre las escuelas de Kenpo Karate en Chile'
+};
+function buildWhatsAppLink(message) {
+  return `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(message || CONFIG.defaultMessage)}`;
+}
+
+// ── Registro de buscadores por sección, usado por el atajo de teclado "B" (ver más abajo) ──
+const SECTION_SEARCH_OPENERS = {};
+// Aplica el link/numero centralizado a todos los puntos de contacto del sitio
+document.querySelectorAll('[data-whatsapp-link]').forEach(el => {
+  el.href = buildWhatsAppLink();
+});
+const waDisplayEl = document.getElementById('waDisplay');
+if (waDisplayEl) waDisplayEl.textContent = CONFIG.whatsappDisplay;
+
+// ── MOTION / DEVICE PREFERENCES ──
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ── NAVBAR ──
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 60);
+  document.getElementById('scrollTop').classList.toggle('visible', window.scrollY > 400);
+});
+
+// ── HAMBURGER ──
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+document.getElementById('mobileClose').addEventListener('click', closeMobile);
+hamburger.addEventListener('click', () => {
+  const isOpen = mobileMenu.classList.toggle('open');
+  hamburger.classList.toggle('active', isOpen);
+  hamburger.setAttribute('aria-expanded', String(isOpen));
+  hamburger.setAttribute('aria-label', isOpen ? 'Cerrar menú' : 'Abrir menú');
+});
+function closeMobile() {
+  hamburger.classList.remove('active');
+  mobileMenu.classList.remove('open');
+  hamburger.setAttribute('aria-expanded', 'false');
+  hamburger.setAttribute('aria-label', 'Abrir menú');
+}
+
+// ── PARTICLES (se omiten/reducen con reduced-motion) ──
+const container = document.getElementById('heroParticles');
+const particleCount = prefersReducedMotion ? 0 : 120;
+for (let i = 0; i < particleCount; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  const size = Math.random() * 6 + 2;
+  const colors = ['rgba(228,87,46,0.6)','rgba(245,166,35,0.5)','rgba(249,115,22,0.4)','rgba(249,250,251,0.2)'];
+  p.style.cssText = `
+    width:${size}px;height:${size}px;
+    background:${colors[Math.floor(Math.random()*colors.length)]};
+    left:${Math.random()*100}%;
+    animation-duration:${Math.random()*15+8}s;
+    animation-delay:${Math.random()*10}s;
+  `;
+  container.appendChild(p);
+}
+
+// ── SCROLL REVEAL ──
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+reveals.forEach(r => observer.observe(r));
+
+// ── ACCESIBILIDAD: tarjetas clicables también operables por teclado ──
+function makeActivatable(el) {
+  if (el.hasAttribute('tabindex')) return;
+  el.setAttribute('role', 'button');
+  el.setAttribute('tabindex', '0');
+}
+document.querySelectorAll('.maestro-card, .video-card, .insignia-item').forEach(makeActivatable);
+document.addEventListener('keydown', e => {
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[role="button"]')) {
+    e.preventDefault();
+    e.target.click();
+  }
+  if (e.key === 'Escape') {
+    closeLightbox();
+    closeMobile();
+  }
+  if (document.getElementById('lightbox').classList.contains('lightbox-gallery')) {
+    if (e.key === 'ArrowLeft') navInsignia(-1);
+    if (e.key === 'ArrowRight') navInsignia(1);
+  }
+});
+
+// ── INSIGNIAS (imágenes reales de la colección oficial) ──
+const totalInsignias = 29;
+const grid = document.getElementById('insigniasGrid');
+const insigniaData = [];
+for (let i = 1; i <= totalInsignias; i++) {
+  const num = String(i).padStart(2, '0');
+  const src = `img/insignias/escuelas/${num}.png`;
+  const alt = `Insignia Kenpo Nº ${num}`;
+  const index = insigniaData.length;
+  insigniaData.push({ src, alt });
+  const item = document.createElement('div');
+  item.className = 'insignia-item';
+  item.innerHTML = `<img src="${src}" alt="${alt}" loading="lazy" decoding="async">`;
+  makeActivatable(item);
+  item.addEventListener('click', () => {
+    lightboxTrigger = item;
+    openInsignia(index);
+  });
+  grid.appendChild(item);
+}
+
+// ── LIGHTBOX ──
+let lightboxTrigger = null;
+let currentInsigniaIndex = -1;
+function openLightbox() {
+  const lb = document.getElementById('lightbox');
+  lb.classList.add('open');
+  lb.querySelector('.lightbox-close').focus();
+}
+function closeLightbox() {
+  const lb = document.getElementById('lightbox');
+  if (!lb.classList.contains('open')) return;
+  lb.classList.remove('open', 'lightbox-gallery');
+  currentInsigniaIndex = -1;
+  if (lightboxTrigger) { lightboxTrigger.focus(); lightboxTrigger = null; }
+}
+document.getElementById('lightbox').addEventListener('click', function(e) {
+  if(e.target === this) closeLightbox();
+});
+function openBio(name, grade, desc) {
+  lightboxTrigger = document.activeElement;
+  document.getElementById('lightbox').classList.remove('lightbox-gallery');
+  document.getElementById('lbImage').style.display = 'none';
+  document.getElementById('lbIcon').style.display = 'block';
+  document.getElementById('lbIcon').innerHTML = '<svg class="icon" style="width:5rem;height:5rem"><use href="#icon-user"/></svg>';
+  document.getElementById('lbTitle').textContent = name;
+  document.getElementById('lbGrade').textContent = grade;
+  document.getElementById('lbDesc').textContent = desc;
+  document.getElementById('lbCounter').textContent = '';
+  openLightbox();
+}
+
+// ── INSIGNIAS: navegación dentro del lightbox sin cerrarlo ──
+function updateInsigniaContent(index) {
+  const { src, alt } = insigniaData[index];
+  document.getElementById('lbIcon').style.display = 'none';
+  const img = document.getElementById('lbImage');
+  img.src = src;
+  img.alt = alt;
+  img.style.display = 'block';
+  document.getElementById('lbTitle').textContent = alt;
+  document.getElementById('lbGrade').textContent = 'International Vidal Kenpo Studio';
+  document.getElementById('lbDesc').textContent = 'Insignia oficial de la colección KenpoChile.cl perteneciente al International Vidal Kenpo Studio y la Chinese Karate Federation.';
+  document.getElementById('lbCounter').textContent = `${index + 1} / ${insigniaData.length}`;
+  currentInsigniaIndex = index;
+}
+function openInsignia(index) {
+  document.getElementById('lightbox').classList.add('lightbox-gallery');
+  updateInsigniaContent(index);
+  openLightbox();
+}
+function navInsignia(delta) {
+  if (currentInsigniaIndex === -1) return;
+  const total = insigniaData.length;
+  updateInsigniaContent((currentInsigniaIndex + delta + total) % total);
+}
+
+// ── INTERÉS EN SEMINARIOS / BLOGS → WhatsApp (en vez de enlaces muertos) ──
+function interesEvento(nombre) {
+  window.open(buildWhatsAppLink(`Hola, quiero más información sobre: ${nombre}`), '_blank');
+}
+
+// ── BLOG TABS ──
+function switchTab(btn, id) {
+  document.querySelectorAll('.blog-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.blog-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(id).classList.add('active');
+}
+function switchTabById(id) {
+  const btn = document.querySelector(`.blog-tab[data-tab="${id}"]`);
+  if (btn) switchTab(btn, id);
+}
+
+// ── FAQ ──
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  if(!isOpen) item.classList.add('open');
+}
+
+// Baraja un array sin mutar el original (Fisher-Yates). Se usa para mostrar las tarjetas
+// en orden aleatorio (distinto en cada carga de la página) cuando la etiqueta principal
+// "Todas/Todos" está activa en Escuelas e Instructores.
+function shuffleArray(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ── ESCUELAS (datos reales de kenpochile.cl/escuelas) ──
+const ESCUELAS = [
+  { nombre: 'International Chilean Kenpo Orellana Studio', director: 'Felipe Orellana', region: 'Región de Coquimbo', comuna: null, lugar: 'Vicuña, Provincia de Elqui' },
+  { nombre: 'Escuela Kenpo Karate Illapel', director: 'Alejandro Luna', region: 'Región de Coquimbo', comuna: null, lugar: 'Illapel, Provincia de Choapa' },
+  { nombre: 'International Véliz Kenpo Studio', director: 'Edgardo Véliz', region: 'Región de Valparaíso', comuna: null, lugar: 'Concón' },
+  { nombre: 'International Zumaeta Kenpo Studio', director: 'Rodrigo Zumaeta', region: 'Región Metropolitana', comuna: 'Las Condes', lugar: 'Las Condes' },
+  { nombre: 'International Rising Dragons Kenpo Studio', director: 'María Elena Araya', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú' },
+  { nombre: 'International Fighter Dragons Kenpo Studio', director: 'Karina Gatica', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú' },
+  { nombre: 'International Caliga Kenpo Studio', director: 'Aaron Torres', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú' },
+  { nombre: 'International Cornejo Kenpo Studio', director: 'Daniel Cornejo', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú' },
+  { nombre: 'International Manríquez Kenpo Studio', director: 'Miguel Ángel Manríquez', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú' },
+  { nombre: 'International Pérez Kenpo Studio', director: 'Francisco Pérez y Marcelo Pérez', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú' },
+  { nombre: 'International Lorca Kenpo Studio', director: 'Roberto Lorca Pacheco', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú' },
+  { nombre: 'Taller de Kenpo Karate — Municipalidad de Maipú', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú · Depto. de Deportes' },
+  { nombre: 'Instituto Nacional de Deportes', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú' },
+  { nombre: 'Gimnasio Alemán', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: null, lugar: 'Región Metropolitana' },
+  { nombre: 'DUOC UC', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: null, lugar: 'Sedes Alameda, Maipú y Plaza Oeste' },
+  { nombre: 'International UZ Kenpo Studio', director: 'Felipe Urra', region: 'Región Metropolitana', comuna: 'San Ramón', lugar: 'San Ramón' },
+  { nombre: 'International Lagos Kenpo Karate Studio', director: 'Carlos Lagos', region: 'Región Metropolitana', comuna: 'Huechuraba', lugar: 'Huechuraba' },
+  { nombre: 'Internacional Lions Warriors Kenpo Studio', director: 'Christian Vidal', region: 'Región de Ñuble', comuna: null, lugar: 'San Nicolás, Provincia de Punilla' },
+  { nombre: 'Internacional GTF Kenpo Studio', director: 'Gisela Torres', region: 'Región del Biobío', comuna: null, lugar: 'San Pedro de la Paz, Provincia de Concepción' },
+  { nombre: 'Internacional Kenpo Karate Calbuco', director: 'Ramón Morales', region: 'Región de Los Lagos', comuna: null, lugar: 'Calbuco, Provincia de Llanquihue' },
+  { nombre: 'International Pinto Kenpo Studio', director: 'Matías Raúl Pinto', region: 'Argentina', comuna: 'Córdoba', lugar: 'Córdoba, Provincia de Córdoba' },
+];
+// Orden aleatorio fijo para esta carga de página, usado solo cuando la etiqueta "Todas" está activa.
+const ESCUELAS_SHUFFLED = shuffleArray(ESCUELAS);
+const ESCUELAS_PAISES = ['Todas', 'Chile', 'Argentina'];
+const ESCUELAS_REGIONES_CHILE = ['Región de Coquimbo', 'Región de Valparaíso', 'Región Metropolitana', 'Región de Ñuble', 'Región del Biobío', 'Región de Los Lagos'];
+const ESCUELAS_PAGE_SIZE = 8;
+let escuelaPais = 'Todas';
+let escuelaRegion = 'Todas';
+let escuelaComuna = 'Todas';
+let escuelaPage = 1;
+let escuelaQuery = '';
+
+function escuelaLabel(e) { return `${e.nombre} — ${e.lugar}`; }
+
+// Con búsqueda activa, se ignoran los filtros de país/región/comuna (misma lógica que instructores).
+function getFilteredEscuelas() {
+  if (escuelaQuery) return ESCUELAS.filter(e => normalizarTexto(e.nombre).includes(escuelaQuery));
+  const source = escuelaPais === 'Todas' ? ESCUELAS_SHUFFLED : ESCUELAS;
+  return source.filter(e => {
+    const esArgentina = e.region === 'Argentina';
+    if (escuelaPais === 'Chile' && esArgentina) return false;
+    if (escuelaPais === 'Argentina' && !esArgentina) return false;
+    if (!esArgentina && escuelaRegion !== 'Todas' && e.region !== escuelaRegion) return false;
+    if ((escuelaRegion === 'Región Metropolitana' || esArgentina) && escuelaComuna !== 'Todas' && e.comuna !== escuelaComuna) return false;
+    return true;
+  });
+}
+
+// Los tabs de país/región/comuna son filtros manuales: si había una búsqueda por nombre
+// activa, se cancela para que el filtro elegido por el usuario mande sobre la grilla.
+function clearEscuelaQuery() {
+  escuelaQuery = '';
+  const input = document.getElementById('escuelaSearch');
+  if (input) input.value = '';
+}
+
+// Línea 1: país
+function renderPaisTabs() {
+  const wrap = document.getElementById('paisTabs');
+  wrap.style.gridTemplateColumns = `repeat(${ESCUELAS_PAISES.length}, 1fr)`;
+  wrap.innerHTML = ESCUELAS_PAISES.map(p => {
+    const count = p === 'Todas' ? ESCUELAS.length
+      : p === 'Chile' ? ESCUELAS.filter(e => e.region !== 'Argentina').length
+      : ESCUELAS.filter(e => e.region === 'Argentina').length;
+    return `<button type="button" class="pais-tab${p === escuelaPais ? ' active' : ''}" data-pais="${p}">${p}<span class="count">(${count})</span></button>`;
+  }).join('');
+  wrap.querySelectorAll('.pais-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      clearEscuelaQuery();
+      escuelaPais = btn.dataset.pais;
+      escuelaRegion = 'Todas';
+      escuelaComuna = 'Todas';
+      escuelaPage = 1;
+      renderEscuelasSection();
+    });
+  });
+}
+
+// Línea 2: regiones de Chile, de norte a sur
+function regionShortLabel(r) {
+  if (r === 'Todas' || r === 'Región Metropolitana') return r;
+  return r.replace(/^Región (de |del )?/, '');
+}
+
+function renderRegionRow() {
+  const wrap = document.getElementById('regionRow');
+  if (escuelaPais !== 'Chile') {
+    wrap.innerHTML = '';
+    wrap.style.display = 'none';
+    return;
+  }
+  wrap.style.display = 'grid';
+  const items = ['Todas', ...ESCUELAS_REGIONES_CHILE];
+  wrap.style.gridTemplateColumns = `repeat(${items.length}, 1fr)`;
+  wrap.innerHTML = items.map(r => {
+    const count = r === 'Todas'
+      ? ESCUELAS.filter(e => e.region !== 'Argentina').length
+      : ESCUELAS.filter(e => e.region === r).length;
+    return `<button type="button" class="region-tab${r === escuelaRegion ? ' active' : ''}" data-region="${r}">${regionShortLabel(r)}<span class="count">(${count})</span></button>`;
+  }).join('');
+  wrap.querySelectorAll('.region-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      clearEscuelaQuery();
+      escuelaRegion = btn.dataset.region;
+      escuelaComuna = 'Todas';
+      escuelaPage = 1;
+      renderRegionRow();
+      renderComunaChips();
+      renderEscuelasGridAndPager();
+    });
+  });
+}
+
+// Línea 3: comunas (cuando la región activa es Metropolitana, o cuando el país activo es Argentina)
+function renderComunaChips() {
+  const wrap = document.getElementById('comunaChips');
+  const isArgentina = escuelaPais === 'Argentina';
+  if (!isArgentina && escuelaRegion !== 'Región Metropolitana') {
+    wrap.innerHTML = '';
+    wrap.style.display = 'none';
+    return;
+  }
+  wrap.style.display = 'grid';
+  const scope = isArgentina ? e => e.region === 'Argentina' : e => e.region === 'Región Metropolitana';
+  const comunas = [...new Set(ESCUELAS.filter(e => scope(e) && e.comuna).map(e => e.comuna))].sort();
+  const items = ['Todas', ...comunas];
+  wrap.style.gridTemplateColumns = `repeat(${items.length}, 1fr)`;
+  wrap.innerHTML = items.map(c => {
+    const count = c === 'Todas'
+      ? ESCUELAS.filter(scope).length
+      : ESCUELAS.filter(e => scope(e) && e.comuna === c).length;
+    return `<button type="button" class="comuna-chip${c === escuelaComuna ? ' active' : ''}" data-comuna="${c}">${c} <span class="count">(${count})</span></button>`;
+  }).join('');
+  wrap.querySelectorAll('.comuna-chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      clearEscuelaQuery();
+      escuelaComuna = btn.dataset.comuna;
+      escuelaPage = 1;
+      renderComunaChips();
+      renderEscuelasGridAndPager();
+    });
+  });
+}
+
+function bindEscuelaCta(btn) {
+  btn.addEventListener('click', () => {
+    const select = document.getElementById('f-escuela');
+    const valor = btn.getAttribute('data-escuela');
+    if (select && [...select.options].some(o => o.value === valor)) {
+      select.value = valor;
+    }
+  });
+}
+
+function renderEscuelasGridAndPager() {
+  const all = getFilteredEscuelas();
+  const totalPages = Math.max(1, Math.ceil(all.length / ESCUELAS_PAGE_SIZE));
+  escuelaPage = Math.min(escuelaPage, totalPages);
+  const start = (escuelaPage - 1) * ESCUELAS_PAGE_SIZE;
+  const pageItems = all.slice(start, start + ESCUELAS_PAGE_SIZE);
+
+  const grid = document.getElementById('escuelasGrid');
+  const empty = document.getElementById('escuelasEmpty');
+  if (pageItems.length === 0) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+  } else {
+    empty.style.display = 'none';
+    grid.innerHTML = pageItems.map(e => `
+      <div class="escuela-card">
+        <div class="escuela-icon"><svg class="icon" style="width:1.4rem;height:1.4rem"><use href="#icon-landmark"/></svg></div>
+        <div class="escuela-nombre">${e.nombre}</div>
+        <div class="escuela-director">Dir. ${e.director}</div>
+        <div class="escuela-ciudad"><svg class="icon"><use href="#icon-map-pin"/></svg> ${e.lugar}, ${e.region}</div>
+        <a href="#contacto" class="btn-escuela" data-escuela="${escuelaLabel(e)}">Inscribirme</a>
+      </div>`).join('');
+    grid.querySelectorAll('.btn-escuela[data-escuela]').forEach(bindEscuelaCta);
+  }
+  renderEscuelasPager(totalPages);
+}
+
+function renderEscuelasPager(totalPages) {
+  const pager = document.getElementById('escuelasPager');
+  if (totalPages <= 1) { pager.innerHTML = ''; return; }
+  let html = `<button type="button" class="pager-btn" data-page="${escuelaPage - 1}" ${escuelaPage === 1 ? 'disabled' : ''} aria-label="Página anterior">‹</button>`;
+  for (let p = 1; p <= totalPages; p++) {
+    html += `<button type="button" class="pager-btn${p === escuelaPage ? ' active' : ''}" data-page="${p}">${p}</button>`;
+  }
+  html += `<button type="button" class="pager-btn" data-page="${escuelaPage + 1}" ${escuelaPage === totalPages ? 'disabled' : ''} aria-label="Página siguiente">›</button>`;
+  pager.innerHTML = html;
+  pager.querySelectorAll('.pager-btn[data-page]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const p = Number(btn.dataset.page);
+      if (p < 1 || p > totalPages || p === escuelaPage) return;
+      escuelaPage = p;
+      renderEscuelasGridAndPager();
+      document.getElementById('escuelas').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+}
+
+function renderEscuelasSection() {
+  renderPaisTabs();
+  renderRegionRow();
+  renderComunaChips();
+  renderEscuelasGridAndPager();
+}
+renderEscuelasSection();
+
+// ── SEMINARIOS (historial real, datos de kenpochile.cl/seminarios/, del más reciente al más antiguo) ──
+const SEMINARIOS = [
+  { titulo: '12vo Seminario Internacional IVKS/CKF', maestros: 'Sean Kelley, Jocely Gonzalez y equipo internacional de instructores', fecha: 'Nov 2023', lugar: 'Santiago y Vicuña, Chile', desc: 'El seminario más extenso hasta la fecha, con cinco días de actividades en Santiago y la Región de Coquimbo.', icon: 'icon-shield' },
+  { titulo: '11vo Seminario Internacional IVKS/CKF', maestros: 'Sean P. Kelley, Marty Zaninovich, Jocely Gonzalez', fecha: 'Oct 2019', lugar: 'Maipú, Región Metropolitana, Chile', desc: 'Contó con el apoyo de la Municipalidad de Maipú e incluyó una charla del programa «Stomp the Bullying».', icon: 'icon-trophy' },
+  { titulo: '10mo Seminario Internacional IVKS/CKF', maestros: 'Sean P. Kelley, Mohamed Tabatabai, Brian Duffy, Rich Hale, Matías Raúl Pinto, Jorge Alfredo Zalazar, Juan Almeyda', fecha: 'Oct 2017', lugar: 'Maipú y Viña del Mar, Chile', desc: 'Bajo el lema «La unión hace la fuerza», reunió a instructores de Estados Unidos, Argentina y Brasil.', icon: 'icon-shield' },
+  { titulo: '9no Seminario Internacional IVKS/CKF', maestros: 'Sean Kelley, Rich Hale, Jorge Alfredo Zalazar', fecha: '2016', lugar: 'Chile', desc: 'Novena edición organizada por el maestro Roberto Vidal C., con instructores de Kenpo y Muay Thai.', icon: 'icon-trophy' },
+  { titulo: '8vo Seminario Internacional IVKS/CKF', maestros: 'Sean Kelley, Bill «Superfoot» Wallace, Jeff Speakman', fecha: '2015', lugar: 'Chile', desc: 'Edición con panel de lujo: Bill «Superfoot» Wallace y el actor y kenpoísta Jeff Speakman.', icon: 'icon-shield' },
+  { titulo: '7mo Seminario Internacional IVKS/CKF', maestros: 'Sean Kelley, Bill «Superfoot» Wallace', fecha: '2014', lugar: 'Chile', desc: 'Seminario con la visita del legendario campeón mundial de kickboxing Bill «Superfoot» Wallace.', icon: 'icon-trophy' },
+  { titulo: '6to Seminario Internacional IVKS/CKF', maestros: 'Sean Kelley, Rainer Schulte, Mike Friedman, Raffy Pambuan', fecha: 'Oct 2013', lugar: 'Santiago, Viña del Mar y Las Cabras, Chile', desc: 'Organizado por el maestro Roberto Vidal C., recorrió tres regiones de Chile en un mismo fin de semana.', icon: 'icon-shield' },
+  { titulo: '5to Seminario Internacional IVKS/CKF', maestros: 'Sean P. Kelley', fecha: '2012', lugar: 'Chile', desc: 'Quinta edición del seminario internacional IVKS/CKF, consolidando la relación con la Chinese Karate Federation.', icon: 'icon-trophy' },
+  { titulo: '4to Seminario Internacional IVKS/CKF', maestros: 'Sean P. Kelley, GM Michael Robert Pick', fecha: '2010', lugar: 'Chile', desc: 'Seminario con la presencia del Gran Maestro Michael Robert Pick, Segundo Gran Maestro del American Kenpo.', icon: 'icon-shield' },
+  { titulo: '3er Seminario Internacional IVKS/CKF', maestros: 'Sean Kelley, Bill Larson, Kevin Kuliga', fecha: '2009', lugar: 'Chile', desc: 'Tercera edición del seminario, ampliando el panel de instructores invitados desde Estados Unidos.', icon: 'icon-trophy' },
+  { titulo: '2do Seminario Internacional IVKS/CKF', maestros: 'Sean P. Kelley, Ed. Parker Jr.', fecha: 'Jul 2008', lugar: 'Universidad de Las Américas, sede Manuel Montt · Santiago, Chile', desc: 'Segunda edición del seminario internacional, con la participación especial de Ed. Parker Jr., hijo del fundador del American Kenpo Karate.', icon: 'icon-shield' },
+  { titulo: '1er Seminario Internacional IVKS/CKF', maestros: 'Sean P. Kelley', fecha: '2006', lugar: 'Chile', desc: 'El seminario que dio inicio a la tradición internacional IVKS/CKF en Chile, con la primera visita de Sean P. Kelley.', icon: 'icon-trophy' },
+];
+const SEMINARIOS_PAGE_SIZE = 3;
+let seminarioPage = 1;
+let seminarioQuery = '';
+
+// Con búsqueda activa se busca tanto en el título como en los maestros invitados.
+function getFilteredSeminarios() {
+  if (!seminarioQuery) return SEMINARIOS;
+  return SEMINARIOS.filter(s => normalizarTexto(s.titulo).includes(seminarioQuery) || normalizarTexto(s.maestros).includes(seminarioQuery));
+}
+
+function seminarioCardHTML(s) {
+  return `
+    <div class="seminario-card">
+      <div class="seminario-img">
+        <div class="seminario-img-icon"><svg class="icon" style="width:2.4rem;height:2.4rem"><use href="#${s.icon}"/></svg></div>
+        <div class="seminario-fecha">${s.fecha}</div>
+      </div>
+      <div class="seminario-body">
+        <div class="seminario-titulo">${s.titulo}</div>
+        <div class="seminario-maestros"><svg class="icon"><use href="#icon-award"/></svg> ${s.maestros}</div>
+        <div class="seminario-lugar"><svg class="icon"><use href="#icon-map-pin"/></svg> ${s.lugar}</div>
+        <p class="seminario-desc">${s.desc}</p>
+        <button class="btn-ver" onclick="interesEvento('${s.titulo}')">Ver Seminario →</button>
+      </div>
+    </div>`;
+}
+
+function renderSeminariosGridAndPager() {
+  const all = getFilteredSeminarios();
+  const totalPages = Math.max(1, Math.ceil(all.length / SEMINARIOS_PAGE_SIZE));
+  seminarioPage = Math.min(seminarioPage, totalPages);
+  const start = (seminarioPage - 1) * SEMINARIOS_PAGE_SIZE;
+  const pageItems = all.slice(start, start + SEMINARIOS_PAGE_SIZE);
+
+  const grid = document.getElementById('seminariosGrid');
+  const empty = document.getElementById('seminariosEmpty');
+  if (pageItems.length === 0) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+  } else {
+    empty.style.display = 'none';
+    grid.innerHTML = pageItems.map(seminarioCardHTML).join('');
+  }
+  renderSeminariosPager(totalPages);
+}
+
+function renderSeminariosPager(totalPages) {
+  const pager = document.getElementById('seminariosPager');
+  if (totalPages <= 1) { pager.innerHTML = ''; return; }
+  let html = `<button type="button" class="pager-btn" data-page="${seminarioPage - 1}" ${seminarioPage === 1 ? 'disabled' : ''} aria-label="Página anterior">‹</button>`;
+  for (let p = 1; p <= totalPages; p++) {
+    html += `<button type="button" class="pager-btn${p === seminarioPage ? ' active' : ''}" data-page="${p}">${p}</button>`;
+  }
+  html += `<button type="button" class="pager-btn" data-page="${seminarioPage + 1}" ${seminarioPage === totalPages ? 'disabled' : ''} aria-label="Página siguiente">›</button>`;
+  pager.innerHTML = html;
+  pager.querySelectorAll('.pager-btn[data-page]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const p = Number(btn.dataset.page);
+      if (p < 1 || p > totalPages || p === seminarioPage) return;
+      seminarioPage = p;
+      renderSeminariosGridAndPager();
+      document.getElementById('seminarios').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+}
+renderSeminariosGridAndPager();
+
+// ── Sincroniza el select "Escuela de Interés" del formulario con el listado real ──
+(function populateEscuelaSelect() {
+  const select = document.getElementById('f-escuela');
+  const cercaOpt = select.querySelector('option[value="La más cercana a mí"]');
+  ESCUELAS.forEach(e => {
+    const opt = document.createElement('option');
+    opt.value = escuelaLabel(e);
+    opt.textContent = escuelaLabel(e);
+    select.insertBefore(opt, cercaOpt);
+  });
+})();
+
+// ── INSTRUCTORES (Members IVKS/CKF 2026, datos reales de kenpochile.cl/members) ──
+const BELT_BLACK = { bg: '#141414', text: '#F5A623' };
+const BELT_BROWN = { bg: '#6B3F1D', text: '#F5E6D3' };
+const INSTRUCTOR_GRUPOS = [
+  { grado: '6° Degree', titulo: '6th Degree Black Belt «Professor of the Arts»', belt: { ...BELT_BLACK, label: '6' },
+    miembros: ['María Elena Araya'] },
+  { grado: '4° Degree', titulo: '4th Degree Black Belt «Senior Instructor»', belt: { ...BELT_BLACK, label: '4' },
+    miembros: ['Edgardo Véliz', 'Ramón Morales'] },
+  { grado: '3° Degree', titulo: '3rd Degree Black Belt «Head Instructor»', belt: { ...BELT_BLACK, label: '3' },
+    miembros: ['Gladys Vergara', 'Felipe Orellana', 'Sergio Rodríguez', 'Alfredo Ruiz', 'Fabián Terán'] },
+  { grado: '2° Degree', titulo: '2nd Degree Black Belt «Associate Instructor»', belt: { ...BELT_BLACK, label: '2' },
+    miembros: ['Leonardo Muñoz', 'Aaron Torres', 'Oscar Olivares'] },
+  { grado: '1° Degree', titulo: '1st Degree Black Belt «Junior Instructor»', belt: { ...BELT_BLACK, label: '1' },
+    miembros: ['Miguel Ángel Manríquez', 'Rodrigo Zumaeta', 'Francisco Pérez', 'Marcelo Pérez', 'Moisés Catalán', 'Sebastián Opazo', 'Jin Reyes', 'Felipe Urra', 'Juan Carlos Castro', 'Carlos Lagos'] },
+  { grado: 'Negro (Prob.)', titulo: 'Black Belt «Probationary Black Belt»', belt: { ...BELT_BLACK, label: '●' },
+    miembros: ['Christian Vidal', 'Daniel Cornejo', 'Karina Gatica', 'Roberto Lorca', 'Gisela Torres', 'Andrew Villarroel Torres', 'Diego Estay'] },
+  { grado: 'Café 1ro', titulo: '1st Degree Brown Belt', belt: { ...BELT_BROWN, label: '1' },
+    miembros: ['Jorge Huichalaf', 'Pedro Molina'] },
+  { grado: 'Café 2do', titulo: '2nd Degree Brown Belt', belt: { ...BELT_BROWN, label: '2' },
+    miembros: ['Rafael Henríquez', 'Juan González', 'Alonso Olivares'] },
+  { grado: 'Café 3ro', titulo: '3rd Brown Belt', belt: { ...BELT_BROWN, label: '3' },
+    miembros: ['Nelson Carrión López', 'Paulina Luengo', 'José Luis Moncada'] },
+  { grado: 'Verde', titulo: 'Green Belt', belt: { bg: '#2E7D32', text: '#F0FFF2', label: '●' },
+    miembros: ['Maurizio Estay', 'Solange Rodríguez'] },
+  { grado: 'Púrpura', titulo: 'Purple Belt', belt: { bg: '#6A1B9A', text: '#F3E5FF', label: '●' },
+    miembros: ['Pablo Gajardo'] },
+  { grado: 'Nuevos', titulo: 'Nuevos Members', belt: { bg: '#EDEDED', text: '#141414', label: 'N' },
+    miembros: ['Marta Burgos'] },
+  { grado: 'Honorarios', titulo: 'Membresías honorarias (Q.E.P.D)', belt: null,
+    miembros: ['Juan Carlos Lastra Dinamarca', 'Daniel Alejandro Flores Salinas', 'Rodrigo Pizarro'] },
+];
+const INSTRUCTORES = INSTRUCTOR_GRUPOS.flatMap(g => g.miembros.map(nombre => ({ nombre, grado: g.grado, belt: g.belt })));
+// Orden aleatorio fijo para esta carga de página, usado solo cuando la etiqueta "Todos" está activa.
+const INSTRUCTORES_SHUFFLED = shuffleArray(INSTRUCTORES);
+const INSTRUCTORES_PAGE_SIZE = 6;
+let instructorGrado = 'Todos';
+let instructorPage = 1;
+let instructorSuggestionMatches = [];
+let instructorSuggestionIndex = -1;
+
+function normalizarTexto(s) {
+  return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+}
+function instructorSlug(nombre) {
+  return normalizarTexto(nombre).replace(/[^a-z0-9]+/g, '-').replace(/(^-+|-+$)/g, '');
+}
+function instructorIniciales(nombre) {
+  return nombre.split(' ').filter(Boolean).slice(0, 2).map(p => p[0]).join('').toUpperCase();
+}
+function beltIconHTML(belt) {
+  return belt
+    ? `<span class="belt-icon" style="background:${belt.bg};color:${belt.text}">${belt.label}</span>`
+    : `<svg class="icon" style="width:1.1rem;height:1.1rem;color:var(--accent)"><use href="#icon-star"/></svg>`;
+}
+function instructorCardHTML(inst) {
+  const slug = instructorSlug(inst.nombre);
+  return `
+    <div class="instructor-card">
+      <div class="instructor-avatar">
+        <img src="img/instructores/${slug}.jpg" alt="${inst.nombre}" loading="lazy" decoding="async" onerror="this.remove()">
+        <span class="instructor-initials">${instructorIniciales(inst.nombre)}</span>
+        <span class="instructor-belt">${beltIconHTML(inst.belt)}</span>
+      </div>
+      <div class="instructor-name">${inst.nombre}</div>
+    </div>`;
+}
+
+function getInstructorQuery() {
+  return normalizarTexto(document.getElementById('instructorSearch').value.trim());
+}
+
+// Con búsqueda activa, se ignora la etiqueta de grado y se busca en todos los instructores.
+function getFilteredInstructores() {
+  const query = getInstructorQuery();
+  if (query) return INSTRUCTORES.filter(i => normalizarTexto(i.nombre).includes(query));
+  return instructorGrado === 'Todos' ? INSTRUCTORES_SHUFFLED : INSTRUCTORES.filter(i => i.grado === instructorGrado);
+}
+
+function renderInstructorGradoSubtitle() {
+  const el = document.getElementById('instructorGradoSubtitle');
+  const query = getInstructorQuery();
+  let grupo;
+  if (query) {
+    const seleccionado = INSTRUCTORES.find(i => normalizarTexto(i.nombre) === query);
+    grupo = seleccionado ? INSTRUCTOR_GRUPOS.find(g => g.grado === seleccionado.grado) : null;
+  } else {
+    grupo = INSTRUCTOR_GRUPOS.find(g => g.grado === instructorGrado);
+  }
+  el.textContent = grupo ? grupo.titulo : '';
+  el.style.display = grupo ? 'block' : 'none';
+}
+
+function renderInstructorTabs() {
+  const wrap = document.getElementById('instructorTabs');
+  const grados = ['Todos', ...INSTRUCTOR_GRUPOS.map(g => g.grado)];
+  wrap.classList.toggle('is-searching', !!getInstructorQuery());
+  renderInstructorGradoSubtitle();
+  wrap.innerHTML = grados.map(g => {
+    const count = g === 'Todos' ? INSTRUCTORES.length : INSTRUCTORES.filter(i => i.grado === g).length;
+    return `<button type="button" class="instructor-tab${g === instructorGrado ? ' active' : ''}" data-grado="${g}">${g}<span class="count">(${count})</span></button>`;
+  }).join('');
+  wrap.querySelectorAll('.instructor-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      instructorGrado = btn.dataset.grado;
+      instructorPage = 1;
+      document.getElementById('instructorSearch').value = '';
+      hideInstructorSuggestions();
+      renderInstructorTabs();
+      renderInstructoresGridAndPager();
+    });
+  });
+}
+
+function renderInstructoresGridAndPager() {
+  const all = getFilteredInstructores();
+  const totalPages = Math.max(1, Math.ceil(all.length / INSTRUCTORES_PAGE_SIZE));
+  instructorPage = Math.min(instructorPage, totalPages);
+  const start = (instructorPage - 1) * INSTRUCTORES_PAGE_SIZE;
+  const pageItems = all.slice(start, start + INSTRUCTORES_PAGE_SIZE);
+
+  const grid = document.getElementById('instructoresGrid');
+  const empty = document.getElementById('instructoresEmpty');
+  if (pageItems.length === 0) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+  } else {
+    empty.style.display = 'none';
+    grid.innerHTML = pageItems.map(instructorCardHTML).join('');
+  }
+  renderInstructoresPager(totalPages);
+}
+
+function renderInstructoresPager(totalPages) {
+  const pager = document.getElementById('instructoresPager');
+  if (totalPages <= 1) { pager.innerHTML = ''; return; }
+  let html = `<button type="button" class="pager-btn" data-page="${instructorPage - 1}" ${instructorPage === 1 ? 'disabled' : ''} aria-label="Página anterior">‹</button>`;
+  for (let p = 1; p <= totalPages; p++) {
+    html += `<button type="button" class="pager-btn${p === instructorPage ? ' active' : ''}" data-page="${p}">${p}</button>`;
+  }
+  html += `<button type="button" class="pager-btn" data-page="${instructorPage + 1}" ${instructorPage === totalPages ? 'disabled' : ''} aria-label="Página siguiente">›</button>`;
+  pager.innerHTML = html;
+  pager.querySelectorAll('.pager-btn[data-page]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const p = Number(btn.dataset.page);
+      if (p < 1 || p > totalPages || p === instructorPage) return;
+      instructorPage = p;
+      renderInstructoresGridAndPager();
+      document.getElementById('instructores').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+}
+
+// ── Autocompletado: sugiere coincidencias mientras se escribe, sin importar la etiqueta activa ──
+function highlightMatch(nombre, query) {
+  const idx = normalizarTexto(nombre).indexOf(query);
+  if (idx === -1) return nombre;
+  return `${nombre.slice(0, idx)}<strong>${nombre.slice(idx, idx + query.length)}</strong>${nombre.slice(idx + query.length)}`;
+}
+function hideInstructorSuggestions() {
+  const box = document.getElementById('instructorSuggestions');
+  box.classList.remove('open');
+  box.innerHTML = '';
+  instructorSuggestionMatches = [];
+  instructorSuggestionIndex = -1;
+}
+function selectInstructorSuggestion(nombre) {
+  document.getElementById('instructorSearch').value = nombre;
+  hideInstructorSuggestions();
+  instructorPage = 1;
+  renderInstructorTabs();
+  renderInstructoresGridAndPager();
+}
+function updateInstructorSuggestionHighlight() {
+  document.querySelectorAll('#instructorSuggestions .section-search-suggestion').forEach((btn, i) => {
+    btn.classList.toggle('active', i === instructorSuggestionIndex);
+    if (i === instructorSuggestionIndex) btn.scrollIntoView({ block: 'nearest' });
+  });
+}
+function renderInstructorSuggestions() {
+  const box = document.getElementById('instructorSuggestions');
+  const query = getInstructorQuery();
+  if (!query) { hideInstructorSuggestions(); return; }
+  const matches = INSTRUCTORES.filter(i => normalizarTexto(i.nombre).includes(query)).slice(0, 8);
+  if (matches.length === 0) { hideInstructorSuggestions(); return; }
+  instructorSuggestionMatches = matches;
+  instructorSuggestionIndex = -1;
+  box.innerHTML = matches.map(i => `<button type="button" class="section-search-suggestion" data-nombre="${i.nombre}"><span class="section-search-suggestion-name">${highlightMatch(i.nombre, query)}</span><span class="section-search-suggestion-meta">${i.grado}</span></button>`).join('');
+  box.classList.add('open');
+  box.querySelectorAll('.section-search-suggestion').forEach(btn => {
+    btn.addEventListener('click', () => selectInstructorSuggestion(btn.dataset.nombre));
+  });
+}
+
+function renderInstructoresSection() {
+  renderInstructorTabs();
+  renderInstructoresGridAndPager();
+}
+const instructorSearchInput = document.getElementById('instructorSearch');
+instructorSearchInput.addEventListener('input', () => {
+  instructorPage = 1;
+  renderInstructorTabs();
+  renderInstructoresGridAndPager();
+  renderInstructorSuggestions();
+});
+instructorSearchInput.addEventListener('blur', () => {
+  setTimeout(hideInstructorSuggestions, 150);
+});
+instructorSearchInput.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeInstructorSearch(); return; }
+  if (e.key.toLowerCase() === 'b' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+    const query = getInstructorQuery();
+    const yaSeleccionado = query && INSTRUCTORES.some(i => normalizarTexto(i.nombre) === query);
+    if (yaSeleccionado) {
+      e.preventDefault();
+      instructorSearchInput.value = '';
+      instructorPage = 1;
+      renderInstructorTabs();
+      renderInstructoresGridAndPager();
+      hideInstructorSuggestions();
+      return;
+    }
+  }
+  if (!instructorSuggestionMatches.length) return;
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    instructorSuggestionIndex = (instructorSuggestionIndex + 1) % instructorSuggestionMatches.length;
+    updateInstructorSuggestionHighlight();
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    instructorSuggestionIndex = (instructorSuggestionIndex - 1 + instructorSuggestionMatches.length) % instructorSuggestionMatches.length;
+    updateInstructorSuggestionHighlight();
+  } else if (e.key === 'Enter') {
+    const idx = instructorSuggestionIndex !== -1 ? instructorSuggestionIndex
+      : instructorSuggestionMatches.length === 1 ? 0 : -1;
+    if (idx === -1) return;
+    e.preventDefault();
+    selectInstructorSuggestion(instructorSuggestionMatches[idx].nombre);
+  }
+});
+
+const instructorSearchToggle = document.getElementById('instructorSearchToggle');
+const instructorSearchBox = document.getElementById('instructorSearchBox');
+function openInstructorSearch() {
+  instructorSearchBox.classList.add('open');
+  instructorSearchToggle.setAttribute('aria-expanded', 'true');
+  instructorSearchInput.focus();
+}
+function closeInstructorSearch() {
+  instructorSearchBox.classList.remove('open');
+  instructorSearchToggle.setAttribute('aria-expanded', 'false');
+  hideInstructorSuggestions();
+  if (instructorSearchInput.value) {
+    instructorSearchInput.value = '';
+    instructorPage = 1;
+    renderInstructorTabs();
+    renderInstructoresGridAndPager();
+  }
+}
+instructorSearchToggle.addEventListener('click', () => {
+  if (!instructorSearchBox.classList.contains('open')) openInstructorSearch();
+  else closeInstructorSearch();
+});
+const instructoresGrid = document.getElementById('instructoresGrid');
+document.addEventListener('click', e => {
+  if (!instructorSearchBox.classList.contains('open')) return;
+  const path = e.composedPath();
+  if (!path.includes(instructorSearchBox) && !path.includes(instructoresGrid)) {
+    closeInstructorSearch();
+  }
+});
+SECTION_SEARCH_OPENERS.instructores = openInstructorSearch;
+renderInstructoresSection();
+
+// ── BUSCADOR GENÉRICO POR NOMBRE/TÍTULO ──
+// Misma lógica del buscador de instructores (ícono expandible, autocompletado con
+// resaltado de coincidencia, navegación con flechas/Enter, atajo "B", cierre al hacer
+// clic afuera) aplicada sobre tarjetas ya existentes en el DOM: al buscar se filtran/ocultan
+// las que no coinciden, y al seleccionar una sugerencia esa tarjeta queda visible y resaltada.
+function initCardSearch(cfg) {
+  const input = document.getElementById(cfg.inputId);
+  const box = document.getElementById(cfg.boxId);
+  const toggle = document.getElementById(cfg.toggleId);
+  const suggestions = document.getElementById(cfg.suggestionsId);
+  const results = document.getElementById(cfg.resultsId);
+  let matches = [];
+  let activeIndex = -1;
+
+  function getItems() {
+    if (cfg.getItems) return cfg.getItems();
+    return Array.from(document.querySelectorAll(cfg.cardSelector)).map(el => ({
+      nombre: el.querySelector(cfg.nameSelector).textContent.trim(),
+      meta: cfg.metaSelector ? (el.querySelector(cfg.metaSelector)?.textContent.trim() || '') : '',
+      el
+    }));
+  }
+  // Además del nombre, algunas secciones (ej. seminarios) buscan también en un campo extra "search".
+  function matchesQuery(item, query) {
+    return !query || normalizarTexto(`${item.nombre} ${item.search || ''}`).includes(query);
+  }
+  function applyFilter(query) {
+    if (cfg.getItems) return;
+    getItems().forEach(i => { i.el.style.display = matchesQuery(i, query) ? '' : 'none'; });
+  }
+  function hideSuggestions() {
+    suggestions.classList.remove('open');
+    suggestions.innerHTML = '';
+    matches = [];
+    activeIndex = -1;
+  }
+  function updateHighlight() {
+    suggestions.querySelectorAll('.section-search-suggestion').forEach((btn, i) => {
+      btn.classList.toggle('active', i === activeIndex);
+      if (i === activeIndex) btn.scrollIntoView({ block: 'nearest' });
+    });
+  }
+  function focusItem(item) {
+    if (cfg.onSelect) { cfg.onSelect(item); return; }
+    const el = item.el;
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.classList.add('search-found');
+    setTimeout(() => el.classList.remove('search-found'), 1900);
+  }
+  function selectItem(item) {
+    input.value = item.nombre;
+    hideSuggestions();
+    applyFilter(normalizarTexto(item.nombre));
+    focusItem(item);
+  }
+  function renderSuggestions() {
+    const query = normalizarTexto(input.value.trim());
+    applyFilter(query);
+    if (!query) { hideSuggestions(); return; }
+    matches = getItems().filter(i => matchesQuery(i, query)).slice(0, 8);
+    if (!matches.length) { hideSuggestions(); return; }
+    activeIndex = -1;
+    suggestions.innerHTML = matches.map(i => `<button type="button" class="section-search-suggestion"><span class="section-search-suggestion-name">${highlightMatch(i.nombre, query)}</span>${i.meta ? `<span class="section-search-suggestion-meta">${i.meta}</span>` : ''}</button>`).join('');
+    suggestions.classList.add('open');
+    suggestions.querySelectorAll('.section-search-suggestion').forEach((btn, idx) => {
+      btn.addEventListener('click', () => selectItem(matches[idx]));
+    });
+  }
+  function open() {
+    box.classList.add('open');
+    toggle.setAttribute('aria-expanded', 'true');
+    input.focus();
+  }
+  function close() {
+    box.classList.remove('open');
+    toggle.setAttribute('aria-expanded', 'false');
+    hideSuggestions();
+    if (input.value) {
+      input.value = '';
+      applyFilter('');
+      if (cfg.onClear) cfg.onClear();
+    }
+  }
+  input.addEventListener('input', renderSuggestions);
+  input.addEventListener('blur', () => setTimeout(hideSuggestions, 150));
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { close(); return; }
+    if (e.key.toLowerCase() === 'b' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      const query = normalizarTexto(input.value.trim());
+      const yaSeleccionado = query && getItems().some(i => normalizarTexto(i.nombre) === query);
+      if (yaSeleccionado) {
+        e.preventDefault();
+        input.value = '';
+        applyFilter('');
+        hideSuggestions();
+        if (cfg.onClear) cfg.onClear();
+        return;
+      }
+    }
+    if (!matches.length) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      activeIndex = (activeIndex + 1) % matches.length;
+      updateHighlight();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      activeIndex = (activeIndex - 1 + matches.length) % matches.length;
+      updateHighlight();
+    } else if (e.key === 'Enter') {
+      const idx = activeIndex !== -1 ? activeIndex : matches.length === 1 ? 0 : -1;
+      if (idx === -1) return;
+      e.preventDefault();
+      selectItem(matches[idx]);
+    }
+  });
+  toggle.addEventListener('click', () => {
+    if (!box.classList.contains('open')) open(); else close();
+  });
+  document.addEventListener('click', e => {
+    if (!box.classList.contains('open')) return;
+    const path = e.composedPath();
+    if (!path.includes(box) && !(results && path.includes(results))) close();
+  });
+  SECTION_SEARCH_OPENERS[cfg.sectionId] = open;
+}
+
+initCardSearch({
+  sectionId: 'maestros', inputId: 'maestroSearch', toggleId: 'maestroSearchToggle',
+  boxId: 'maestroSearchBox', suggestionsId: 'maestroSuggestions', resultsId: 'maestrosGrid',
+  cardSelector: '.maestro-card', nameSelector: '.maestro-name', metaSelector: '.maestro-grade'
+});
+// Seminarios: buscador data-driven (igual que Escuelas), busca por título y por maestro invitado.
+function selectSeminario(s) {
+  seminarioQuery = normalizarTexto(s.titulo);
+  seminarioPage = 1;
+  renderSeminariosGridAndPager();
+  const card = Array.from(document.querySelectorAll('#seminariosGrid .seminario-titulo'))
+    .find(n => n.textContent.trim() === s.titulo)?.closest('.seminario-card');
+  if (card) {
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    card.classList.add('search-found');
+    setTimeout(() => card.classList.remove('search-found'), 1900);
+  }
+}
+initCardSearch({
+  sectionId: 'seminarios', inputId: 'seminarioSearch', toggleId: 'seminarioSearchToggle',
+  boxId: 'seminarioSearchBox', suggestionsId: 'seminarioSuggestions', resultsId: 'seminariosGrid',
+  getItems: () => SEMINARIOS.map(s => ({ nombre: s.titulo, meta: s.fecha, search: `${s.maestros} ${s.fecha}`, seminario: s })),
+  onSelect: item => selectSeminario(item.seminario),
+  onClear: () => {
+    seminarioQuery = '';
+    seminarioPage = 1;
+    renderSeminariosGridAndPager();
+  }
+});
+initCardSearch({
+  sectionId: 'videos', inputId: 'videoSearch', toggleId: 'videoSearchToggle',
+  boxId: 'videoSearchBox', suggestionsId: 'videoSuggestions', resultsId: 'videosGrid',
+  cardSelector: '.video-card', nameSelector: '.video-title', metaSelector: '.video-meta'
+});
+initCardSearch({
+  sectionId: 'blogs', inputId: 'blogSearch', toggleId: 'blogSearchToggle',
+  boxId: 'blogSearchBox', suggestionsId: 'blogSuggestions', resultsId: 'blogsContent',
+  cardSelector: '.blog-card', nameSelector: '.blog-title', metaSelector: '.blog-cat',
+  onSelect: item => {
+    const el = item.el;
+    const panel = el.closest('.blog-panel');
+    if (panel) switchTabById(panel.id);
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.classList.add('search-found');
+    setTimeout(() => el.classList.remove('search-found'), 1900);
+  }
+});
+
+// ── Escuelas: el buscador ignora los filtros de país/región/comuna para armar la grilla
+// (igual que instructores ignora la etiqueta de grado), pero las etiquetas país/región/comuna
+// se actualizan para reflejar (visualmente) a qué filtro pertenece la escuela encontrada. ──
+function selectEscuela(e) {
+  escuelaQuery = normalizarTexto(e.nombre);
+  escuelaPage = 1;
+  escuelaPais = e.region === 'Argentina' ? 'Argentina' : 'Chile';
+  escuelaRegion = e.region === 'Argentina' ? 'Todas' : e.region;
+  escuelaComuna = ((e.region === 'Región Metropolitana' || e.region === 'Argentina') && e.comuna) ? e.comuna : 'Todas';
+  renderPaisTabs();
+  renderRegionRow();
+  renderComunaChips();
+  renderEscuelasGridAndPager();
+  const card = Array.from(document.querySelectorAll('#escuelasGrid .escuela-nombre'))
+    .find(n => n.textContent.trim() === e.nombre)?.closest('.escuela-card');
+  if (card) {
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    card.classList.add('search-found');
+    setTimeout(() => card.classList.remove('search-found'), 1900);
+  }
+}
+initCardSearch({
+  sectionId: 'escuelas', inputId: 'escuelaSearch', toggleId: 'escuelaSearchToggle',
+  boxId: 'escuelaSearchBox', suggestionsId: 'escuelaSuggestions', resultsId: 'escuelasGrid',
+  getItems: () => ESCUELAS.map(e => ({ nombre: e.nombre, meta: e.lugar, escuela: e })),
+  onSelect: item => selectEscuela(item.escuela),
+  onClear: () => {
+    escuelaQuery = '';
+    escuelaPage = 1;
+    escuelaPais = 'Todas';
+    escuelaRegion = 'Todas';
+    escuelaComuna = 'Todas';
+    renderEscuelasSection();
+  }
+});
+
+// ── FORM ──
+function handleSubmit(e) {
+  e.preventDefault();
+  let valid = true;
+  const fields = [
+    { id: 'f-nombre', check: v => v.trim().length >= 2 },
+    { id: 'f-email', check: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
+    { id: 'f-ciudad', check: v => v.trim().length >= 2 }
+  ];
+  let firstInvalid = null;
+  fields.forEach(f => {
+    const el = document.getElementById(f.id);
+    const grp = el.closest('.form-group');
+    if(!f.check(el.value)) { grp.classList.add('invalid'); valid = false; firstInvalid = firstInvalid || el; }
+    else grp.classList.remove('invalid');
+    el.addEventListener('input', () => grp.classList.remove('invalid'), {once:true});
+  });
+  if(!valid) { firstInvalid.focus(); return; }
+  const nombre = document.getElementById('f-nombre').value;
+  const email = document.getElementById('f-email').value;
+  const tel = document.getElementById('f-tel').value;
+  const ciudad = document.getElementById('f-ciudad').value;
+  const escuela = document.getElementById('f-escuela').value;
+  const mensaje = document.getElementById('f-mensaje').value;
+  let msg = `Hola, quiero información sobre las escuelas de Kenpo Karate en Chile\n\n`;
+  msg += `👤 Nombre: ${nombre}\n📧 Email: ${email}\n`;
+  if(tel) msg += `📱 Teléfono: ${tel}\n`;
+  msg += `📍 Ciudad: ${ciudad}\n`;
+  if(escuela) msg += `🏯 Escuela de interés: ${escuela}\n`;
+  if(mensaje) msg += `\n💬 Mensaje: ${mensaje}`;
+  window.open(buildWhatsAppLink(msg), '_blank');
+}
+
+// ── YEAR ──
+document.getElementById('footerYear').textContent = new Date().getFullYear();
+
+// ── SMOOTH ANCHOR LINKS ──
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const id = a.getAttribute('href');
+    if(id === '#') return;
+    const target = document.querySelector(id);
+    if(target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+
+// ── ATAJO DE TECLADO "B": abre el buscador de la sección que el usuario está viendo ──
+function getVisibleSectionId() {
+  let current = null;
+  let bestVisible = 0;
+  Object.keys(SECTION_SEARCH_OPENERS).forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const visible = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+    if (visible > bestVisible) { bestVisible = visible; current = id; }
+  });
+  return current;
+}
+document.addEventListener('keydown', e => {
+  if (e.key.toLowerCase() !== 'b' || e.ctrlKey || e.metaKey || e.altKey) return;
+  const tag = (e.target.tagName || '').toLowerCase();
+  if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
+  const sectionId = getVisibleSectionId();
+  const open = sectionId && SECTION_SEARCH_OPENERS[sectionId];
+  if (open) {
+    e.preventDefault();
+    open();
+  }
+});
+
+// ── SEO: datos estructurados (usa el mismo CONFIG, sin duplicar el teléfono) ──
+(function injectStructuredData() {
+  const data = {
+    '@context': 'https://schema.org',
+    '@type': 'SportsActivityLocation',
+    name: 'International Vidal Kenpo Studio | KenpoChile.cl',
+    description: 'Escuela internacional de Kenpo Karate en Chile bajo la Chinese Karate Federation. Disciplina, respeto y defensa personal con maestros certificados.',
+    url: 'https://kenpochile.cl',
+    image: 'https://kenpochile.cl/img/header/maestro.png',
+    telephone: '+' + CONFIG.whatsapp,
+    areaServed: 'CL',
+    sameAs: []
+  };
+  const script = document.createElement('script');
+  script.type = 'application/ld+json';
+  script.textContent = JSON.stringify(data);
+  document.head.appendChild(script);
+})();
+</script>
+</body>
+</html>
