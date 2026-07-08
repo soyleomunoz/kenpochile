@@ -3408,12 +3408,61 @@ function beltIconHTML(belt) {
     ? `<span class="belt-icon" style="background:${belt.bg};color:${belt.text}">${belt.label}</span>`
     : `<svg class="icon" style="width:1.1rem;height:1.1rem;color:var(--accent)"><use href="#icon-star"/></svg>`;
 }
+const INSTRUCTOR_FOTOS = {
+  'María Elena Araya': 'Maria-Elena-Araya.webp',
+  'Edgardo Véliz': 'Edgardo-Veliz.webp',
+  'Ramón Morales': 'Ramon-Morales.webp',
+  'Gladys Vergara': 'Gladys-Vergara.webp',
+  'Felipe Orellana': 'Felipe-Orellana.webp',
+  'Sergio Rodríguez': 'Sergio-Rodriguez.webp',
+  'Alfredo Ruiz': 'Alfredo-Ruiz.webp',
+  'Fabián Terán': 'Fabian-Teran.webp',
+  'Leonardo Muñoz': 'Leonardo-Munoz.webp',
+  'Aaron Torres': 'Aaron-Torres.webp',
+  'Oscar Olivares': 'Oscar-Olivares.webp',
+  'Miguel Ángel Manríquez': 'Miguel-Angel-Manriquez.webp',
+  'Rodrigo Zumaeta': 'Rodrigo-Zumaeta.webp',
+  'Francisco Pérez': 'Francisco-Perez.webp',
+  'Marcelo Pérez': 'Marcelo-Perez.webp',
+  'Moisés Catalán': 'Moises-Catalan.webp',
+  'Sebastián Opazo': 'Sebastian-Opazo.webp',
+  'Jin Reyes': 'Jin-Reyes.webp',
+  'Felipe Urra': 'Felipe-Urra.webp',
+  'Juan Carlos Castro': 'Juan-Carlos-Castro.webp',
+  'Carlos Lagos': 'Carlos-Lagos.webp',
+  'Christian Vidal': 'Christian-Vidal.webp',
+  'Daniel Cornejo': 'Daniel-Cornejo.webp',
+  'Karina Gatica': 'Karina-Gatica.webp',
+  'Roberto Lorca': 'Roberto-Lorca.webp',
+  'Gisela Torres': 'Gisela-Torres.webp',
+  'Andrew Villarroel Torres': 'Andrew-Villarroel-Torres.webp',
+  'Diego Estay': 'Diego-Estay.webp',
+  'Jorge Huichalaf': 'Jorge-Huichalaf.webp',
+  'Pedro Molina': 'Pedro-Molina.webp',
+  'Rafael Henríquez': 'Rafael-Henriquez.webp',
+  'Juan González': 'Juan-Gonzalez-scaled.webp',
+  'Alonso Olivares': 'Alonso-Olivares.webp',
+  'Nelson Carrión López': 'Nelson-Carrion-Lopez.webp',
+  'Paulina Luengo': 'Paulina-Luengo.webp',
+  'José Luis Moncada': 'Jose-Moncada.webp',
+  'Maurizio Estay': 'Maurizio-Estay.webp',
+  'Solange Rodríguez': 'Solange-Rodriguez.webp',
+  'Pablo Gajardo': 'Pablo-Gajardo-scaled.webp',
+  'Marta Burgos': 'Marta-Burgos.webp',
+  'Juan Carlos Lastra Dinamarca': 'Juan Carlos Lastra.webp',
+  'Daniel Alejandro Flores Salinas': 'Daniel Alejandro Flores Salinas.webp',
+  'Rodrigo Pizarro': 'Rodrigo Pizarro.webp',
+};
+function instructorFotoSrc(nombre) {
+  const archivo = INSTRUCTOR_FOTOS[nombre];
+  return archivo ? `img/members/${encodeURIComponent(archivo)}` : '';
+}
 function instructorCardHTML(inst) {
-  const slug = instructorSlug(inst.nombre);
+  const src = instructorFotoSrc(inst.nombre);
   return `
     <div class="instructor-card">
       <div class="instructor-avatar">
-        <img src="img/instructores/${slug}.jpg" alt="${inst.nombre}" loading="lazy" decoding="async" onerror="this.remove()">
+        ${src ? `<img src="${src}" alt="${inst.nombre}" loading="lazy" decoding="async" onerror="this.remove()">` : ''}
         <span class="instructor-initials">${instructorIniciales(inst.nombre)}</span>
         <span class="instructor-belt">${beltIconHTML(inst.belt)}</span>
       </div>
