@@ -1,0 +1,140 @@
+KENPOCHILE.CL — ANÁLISIS DE CONVERSIÓN (VISITANTE → PRACTICANTE)
+Fecha del análisis: 2026-07-09
+
+============================================================
+DIAGNÓSTICO GENERAL
+============================================================
+El sitio tiene buenos fundamentos (hero con CTA claro, clase de prueba
+gratis, buscador de escuelas con filtros, FAQ que responde objeciones
+reales, WhatsApp accesible), pero la estructura actual prioriza
+credenciales y archivo histórico por sobre persuasión y facilidad de
+acción. Un visitante nuevo tiene que atravesar mucho contenido de
+linaje/prestigio antes de llegar a lo que realmente decide una
+inscripción: beneficios tangibles, prueba social de otros alumnos, y
+un camino claro para actuar.
+
+Faltan dos piezas clásicas de conversión que pesan mucho en este
+rubro: testimonios reales y una señal de qué esperar en costos/
+primeros pasos. Ninguna de las dos existe hoy.
+
+============================================================
+ORDEN ACTUAL DE SECCIONES
+============================================================
+Hero -> Stats -> Institucional -> Quote Ed Parker -> Maestros ->
+Frase (quote 2) -> Escuelas (+ Insignias) -> Seminarios -> Videos ->
+Instructores -> Salud y Bienestar -> Blogs -> FAQ -> Contacto
+
+Problema principal: "Salud y Bienestar" es, de lejos, el contenido
+más persuasivo del sitio (beneficios físicos, mentales, familiares,
+de defensa personal) y está en la posición 11 de 14 — casi nadie
+llega tan abajo. Mientras tanto, dos secciones de autoridad/linaje
+(Institucional + Quote + Maestros) ocupan las posiciones 3 a 5,
+retrasando el momento en que el visitante ve algo accionable.
+
+============================================================
+ORDEN RECOMENDADO
+============================================================
+1. Hero (igual)
+2. Stats bar (igual)
+3. Salud y Bienestar -> subir aquí. Es el "por qué" antes de pedirles
+   que sigan leyendo credenciales.
+4. Institucional (más corto si es posible) — el "quiénes somos"
+5. (NUEVO) 3 pasos para empezar
+6. Escuelas (+ Insignias anidada) — el corazón del sitio, debe
+   llegar rápido
+7. (NUEVO) Testimonios
+8. Instructores — sube de posición: es quien realmente los va a
+   formar localmente, más relevante para decidir que el linaje
+   histórico internacional
+9. Maestros — baja de posición: prestigio y linaje, importante para
+   credibilidad pero no urgente para decidir
+10. Seminarios / Videos / Blogs — contenido de "prueba de actividad"
+    y SEO, correcto que estén al final
+11. FAQ
+12. Contacto
+
+Nota: la quote de Ed Parker y la de Roberto Vidal ("frase") son
+redundantes entre sí — evaluar fusionarlas en una sola pausa
+emocional en vez de dos.
+
+============================================================
+SECCIONES QUE SOBRAN O SE PUEDEN FUSIONAR
+============================================================
+- No sobra ninguna sección completa — todas aportan algo. El
+  problema es de posición y densidad, no de contenido innecesario.
+- Quote Epic + Frase: son dos citas motivacionales separadas por
+  solo dos secciones. Fusionarlas en una evita una interrupción
+  doble del flujo de lectura.
+- Maestros es muy extenso (8 tarjetas con biografías largas) antes
+  de llegar a Escuelas. No eliminar, pero considerar recortarlo a
+  los 3-4 más relevantes con un "ver más" desplegable, para no
+  retrasar tanto el acceso a Escuelas.
+
+============================================================
+INFORMACIÓN QUE FALTA (de mayor a menor impacto)
+============================================================
+1. TESTIMONIOS REALES (el gap más grande)
+   Frases cortas de alumnos o padres — "mi hijo ganó confianza",
+   "empecé a los 35 sin experiencia previa" — con nombre, escuela y
+   ojalá foto. Es la prueba social que le falta al sitio; hoy toda
+   la prueba social es "de arriba hacia abajo" (maestros,
+   federación) y ninguna "de igual a igual" (otros practicantes).
+
+2. "CÓMO EMPEZAR" EN 3 PASOS
+   Encuentra tu escuela -> Agenda tu clase de prueba gratuita ->
+   Únete a la comunidad. Reduce la incertidumbre del primer
+   contacto; hoy esa respuesta solo existe escondida en una
+   pregunta del FAQ.
+
+3. CTAs REPETIDOS A MEDIA PÁGINA
+   Entre el hero y el formulario de contacto hay ~9 secciones de
+   puro consumo de contenido sin ningún botón de acción. Un banner
+   tipo "¿Listo para tu clase de prueba gratis?" cada 2-3 secciones
+   evita que el visitante interesado tenga que scrollear hasta el
+   final para actuar.
+
+4. TRANSPARENCIA DE COSTOS
+   Aunque sea parcial. No hace falta una tabla de precios (cada
+   escuela es independiente), pero una frase tipo "valores y planes
+   varían por escuela, sin letra chica" en la sección Escuelas o el
+   FAQ reduce una objeción típica que hoy no se toca en ningún lugar
+   del sitio.
+
+5. NAV DE ESCRITORIO INCOMPLETA
+   El menú de escritorio no incluye "Salud y Bienestar", "FAQ" ni
+   "Contacto" (sí están en el menú mobile). Un visitante de
+   escritorio de alta intención no puede saltar directo a esas
+   secciones.
+
+6. REDES SOCIALES INACTIVAS
+   Facebook, Instagram y YouTube están marcados "próximamente" en
+   el footer. Para una comunidad que se quiere transmitir como
+   activa, no tener redes verificables resta confianza — vale la
+   pena priorizar activarlas o quitarlas hasta tenerlas listas.
+
+7. PROGRAMAS POR EDAD
+   Hoy solo mencionado en una respuesta del FAQ ("desde los 4
+   años"). Una mención breve más visible (niños / adolescentes /
+   adultos / familias) ayuda a que cada visitante se sienta
+   interpelado rápido, sin tener que abrir el FAQ para descubrirlo.
+
+============================================================
+GALERÍA DE INSIGNIAS: ¿SEPARARLA O DEJARLA DENTRO DE ESCUELAS?
+============================================================
+RECOMENDACIÓN: dejarla donde está, dentro de "Nuestras Escuelas".
+
+Razones:
+- Es contenido de respaldo/orgullo visual (cada insignia representa
+  una escuela), no una acción de conversión en sí misma — no tiene
+  sentido competir en jerarquía de navegación con secciones que sí
+  generan inscripciones.
+- Sacarla como sección propia agregaría un ítem más al menú y un
+  desvío más en el camino hacia el formulario de contacto,
+  diluyendo foco.
+- Contextualmente pertenece ahí: el visitante que está comparando
+  escuelas es el público correcto para ver el "muro de insignias"
+  como prueba de la escala de la red.
+
+Si en el futuro se le quiere dar más protagonismo (por ejemplo, para
+SEO o marca), evaluar una sub-página o ancla propia dentro de
+Escuelas, pero no como sección independiente en el nav principal.
