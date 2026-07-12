@@ -104,6 +104,7 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
     scroll-behavior: auto !important;
   }
   .reveal { opacity: 1; transform: none; }
+  .inst-visual-img, .inst-visual.visible .inst-visual-img { opacity: 1; transform: none; filter: none; clip-path: none; }
 }
 
 /* ── NAVBAR ── */
@@ -549,11 +550,33 @@ section { padding: 6rem 2rem; }
   align-items: center;
 }
 .inst-visual-img {
+  width: 100%;
   max-width: 600px;
   height: auto;
   display: block;
   border-radius: 8px;
   margin: 0 auto;
+  opacity: 0;
+  transform: scale(1.05);
+  filter: blur(6px);
+  clip-path: inset(0 0 100% 0);
+  box-shadow: 0 0 0 rgba(0,0,0,0);
+  transition:
+    opacity 0.8s var(--ease-out),
+    filter 0.8s var(--ease-out),
+    clip-path 0.9s var(--ease-out),
+    transform 0.4s ease,
+    box-shadow 0.4s ease;
+}
+.inst-visual.visible .inst-visual-img {
+  opacity: 1;
+  transform: scale(1);
+  filter: blur(0);
+  clip-path: inset(0 0 0 0);
+}
+.inst-visual.visible .inst-visual-img:hover {
+  transform: scale(1.015) translateY(-6px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 30px var(--glow-primary);
 }
 /* Amanecer: continúa el horizonte de luz de "Sobre Nosotros". */
 #cita-ed-parker {
@@ -3891,6 +3914,24 @@ const observer = new IntersectionObserver(entries => {
   entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
 }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 reveals.forEach(r => observer.observe(r));
+
+// ── LINAJE: revelado de la imagen institucional (la más importante del sitio) ──
+// Se observa el contenedor .inst-visual (no la img) porque la img arranca con
+// clip-path: inset(0 0 100% 0) — con área visible cero, un IntersectionObserver
+// sobre la propia img nunca reportaría intersección.
+(function initLinajeReveal() {
+  const container = document.querySelector('.inst-visual');
+  if (!container) return;
+  const linajeObserver = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2, rootMargin: '0px 0px -100px 0px' });
+  linajeObserver.observe(container);
+})();
 
 // ── MAESTROS: orden aleatorio + carrusel deslizable (swipe en móvil, flechas en desktop) ──
 (function initMaestrosCarousel() {
