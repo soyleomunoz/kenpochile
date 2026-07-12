@@ -79,6 +79,12 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   outline-offset: 3px;
   border-radius: 2px;
 }
+/* Foco programático sin anillo visible (p. ej. al resetear filtros con Esc):
+   además de quitar el outline, se restaura el border-radius propio del elemento
+   (la regla de foco de arriba lo fuerza a 2px). */
+.no-focus-ring:focus-visible { outline: none; border-radius: inherit; }
+.pais-tab.no-focus-ring:focus-visible,
+.instructor-tab.no-focus-ring:focus-visible { border-radius: 50px; }
 
 /* Inline icon sprite usage */
 .icon {
@@ -4526,7 +4532,13 @@ renderEscuelasSection();
       escuelaPage = 1;
       escuelaKeyboardRow = 'paisTabs';
       renderEscuelasSection();
-      document.querySelector('.pais-tab[data-pais="Todas"]')?.focus();
+      const todasTab = document.querySelector('.pais-tab[data-pais="Todas"]');
+      if (todasTab) {
+        // Foco sin anillo visible: Esc es un "reset", no un movimiento de cursor de teclado.
+        todasTab.classList.add('no-focus-ring');
+        todasTab.focus();
+        todasTab.addEventListener('blur', () => todasTab.classList.remove('no-focus-ring'), { once: true });
+      }
       return;
     }
 
@@ -5383,12 +5395,32 @@ document.addEventListener('click', e => {
     return tag === 'input' || tag === 'textarea' || el.isContentEditable;
   }
   document.addEventListener('keydown', e => {
-    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight' && e.key !== 'Escape') return;
     if (!sectionInView || isTypingTarget(e.target)) return;
     if (document.getElementById('lightbox')?.classList.contains('open')) return;
     if (document.getElementById('instructorModal')?.classList.contains('open')) return;
     const rowEl = document.getElementById('instructorTabs');
     if (!rowEl || !rowEl.children.length) return;
+
+    // Esc: descarta cualquier filtro/búsqueda activo y vuelve a "Todos", sin destacar
+    // la etiqueta con el anillo de foco (es un reset, no un movimiento de cursor).
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      if (instructorSearchInput.value) instructorSearchInput.value = '';
+      instructorGrado = 'Todos';
+      instructorPage = 1;
+      renderInstructorTabs();
+      renderInstructoresGridAndPager();
+      hideInstructorSuggestions();
+      const todosTab = document.querySelector('#instructorTabs .instructor-tab[data-grado="Todos"]');
+      if (todosTab) {
+        todosTab.classList.add('no-focus-ring');
+        todosTab.focus();
+        todosTab.addEventListener('blur', () => todosTab.classList.remove('no-focus-ring'), { once: true });
+      }
+      return;
+    }
+
     e.preventDefault();
     const buttons = Array.from(rowEl.querySelectorAll(':scope > button'));
     const active = rowEl.querySelector('button.active') || buttons[0];
