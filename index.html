@@ -4090,6 +4090,39 @@ function switchTabById(id) {
   if (btn) switchTab(btn, id);
 }
 
+// Flechas del teclado en las etiquetas de categoría de Noticias y Blogs: activas mientras
+// la sección está a la vista (igual que Nuestras Escuelas / Nuestros Instructores y el
+// atajo "B" de buscar), sin necesidad de enfocar antes ninguna etiqueta. → ← seleccionan
+// la etiqueta contigua, permitiendo recorrer todas las categorías sin soltar el teclado.
+(function() {
+  let sectionInView = false;
+  const section = document.getElementById('blogs');
+  if (section) {
+    new IntersectionObserver(entries => {
+      entries.forEach(en => { sectionInView = en.isIntersecting; });
+    }, { threshold: 0, rootMargin: '-30% 0px -30% 0px' }).observe(section);
+  }
+  function isTypingTarget(el) {
+    const tag = (el.tagName || '').toLowerCase();
+    return tag === 'input' || tag === 'textarea' || el.isContentEditable;
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    if (!sectionInView || isTypingTarget(e.target)) return;
+    if (document.getElementById('lightbox')?.classList.contains('open')) return;
+    if (document.getElementById('instructorModal')?.classList.contains('open')) return;
+    const rowEl = document.querySelector('.blogs-tabs');
+    if (!rowEl || !rowEl.children.length) return;
+    e.preventDefault();
+    const buttons = Array.from(rowEl.querySelectorAll(':scope > button'));
+    const active = rowEl.querySelector('button.active') || buttons[0];
+    const idx = buttons.indexOf(active);
+    const dir = e.key === 'ArrowRight' ? 1 : -1;
+    const next = buttons[(idx + dir + buttons.length) % buttons.length];
+    next.click();
+  });
+})();
+
 // ── FAQ ──
 function toggleFaq(btn) {
   const item = btn.closest('.faq-item');
@@ -4368,6 +4401,68 @@ function renderEscuelasSection() {
 }
 renderEscuelasSection();
 
+// Flechas del teclado en las etiquetas de país/región/comuna de Nuestras Escuelas:
+// activas mientras la sección está a la vista (igual que el atajo "B" de buscar), sin
+// necesidad de enfocar antes ninguna etiqueta. → ← seleccionan la etiqueta contigua de
+// la fila donde está el "cursor" de teclado; ↓ ↑ mueven ese cursor a la fila siguiente/
+// anterior que esté visible, permitiendo recorrer país → región → comuna sin soltar el teclado.
+(function() {
+  let sectionInView = false;
+  const section = document.getElementById('escuelas');
+  if (section) {
+    new IntersectionObserver(entries => {
+      entries.forEach(en => { sectionInView = en.isIntersecting; });
+    }, { threshold: 0, rootMargin: '-30% 0px -30% 0px' }).observe(section);
+  }
+  const ESCUELA_TAB_ROW_IDS = ['paisTabs', 'regionRow', 'comunaChips'];
+  let escuelaKeyboardRow = 'paisTabs';
+  function escuelaTabRowEl(id) {
+    const el = document.getElementById(id);
+    return (el && el.style.display !== 'none' && el.children.length) ? el : null;
+  }
+  function isTypingTarget(el) {
+    const tag = (el.tagName || '').toLowerCase();
+    return tag === 'input' || tag === 'textarea' || el.isContentEditable;
+  }
+  document.addEventListener('keydown', e => {
+    if (!['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp'].includes(e.key)) return;
+    if (!sectionInView || isTypingTarget(e.target)) return;
+    if (document.getElementById('lightbox')?.classList.contains('open')) return;
+    if (document.getElementById('instructorModal')?.classList.contains('open')) return;
+
+    let rowEl = escuelaTabRowEl(escuelaKeyboardRow) || escuelaTabRowEl('paisTabs');
+    if (!rowEl) return;
+    escuelaKeyboardRow = rowEl.id;
+
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      const buttons = Array.from(rowEl.querySelectorAll(':scope > button'));
+      const active = rowEl.querySelector('button.active') || buttons[0];
+      const idx = buttons.indexOf(active);
+      const dir = e.key === 'ArrowRight' ? 1 : -1;
+      const next = buttons[(idx + dir + buttons.length) % buttons.length];
+      next.click();
+      // El click re-renderiza la fila (innerHTML), así que el foco real se aplica sobre
+      // el botón recién marcado como activo: eso muestra con el anillo de foco del sitio
+      // en cuál fila y etiqueta está el cursor de teclado.
+      document.getElementById(escuelaKeyboardRow)?.querySelector('button.active')?.focus();
+    } else {
+      e.preventDefault();
+      const dir = e.key === 'ArrowDown' ? 1 : -1;
+      let pos = ESCUELA_TAB_ROW_IDS.indexOf(escuelaKeyboardRow) + dir;
+      while (pos >= 0 && pos < ESCUELA_TAB_ROW_IDS.length) {
+        const targetRow = escuelaTabRowEl(ESCUELA_TAB_ROW_IDS[pos]);
+        if (targetRow) {
+          escuelaKeyboardRow = ESCUELA_TAB_ROW_IDS[pos];
+          (targetRow.querySelector('button.active') || targetRow.querySelector('button'))?.focus();
+          break;
+        }
+        pos += dir;
+      }
+    }
+  });
+})();
+
 // ── VIDEOS (catálogo real del canal de YouTube @vidalkenpo/videos) ──
 const VIDEOS_CATALOG = [
   { id: 'mQ5NufoeODo', titulo: 'Entrevista al maestro Sean Kelley por Kenpo Power Podcast' },
@@ -4471,6 +4566,37 @@ function renderVideosPager(totalPages) {
   });
 }
 renderVideosGridAndPager();
+
+// Flechas del teclado en la paginación de Videos Destacados: activas mientras la sección
+// está a la vista (igual que Escuelas / Instructores / Blogs), sin necesidad de enfocar
+// antes ningún botón. → avanza a la página siguiente, ← retrocede a la anterior.
+(function() {
+  let sectionInView = false;
+  const section = document.getElementById('videos');
+  if (section) {
+    new IntersectionObserver(entries => {
+      entries.forEach(en => { sectionInView = en.isIntersecting; });
+    }, { threshold: 0, rootMargin: '-30% 0px -30% 0px' }).observe(section);
+  }
+  function isTypingTarget(el) {
+    const tag = (el.tagName || '').toLowerCase();
+    return tag === 'input' || tag === 'textarea' || el.isContentEditable;
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    if (!sectionInView || isTypingTarget(e.target)) return;
+    if (document.getElementById('lightbox')?.classList.contains('open')) return;
+    if (document.getElementById('instructorModal')?.classList.contains('open')) return;
+    const pager = document.getElementById('videosPager');
+    if (!pager || !pager.children.length) return;
+    const buttons = Array.from(pager.querySelectorAll('.pager-btn[data-page]'));
+    if (!buttons.length) return;
+    const btn = e.key === 'ArrowRight' ? buttons[buttons.length - 1] : buttons[0];
+    if (btn.disabled) return;
+    e.preventDefault();
+    btn.click();
+  });
+})();
 
 // ── SEMINARIOS (historial real, datos de kenpochile.cl/seminarios/, del más reciente al más antiguo) ──
 const SEMINARIOS = [
@@ -5090,6 +5216,39 @@ document.addEventListener('click', e => {
     closeInstructorSearch();
   }
 });
+// Flechas del teclado en las etiquetas de grado de Nuestros Instructores: activas mientras
+// la sección está a la vista (igual que Nuestras Escuelas y el atajo "B" de buscar), sin
+// necesidad de enfocar antes ninguna etiqueta. → ← seleccionan la etiqueta contigua,
+// permitiendo recorrer todos los grados sin soltar el teclado.
+(function() {
+  let sectionInView = false;
+  const section = document.getElementById('instructores');
+  if (section) {
+    new IntersectionObserver(entries => {
+      entries.forEach(en => { sectionInView = en.isIntersecting; });
+    }, { threshold: 0, rootMargin: '-30% 0px -30% 0px' }).observe(section);
+  }
+  function isTypingTarget(el) {
+    const tag = (el.tagName || '').toLowerCase();
+    return tag === 'input' || tag === 'textarea' || el.isContentEditable;
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    if (!sectionInView || isTypingTarget(e.target)) return;
+    if (document.getElementById('lightbox')?.classList.contains('open')) return;
+    if (document.getElementById('instructorModal')?.classList.contains('open')) return;
+    const rowEl = document.getElementById('instructorTabs');
+    if (!rowEl || !rowEl.children.length) return;
+    e.preventDefault();
+    const buttons = Array.from(rowEl.querySelectorAll(':scope > button'));
+    const active = rowEl.querySelector('button.active') || buttons[0];
+    const idx = buttons.indexOf(active);
+    const dir = e.key === 'ArrowRight' ? 1 : -1;
+    const next = buttons[(idx + dir + buttons.length) % buttons.length];
+    next.click();
+  });
+})();
+
 // ── MODAL FOTO INSTRUCTOR ──
 let instructorModalIndex = -1;
 let instructorModalTrigger = null;
