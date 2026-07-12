@@ -4467,12 +4467,27 @@ renderEscuelasSection();
   }
 
   document.addEventListener('keydown', e => {
-    if (!['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp', 'Enter'].includes(e.key)) return;
+    if (!['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp', 'Enter', 'Escape'].includes(e.key)) return;
     if (!sectionInView || isTypingTarget(e.target)) return;
     if (document.getElementById('lightbox')?.classList.contains('open')) return;
     if (document.getElementById('instructorModal')?.classList.contains('open')) return;
 
     const focusedCard = e.target.closest('#escuelasGrid .escuela-card');
+
+    // Esc: descarta cualquier filtro/búsqueda activo y vuelve a "Todas", la 1ra etiqueta,
+    // mostrando la grilla completa de escuelas.
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      clearEscuelaQuery();
+      escuelaPais = 'Todas';
+      escuelaRegion = 'Todas';
+      escuelaComuna = 'Todas';
+      escuelaPage = 1;
+      escuelaKeyboardRow = 'paisTabs';
+      renderEscuelasSection();
+      document.querySelector('.pais-tab[data-pais="Todas"]')?.focus();
+      return;
+    }
 
     if (e.key === 'Enter') {
       if (!focusedCard) return;
