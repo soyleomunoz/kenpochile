@@ -764,12 +764,28 @@ section { padding: 6rem 2rem; }
 }
 .maestro-overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(to top, var(--bg-dark) 0%, var(--bg-dark) 32%, transparent 85%);
+  background: linear-gradient(to top, var(--bg-dark) 0%, var(--bg-dark) 20%, transparent 55%);
   pointer-events: none;
+}
+.maestro-hover {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(20,16,13,0.55);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.maestro-card:hover .maestro-hover,
+.maestro-card:focus-within .maestro-hover { opacity: 1; }
+.maestro-hover-btn {
+  font-family: 'Rajdhani', sans-serif; font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--bg-dark); background: var(--accent);
+  border-radius: 50px; padding: 0.65rem 1.5rem;
+  box-shadow: 0 4px 20px var(--glow-gold);
 }
 .maestro-info {
   position: absolute; left: 0; right: 0; bottom: 0;
-  padding: 1.5rem;
+  padding: 0.8rem 1.2rem 0.6rem;
 }
 .maestro-name {
   font-family: 'Cinzel', serif;
@@ -781,19 +797,14 @@ section { padding: 6rem 2rem; }
   font-family: 'Rajdhani', sans-serif;
   font-size: 0.8rem; font-weight: 600;
   letter-spacing: 0.08em;
+  line-height: 1.3;
   color: var(--secondary);
-  margin-bottom: 1rem;
+  min-height: 2.6em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
-.maestro-link {
-  display: inline-flex; align-items: center; gap: 0.4rem;
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 0.75rem; font-weight: 700;
-  letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--accent);
-  text-decoration: none;
-  transition: gap 0.3s;
-}
-.maestro-link:hover { gap: 0.8rem; }
 
 /* ── ESCUELAS ── */
 /* Tatami: trama de esterilla, apropiada para la grilla de tarjetas. */
@@ -2520,7 +2531,7 @@ footer {
   box-shadow: 0 4px 20px rgba(37,211,102,0.4);
   text-decoration: none;
   color: white;
-  animation: pulse-wa 2s ease 3;
+  animation: pulse-wa 2s ease infinite;
   transition: transform 0.3s;
 }
 .float-whatsapp:hover { transform: scale(1.1); }
@@ -2946,11 +2957,11 @@ footer {
             <img src="img/maestros/edparker.png" alt="Ed Parker" width="200" height="300" loading="lazy" decoding="async" style="transform: scale(1.088); transform-origin: bottom center;">
           </div>
           <div class="maestro-overlay"></div>
+          <div class="maestro-hover"><span class="maestro-hover-btn">Ver Biografía</span></div>
         </div>
         <div class="maestro-info">
           <div class="maestro-name">Ed Parker</div>
           <div class="maestro-grade">Founder of American Kenpo Karate</div>
-          <a class="maestro-link">Ver Biografía →</a>
         </div>
       </div>
       <div class="maestro-card reveal reveal-delay-1" onclick="openBio('Michael Robert Pick','10th Degree Black Belt · Grandmaster','Comenzó su entrenamiento en 1957 bajo la tutela directa de Ed Parker en Pasadena, California, y fue el único cinturón negro promovido personalmente con el propio cinturón del Gran Maestro. Veterano del Cuerpo de Marines en Vietnam, alcanzó el 10° Dan y el título de Segundo Gran Maestro del American Kenpo en 1997.')">
@@ -2959,24 +2970,24 @@ footer {
             <img src="img/maestros/robertpick.png" alt="Michael Robert Pick" width="200" height="300" loading="lazy" decoding="async" style="object-position: center 36%;">
           </div>
           <div class="maestro-overlay"></div>
+          <div class="maestro-hover"><span class="maestro-hover-btn">Ver Biografía</span></div>
         </div>
         <div class="maestro-info">
           <div class="maestro-name">Michael Robert Pick</div>
           <div class="maestro-grade">10th Degree Black Belt · Grandmaster</div>
-          <a class="maestro-link">Ver Biografía →</a>
         </div>
       </div>
       <div class="maestro-card reveal reveal-delay-2" onclick="openBio('Sean P. Kelley','9th Degree Black Belt · Master of the Arts','Head instructor y presidente de la Chinese Karate Federation, formado bajo el sistema de Ed Parker desde 1978. Hoy ostenta el 9° Dan «Master of the Arts» y ha enseñado en Estados Unidos, Canadá, Sudamérica, Reino Unido e Irlanda.')">
         <div class="maestro-img">
           <div class="maestro-avatar">
-            <img src="img/maestros/seankelley.png" alt="Sean P. Kelley" width="200" height="300" loading="lazy" decoding="async">
+            <img src="img/maestros/seankelley.png" alt="Sean P. Kelley" width="200" height="300" loading="lazy" decoding="async" style="transform: scale(1.3); transform-origin: 50% 5.1%;">
           </div>
           <div class="maestro-overlay"></div>
+          <div class="maestro-hover"><span class="maestro-hover-btn">Ver Biografía</span></div>
         </div>
         <div class="maestro-info">
           <div class="maestro-name">Sean P. Kelley</div>
           <div class="maestro-grade">9th Degree Black Belt · Master of the Arts</div>
-          <a class="maestro-link">Ver Biografía →</a>
         </div>
       </div>
       <div class="maestro-card reveal reveal-delay-3" onclick="openBio('Rainer Schulte','10th Degree Black Belt · Vicepresidente CKF','Recibió su primer cinturón negro de manos de Ed Parker en 1970 y hoy es 10° Dan y Vicepresidente de la Chinese Karate Federation. Fue el encargado de introducir el American Kenpo en Europa, estableciendo la primera filial de la IKKA en Alemania.')">
@@ -2985,11 +2996,11 @@ footer {
             <img src="img/maestros/rainershulte.png" alt="Rainer Schulte" width="200" height="300" loading="lazy" decoding="async">
           </div>
           <div class="maestro-overlay"></div>
+          <div class="maestro-hover"><span class="maestro-hover-btn">Ver Biografía</span></div>
         </div>
         <div class="maestro-info">
           <div class="maestro-name">Rainer Schulte</div>
           <div class="maestro-grade">10th Degree Black Belt · Vicepresidente CKF</div>
-          <a class="maestro-link">Ver Biografía →</a>
         </div>
       </div>
       <div class="maestro-card reveal" onclick="openBio('Bill «Superfoot» Wallace','Grandmaster · PKA Champion','Campeón invicto de la Asociación Profesional de Karate (PKA), reconocido mundialmente como «Superfoot» por la velocidad de sus patadas de pierna izquierda, registradas en más de 60 millas por hora. Triple integrante del Salón de la Fama de Black Belt Magazine.')">
@@ -2998,11 +3009,11 @@ footer {
             <img src="img/maestros/billwallace.png" alt="Bill «Superfoot» Wallace" width="200" height="300" loading="lazy" decoding="async" style="object-position: center 22%;">
           </div>
           <div class="maestro-overlay"></div>
+          <div class="maestro-hover"><span class="maestro-hover-btn">Ver Biografía</span></div>
         </div>
         <div class="maestro-info">
           <div class="maestro-name">Bill «Superfoot» Wallace</div>
           <div class="maestro-grade">Grandmaster · PKA Champion</div>
-          <a class="maestro-link">Ver Biografía →</a>
         </div>
       </div>
       <div class="maestro-card reveal reveal-delay-1" onclick="openBio('Arturo Petit','8th Degree Black Belt · Fundador del Kenpo en Chile','Primer chileno en obtener el cinturón negro de Kenpo (1964) e introductor del Kenpo Karate en Chile y Sudamérica. Alcanzó el 8° Dan en 1995 y formó a generaciones de instructores hasta su fallecimiento en 2000.')">
@@ -3011,24 +3022,24 @@ footer {
             <img src="img/maestros/arturopetit.png" alt="Arturo Petit" width="200" height="300" loading="lazy" decoding="async" style="object-position: center 43%;">
           </div>
           <div class="maestro-overlay"></div>
+          <div class="maestro-hover"><span class="maestro-hover-btn">Ver Biografía</span></div>
         </div>
         <div class="maestro-info">
           <div class="maestro-name">Arturo Petit</div>
           <div class="maestro-grade">8th Degree Black Belt · Fundador del Kenpo en Chile</div>
-          <a class="maestro-link">Ver Biografía →</a>
         </div>
       </div>
       <div class="maestro-card reveal reveal-delay-2" onclick="openBio('Roberto Vidal C.','8th Degree Black Belt · Associate Master of the Arts','Representante de la Chinese Karate Federation para Chile y Sudamérica, formado bajo el Maestro Arturo Petit desde 1976. Alcanzó el 8° Dan «Associate Master of the Arts» en 2023 y fue incorporado al Kenpo Karate Hall of Fame en 2018.')">
         <div class="maestro-img">
           <div class="maestro-avatar">
-            <img src="img/maestros/robertovidal.png" alt="Roberto Vidal C." width="200" height="300" loading="lazy" decoding="async" style="object-position: center 49%;">
+            <img src="img/maestros/robertovidal.png" alt="Roberto Vidal C." width="200" height="300" loading="lazy" decoding="async" style="object-position: center 49%; transform: scale(1.3); transform-origin: 50% 5.1%;">
           </div>
           <div class="maestro-overlay"></div>
+          <div class="maestro-hover"><span class="maestro-hover-btn">Ver Biografía</span></div>
         </div>
         <div class="maestro-info">
           <div class="maestro-name">Roberto Vidal C.</div>
           <div class="maestro-grade">8th Degree Black Belt · Associate Master of the Arts</div>
-          <a class="maestro-link">Ver Biografía →</a>
         </div>
       </div>
       <div class="maestro-card reveal reveal-delay-3" onclick="openBio('Frank Trejo','10th Degree Black Belt · Grandmaster','Excampeón de kickboxing con récord profesional de 21-1 y creador del sistema «Kenpo Fusión», que combina boxeo, kickboxing, karate, judo y lucha en el suelo. Entrenó bajo Ed Parker desde 1969 y alcanzó el 10° Dan.')">
@@ -3037,11 +3048,11 @@ footer {
             <img src="img/maestros/franktrejo.png" alt="Frank Trejo" width="200" height="300" loading="lazy" decoding="async" style="object-position: center 67%;">
           </div>
           <div class="maestro-overlay"></div>
+          <div class="maestro-hover"><span class="maestro-hover-btn">Ver Biografía</span></div>
         </div>
         <div class="maestro-info">
           <div class="maestro-name">Frank Trejo</div>
           <div class="maestro-grade">10th Degree Black Belt · Grandmaster</div>
-          <a class="maestro-link">Ver Biografía →</a>
         </div>
       </div>
       </div>
@@ -3818,6 +3829,16 @@ reveals.forEach(r => observer.observe(r));
   track.addEventListener('scroll', () => requestAnimationFrame(updateArrows), { passive: true });
   window.addEventListener('resize', updateArrows);
   updateArrows();
+
+  // El navegador redirige el scroll vertical del mouse hacia el carrusel horizontal
+  // (porque no tiene overflow vertical propio), dejando la página sin desplazarse.
+  // Si el gesto es principalmente vertical, se lo devolvemos a la página.
+  track.addEventListener('wheel', e => {
+    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+      e.preventDefault();
+      window.scrollBy(0, e.deltaY);
+    }
+  }, { passive: false });
 })();
 
 // ── ACCESIBILIDAD: tarjetas clicables también operables por teclado ──
