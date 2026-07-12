@@ -36,6 +36,8 @@
   --glass: rgba(36,26,20,0.7);
   --glow-primary: rgba(228,87,46,0.45);
   --glow-gold: rgba(245,166,35,0.45);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -110,7 +112,7 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   z-index: 1000;
   padding: 1rem 2rem;
   display: flex; align-items: center; justify-content: space-between;
-  transition: all 0.4s ease;
+  transition: background 0.4s ease, backdrop-filter 0.4s ease, border-color 0.4s ease, padding 0.4s ease, box-shadow 0.4s ease;
   background: transparent;
 }
 #navbar.scrolled {
@@ -155,14 +157,14 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   text-transform: uppercase;
   padding: 0.4rem 0.7rem;
   border-radius: 4px;
-  transition: all 0.3s;
+  transition: color 0.3s;
   position: relative;
 }
 .nav-links a::after {
   content: '';
   position: absolute; bottom: 0; left: 50%; right: 50%;
   height: 1px; background: var(--accent);
-  transition: all 0.3s;
+  transition: left 0.3s, right 0.3s;
 }
 .nav-links a:hover { color: var(--accent); }
 .nav-links a:hover::after { left: 10%; right: 10%; }
@@ -173,7 +175,7 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   border-radius: 4px !important;
   border: 1px solid rgba(228,87,46,0.5);
   box-shadow: 0 0 15px var(--glow-primary);
-  transition: all 0.3s !important;
+  transition: background 0.3s, box-shadow 0.3s, transform 0.3s !important;
 }
 .nav-cta:hover {
   background: #F2711F !important;
@@ -190,7 +192,7 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 .hamburger span {
   display: block; width: 24px; height: 2px;
   background: var(--text-main);
-  transition: all 0.3s;
+  transition: transform 0.3s, opacity 0.3s;
   border-radius: 2px;
 }
 .hamburger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
@@ -278,6 +280,25 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 }
 .hero-side-left { justify-self: end; }
 .hero-side-right { justify-self: start; }
+.hero-vidal-rotator {
+  position: relative;
+  width: 420px;
+  max-width: 100%;
+  aspect-ratio: 480 / 960;
+  filter: drop-shadow(0 4px 30px rgba(228,87,46,0.5));
+}
+.hero-vidal-frame {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  transform: scale(0.97);
+  transition: opacity 1.1s var(--ease-out), transform 1.1s var(--ease-out);
+}
+.hero-vidal-frame.is-active {
+  opacity: 1;
+  transform: scale(1);
+}
 @media (max-width: 900px) {
   .hero-content {
     grid-template-columns: 1fr;
@@ -296,7 +317,7 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   letter-spacing: 0.2em; text-transform: uppercase;
   color: var(--accent);
   margin-bottom: 2rem;
-  animation: fade-up 0.8s ease 0.2s both;
+  animation: fade-up 0.8s var(--ease-out) 0.2s both;
 }
 .hero-badge::before {
   content: ''; width: 6px; height: 6px;
@@ -310,7 +331,7 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   line-height: 0.9;
   letter-spacing: -0.02em;
   margin-bottom: 1rem;
-  animation: fade-up 0.8s ease 0.4s both;
+  animation: fade-up 0.8s var(--ease-out) 0.4s both;
 }
 .hero-title .line1 { display: block; color: var(--text-main); }
 .hero-title .line2 {
@@ -335,12 +356,12 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   text-transform: uppercase;
   color: var(--text-muted);
   margin-bottom: 3rem;
-  animation: fade-up 0.8s ease 0.6s both;
+  animation: fade-up 0.8s var(--ease-out) 0.6s both;
 }
 .hero-subtitle span { color: var(--accent); }
 .hero-ctas {
   display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
-  animation: fade-up 0.8s ease 0.8s both;
+  animation: fade-up 0.8s var(--ease-out) 0.8s both;
 }
 .hero-trust {
   display: flex; align-items: center; gap: 0.5rem;
@@ -350,7 +371,7 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   font-size: 0.8rem; font-weight: 600;
   letter-spacing: 0.05em;
   color: var(--text-muted);
-  animation: fade-up 0.8s ease 1s both;
+  animation: fade-up 0.8s var(--ease-out) 1s both;
 }
 .hero-trust .icon { color: var(--accent); }
 .btn-primary {
@@ -364,12 +385,16 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   letter-spacing: 0.15em; text-transform: uppercase;
   border: none; cursor: pointer;
   box-shadow: 0 4px 25px var(--glow-primary);
-  transition: all 0.3s;
+  transition: transform 0.3s, box-shadow 0.3s;
   display: inline-flex; align-items: center; gap: 0.5rem;
 }
 .btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 35px var(--glow-primary);
+}
+.btn-primary:active {
+  transform: scale(0.97);
+  box-shadow: 0 4px 20px var(--glow-primary);
 }
 .btn-outline {
   background: transparent;
@@ -382,7 +407,7 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   letter-spacing: 0.15em; text-transform: uppercase;
   border: 1px solid rgba(245,166,35,0.4);
   cursor: pointer;
-  transition: all 0.3s;
+  transition: border-color 0.3s, background 0.3s, transform 0.3s, box-shadow 0.3s;
   display: inline-flex; align-items: center; gap: 0.5rem;
 }
 .btn-outline:hover {
@@ -391,11 +416,15 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   transform: translateY(-2px);
   box-shadow: 0 8px 30px var(--glow-gold);
 }
+.btn-outline:active {
+  transform: scale(0.97);
+  background: rgba(245,166,35,0.12);
+}
 .hero-scroll {
   position: absolute; bottom: 2rem; left: 50%;
   transform: translateX(-50%);
   display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
-  animation: fade-up 0.8s ease 1.2s both;
+  animation: fade-up 0.8s var(--ease-out) 1.2s both;
 }
 .scroll-line {
   width: 1px; height: 60px;
@@ -616,7 +645,7 @@ section { padding: 6rem 2rem; }
   font-size: 0.8rem; font-weight: 600;
   letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--accent);
-  transition: all 0.3s;
+  transition: background 0.3s, box-shadow 0.3s;
 }
 .tag:hover {
   background: rgba(228,87,46,0.3);
@@ -653,9 +682,10 @@ section { padding: 6rem 2rem; }
   border: 1px solid rgba(228,87,46,0.15);
   border-radius: 8px;
   overflow: hidden;
-  transition: all 0.4s ease;
+  transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
   cursor: pointer;
   position: relative;
+  aspect-ratio: 2/3;
   flex: 0 0 calc((100% - 3 * 1.5rem) / 4);
   scroll-snap-align: start;
 }
@@ -668,7 +698,7 @@ section { padding: 6rem 2rem; }
   border-radius: 50%;
   color: var(--text-main);
   cursor: pointer;
-  transition: all 0.3s;
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
   z-index: 2;
 }
 .maestros-carousel-arrow:hover:not(:disabled) {
@@ -697,10 +727,10 @@ section { padding: 6rem 2rem; }
   box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 30px var(--glow-primary);
 }
 .maestro-img {
-  width: 100%; aspect-ratio: 3/4;
+  position: absolute; inset: 0;
   background: linear-gradient(135deg, rgba(228,87,46,0.3) 0%, rgba(20,16,13,1) 100%);
   display: flex; align-items: center; justify-content: center;
-  position: relative; overflow: hidden;
+  overflow: hidden;
 }
 .maestro-avatar{
   width: 100%;
@@ -716,7 +746,8 @@ section { padding: 6rem 2rem; }
 .maestro-avatar img{
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
+  object-position: top;
   border-radius: 0;
 }
 .maestro-initials {
@@ -733,20 +764,13 @@ section { padding: 6rem 2rem; }
 }
 .maestro-overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(to top, var(--bg-dark) 0%, transparent 50%);
+  background: linear-gradient(to top, var(--bg-dark) 0%, var(--bg-dark) 32%, transparent 85%);
+  pointer-events: none;
 }
-.maestro-belt {
-  position: absolute; top: 1rem; right: 1rem;
-  background: rgba(20,16,13,0.8);
-  border: 1px solid var(--accent);
-  border-radius: 4px;
-  padding: 0.2rem 0.6rem;
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 0.65rem; font-weight: 700;
-  letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--accent);
+.maestro-info {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 1.5rem;
 }
-.maestro-info { padding: 1.5rem; }
 .maestro-name {
   font-family: 'Cinzel', serif;
   font-size: 1rem; font-weight: 700;
@@ -791,7 +815,7 @@ section { padding: 6rem 2rem; }
   border: 1px solid rgba(228,87,46,0.15);
   border-radius: 8px;
   padding: 2rem;
-  transition: all 0.4s;
+  transition: transform 0.4s, border-color 0.4s, box-shadow 0.4s;
   position: relative; overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -857,7 +881,7 @@ section { padding: 6rem 2rem; }
   letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--accent);
   text-decoration: none; cursor: pointer;
-  transition: all 0.3s;
+  transition: background 0.3s, box-shadow 0.3s;
   width: 100%; justify-content: center;
   margin-top: auto;
 }
@@ -865,7 +889,7 @@ section { padding: 6rem 2rem; }
   background: rgba(228,87,46,0.3);
   box-shadow: 0 0 20px var(--glow-primary);
 }
-.escuela-card { animation: fade-up 0.4s ease both; }
+.escuela-card { animation: fade-up 0.4s var(--ease-out) both; }
 
 .escuelas-filter-row {
   display: grid;
@@ -879,7 +903,7 @@ section { padding: 6rem 2rem; }
   text-transform: uppercase;
   border-radius: 50px;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: color 0.3s, border-color 0.3s;
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
@@ -978,7 +1002,7 @@ section { padding: 6rem 2rem; }
   font-family: 'Rajdhani', sans-serif;
   font-size: 0.85rem; font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: color 0.3s, border-color 0.3s;
 }
 .pager-btn:hover:not(:disabled) { color: var(--accent); border-color: var(--accent); }
 .pager-btn.active {
@@ -1005,7 +1029,7 @@ section { padding: 6rem 2rem; }
   border: 1px solid rgba(228,87,46,0.15);
   border-radius: 8px;
   overflow: hidden;
-  transition: all 0.4s;
+  transition: transform 0.4s, border-color 0.4s, box-shadow 0.4s;
 }
 .seminario-card:hover {
   transform: translateY(-6px);
@@ -1092,7 +1116,7 @@ section { padding: 6rem 2rem; }
   border-radius: 8px;
   overflow: hidden;
   cursor: pointer;
-  transition: all 0.4s;
+  transition: transform 0.4s, border-color 0.4s, box-shadow 0.4s;
 }
 .video-card:hover {
   transform: translateY(-4px);
@@ -1122,7 +1146,7 @@ section { padding: 6rem 2rem; }
   background: rgba(245,166,35,0.9);
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  transition: all 0.3s;
+  transition: background 0.3s, box-shadow 0.3s, transform 0.3s;
 }
 .video-play svg { width: 24px; fill: var(--bg-dark); margin-left: 4px; }
 .video-card:hover .video-play {
@@ -1183,8 +1207,11 @@ section { padding: 6rem 2rem; }
   z-index: 10000;
   align-items: center; justify-content: center;
   backdrop-filter: blur(10px);
+  opacity: 0;
+  transition: opacity 220ms var(--ease-out);
 }
 #lightbox.open { display: flex; }
+#lightbox.is-open { opacity: 1; }
 #lightbox.lb-chart {
   background:
     radial-gradient(ellipse 65% 65% at 50% 50%, rgba(245,166,35,0.25) 0%, rgba(228,87,46,0.12) 40%, transparent 72%),
@@ -1199,7 +1226,10 @@ section { padding: 6rem 2rem; }
   max-width: 500px; width: 90%;
   max-height: 90vh; overflow: hidden;
   text-align: center;
+  transform: scale(0.94);
+  transition: transform 220ms var(--ease-out);
 }
+#lightbox.is-open .lightbox-content { transform: scale(1); }
 #lightbox.lb-chart .lightbox-content {
   max-width: 1100px;
   background: linear-gradient(135deg, rgba(228,87,46,0.25) 0%, var(--bg-dark) 100%);
@@ -1239,7 +1269,7 @@ section { padding: 6rem 2rem; }
   border-radius: 50%;
   color: var(--text-main);
   cursor: pointer;
-  transition: all 0.3s;
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
   z-index: 10001;
 }
 .lightbox-nav:hover {
@@ -1263,8 +1293,11 @@ section { padding: 6rem 2rem; }
   z-index: 10000;
   align-items: center; justify-content: center;
   backdrop-filter: blur(10px);
+  opacity: 0;
+  transition: opacity 220ms var(--ease-out);
 }
 .instructor-modal.open { display: flex; }
+.instructor-modal.is-open { opacity: 1; }
 .instructor-modal .lightbox-nav { display: none; }
 .instructor-modal.is-gallery .lightbox-nav { display: flex; }
 .instructor-modal-content {
@@ -1275,8 +1308,11 @@ section { padding: 6rem 2rem; }
   padding: 2rem;
   max-width: 420px; width: 90%;
   text-align: center;
+  transform: scale(0.94);
+  transition: transform 220ms var(--ease-out);
   box-shadow: 0 0 45px var(--glow-gold);
 }
+.instructor-modal.is-open .instructor-modal-content { transform: scale(1); }
 .instructor-modal-avatar {
   position: relative;
   width: 100%; max-width: 320px;
@@ -1337,7 +1373,7 @@ section { padding: 6rem 2rem; }
   letter-spacing: 0.08em; text-transform: uppercase;
   color: var(--accent);
   text-decoration: none; cursor: pointer;
-  transition: all 0.3s;
+  transition: background 0.3s, box-shadow 0.3s;
 }
 .instructor-modal-schoolbtn:hover { background: rgba(245,166,35,0.28); box-shadow: 0 0 20px var(--glow-gold); }
 .instructor-modal-schoolbtn.is-soon:hover { background: rgba(245,166,35,0.14); box-shadow: none; }
@@ -1409,7 +1445,7 @@ section { padding: 6rem 2rem; }
   background: none; border: 1px solid rgba(228,87,46,0.25); border-radius: 8px;
   padding: 0.7rem; cursor: pointer; width: 100%;
   display: flex; flex-direction: column; align-items: center;
-  transition: all 0.3s;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 .belt-chart-btn:hover, .belt-chart-btn:focus-visible {
   border-color: rgba(228,87,46,0.5);
@@ -1444,7 +1480,7 @@ section { padding: 6rem 2rem; }
   display: flex; flex-direction: column; align-items: center; text-align: center;
   gap: 0.6rem;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
 }
 .belt-card:hover, .belt-card:focus-visible {
   transform: translateY(-4px);
@@ -1474,7 +1510,7 @@ section { padding: 6rem 2rem; }
 .belt-doc-chip {
   display: flex; align-items: center; gap: 0.8rem;
   background: transparent; border: 1px solid rgba(245,166,35,0.4); border-radius: 6px;
-  padding: 0.8rem 1.1rem; text-decoration: none; transition: all 0.3s;
+  padding: 0.8rem 1.1rem; text-decoration: none; transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
 }
 .belt-doc-chip:hover {
   border-color: var(--accent); background: rgba(245,166,35,0.08);
@@ -1499,8 +1535,11 @@ section { padding: 6rem 2rem; }
   align-items: center; justify-content: center;
   backdrop-filter: blur(10px);
   padding: 2rem 1rem;
+  opacity: 0;
+  transition: opacity 220ms var(--ease-out);
 }
 .programa-modal.open { display: flex; }
+.programa-modal.is-open { opacity: 1; }
 .programa-modal-content {
   position: relative;
   background: var(--bg-card);
@@ -1510,7 +1549,10 @@ section { padding: 6rem 2rem; }
   max-width: 640px; width: 100%;
   max-height: 85vh; overflow-y: auto;
   box-shadow: 0 0 45px var(--glow-gold);
+  transform: scale(0.94);
+  transition: transform 220ms var(--ease-out);
 }
+.programa-modal.is-open .programa-modal-content { transform: scale(1); }
 .programa-modal-head {
   display: flex; align-items: center; gap: 1.2rem;
   padding-bottom: 1.2rem; margin-bottom: 1.2rem;
@@ -1582,7 +1624,7 @@ section { padding: 6rem 2rem; }
   cursor: pointer;
   border: none; background: none;
   border-bottom: 2px solid transparent;
-  transition: all 0.3s;
+  transition: color 0.3s, border-bottom-color 0.3s;
   margin-bottom: -1px;
 }
 .blog-tab.active, .blog-tab:hover {
@@ -1601,7 +1643,7 @@ section { padding: 6rem 2rem; }
   border: 1px solid rgba(228,87,46,0.15);
   border-radius: 8px;
   overflow: hidden;
-  transition: all 0.4s;
+  transition: transform 0.4s, border-color 0.4s, box-shadow 0.4s;
 }
 .blog-card:hover {
   transform: translateY(-4px);
@@ -1857,7 +1899,7 @@ section { padding: 6rem 2rem; }
   letter-spacing: 0.03em; text-transform: uppercase;
   color: var(--text-muted);
   cursor: pointer;
-  transition: all 0.3s;
+  transition: color 0.3s, border-color 0.3s;
   text-align: center;
   white-space: nowrap;
   display: flex;
@@ -1911,8 +1953,8 @@ section { padding: 6rem 2rem; }
   overflow: hidden;
   position: relative;
   cursor: pointer;
-  transition: all 0.4s;
-  animation: fade-up 0.4s ease both;
+  transition: transform 0.4s, border-color 0.4s, box-shadow 0.4s;
+  animation: fade-up 0.4s var(--ease-out) both;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -2071,7 +2113,7 @@ section { padding: 6rem 2rem; }
   display: flex; align-items: center; justify-content: center;
   font-size: 0.85rem; color: var(--accent);
   text-decoration: none;
-  transition: all 0.3s;
+  transition: background 0.3s, box-shadow 0.3s, transform 0.3s;
   cursor: pointer;
 }
 .social-btn-sm:hover {
@@ -2127,11 +2169,14 @@ section { padding: 6rem 2rem; }
 }
 .faq-item.open .faq-icon { transform: rotate(45deg); }
 .faq-a {
-  max-height: 0; overflow: hidden;
-  transition: max-height 0.4s ease, padding 0.3s;
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  transition: grid-template-rows 0.4s var(--ease-out), padding 0.3s;
   padding: 0 1.5rem;
 }
-.faq-item.open .faq-a { max-height: 300px; padding: 0 1.5rem 1.2rem; }
+.faq-a > * { min-height: 0; overflow: hidden; }
+.faq-item.open .faq-a { grid-template-rows: 1fr; padding: 0 1.5rem 1.2rem; }
 .faq-a p {
   font-family: 'Cormorant Garamond', serif;
   font-size: 1rem; line-height: 1.7;
@@ -2246,13 +2291,14 @@ section { padding: 6rem 2rem; }
   letter-spacing: 0.15em; text-transform: uppercase;
   cursor: pointer;
   box-shadow: 0 4px 20px var(--glow-primary);
-  transition: all 0.3s;
+  transition: transform 0.3s, box-shadow 0.3s;
   display: flex; align-items: center; justify-content: center; gap: 0.5rem;
 }
 .btn-submit:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 30px var(--glow-primary);
 }
+.btn-submit:active { transform: scale(0.97); }
 
 /* ── FOOTER ── */
 footer {
@@ -2286,7 +2332,7 @@ footer {
   display: flex; align-items: center; justify-content: center;
   font-size: 1rem; color: var(--accent);
   text-decoration: none;
-  transition: all 0.3s;
+  transition: background 0.3s, box-shadow 0.3s, transform 0.3s;
   cursor: pointer;
 }
 .social-btn:hover {
@@ -2337,7 +2383,7 @@ footer {
   border: 1px solid rgba(228,87,46,0.15);
   border-radius: 6px;
   overflow: hidden;
-  transition: all 0.3s;
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
 }
 .empresa-card:hover {
   border-color: rgba(245,166,35,0.35);
@@ -2367,7 +2413,7 @@ footer {
   letter-spacing: 0.1em; text-transform: uppercase;
   border-radius: 50px; padding: 0.4rem 1rem;
   text-decoration: none; cursor: pointer; border: none;
-  transition: all 0.3s;
+  transition: background 0.3s;
 }
 .empresa-card-btn-open { color: var(--bg-dark); background: var(--accent); }
 .empresa-card-btn-open:hover { background: #ffcf6e; }
@@ -2394,8 +2440,11 @@ footer {
   align-items: center; justify-content: center;
   backdrop-filter: blur(10px);
   padding: 2rem 1rem;
+  opacity: 0;
+  transition: opacity 220ms var(--ease-out);
 }
 .empresa-preview-modal.open { display: flex; }
+.empresa-preview-modal.is-open { opacity: 1; }
 .empresa-preview-content {
   position: relative;
   background: var(--bg-card);
@@ -2406,7 +2455,10 @@ footer {
   max-height: 90vh;
   display: flex; flex-direction: column; gap: 0.8rem;
   box-shadow: 0 0 45px var(--glow-gold);
+  transform: scale(0.94);
+  transition: transform 220ms var(--ease-out);
 }
+.empresa-preview-modal.is-open .empresa-preview-content { transform: scale(1); }
 .empresa-preview-header {
   display: flex; align-items: center; justify-content: space-between; gap: 1rem;
 }
@@ -2468,7 +2520,7 @@ footer {
   box-shadow: 0 4px 20px rgba(37,211,102,0.4);
   text-decoration: none;
   color: white;
-  animation: pulse-wa 2s ease infinite;
+  animation: pulse-wa 2s ease 3;
   transition: transform 0.3s;
 }
 .float-whatsapp:hover { transform: scale(1.1); }
@@ -2487,7 +2539,7 @@ footer {
   color: var(--text-muted);
   text-decoration: none;
   backdrop-filter: blur(10px);
-  transition: all 0.3s;
+  transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
   box-shadow: 0 0 12px rgba(245,166,35,0.2);
 }
 .float-dev span {
@@ -2513,7 +2565,7 @@ footer {
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
   opacity: 0; pointer-events: none;
-  transition: all 0.3s;
+  transition: opacity 0.3s, background 0.3s, box-shadow 0.3s, transform 0.3s;
   backdrop-filter: blur(10px);
 }
 .scroll-top.visible { opacity: 1; pointer-events: all; }
@@ -2552,7 +2604,7 @@ footer {
   50% { opacity: 1; }
 }
 @keyframes float-particle {
-  0% { opacity: 0; transform: translateY(100vh) scale(0); }
+  0% { opacity: 0; transform: translateY(100vh) scale(0.3); }
   10% { opacity: 0.6; }
   90% { opacity: 0.3; }
   100% { opacity: 0; transform: translateY(-20px) scale(1.5); }
@@ -2565,7 +2617,7 @@ footer {
 /* ── REVEAL ANIMATION ── */
 .reveal {
   opacity: 0; transform: translateY(40px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
+  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
 }
 .reveal.visible {
   opacity: 1; transform: translateY(0);
@@ -2703,6 +2755,20 @@ footer {
       <div class="hero-side-right">
         <img src="img/header/maestro.png" alt="Maestro Kenpo" class="hero-side-img" width="480" height="960" loading="eager">
       </div>
+      <!-- Rotador animado del maestro Vidal (img/vidal/*.webp) — desactivado temporalmente,
+           el markup y el bloque JS "HERO VIDAL ROTATOR" siguen disponibles para reactivarlo:
+      <div class="hero-side-right">
+        <div class="hero-vidal-rotator" id="heroVidalRotator" role="img" aria-label="Maestro Roberto Vidal C. practicando Kenpo Karate">
+          <img src="img/vidal/04.webp" alt="" class="hero-vidal-frame is-active" width="480" height="960" loading="eager" fetchpriority="high" aria-hidden="true">
+          <img src="img/vidal/01.webp" alt="" class="hero-vidal-frame" width="480" height="960" loading="eager" aria-hidden="true">
+          <img src="img/vidal/02.webp" alt="" class="hero-vidal-frame" width="480" height="960" loading="eager" aria-hidden="true">
+          <img src="img/vidal/03.webp" alt="" class="hero-vidal-frame" width="480" height="960" loading="eager" aria-hidden="true">
+          <img src="img/vidal/05.webp" alt="" class="hero-vidal-frame" width="480" height="960" loading="eager" aria-hidden="true">
+          <img src="img/vidal/06.webp" alt="" class="hero-vidal-frame" width="480" height="960" loading="eager" aria-hidden="true">
+          <img src="img/vidal/07.webp" alt="" class="hero-vidal-frame" width="480" height="960" loading="eager" aria-hidden="true">
+        </div>
+      </div>
+      -->
     </div>
     <div class="hero-scroll">
       <div class="scroll-line"></div>
@@ -2719,11 +2785,11 @@ footer {
       <span class="stat-label">Grado Black Belt</span>
     </div>
     <div class="stat-item reveal reveal-delay-1">
-      <span class="stat-num">+20</span>
+      <span class="stat-num" data-count-to="20" data-count-prefix="+">+0</span>
       <span class="stat-label">Años de Tradición</span>
     </div>
     <div class="stat-item reveal reveal-delay-2">
-      <span class="stat-num">20+</span>
+      <span class="stat-num" data-count-to="20" data-count-suffix="+">0+</span>
       <span class="stat-label">Escuelas en Chile</span>
     </div>
     <div class="stat-item reveal reveal-delay-3">
@@ -2883,10 +2949,9 @@ footer {
       <div class="maestro-card reveal" onclick="openBio('Ed Parker','Founder of American Kenpo Karate','Ed Parker fue el fundador del American Kenpo Karate y una de las figuras más influyentes en las artes marciales modernas. Su legado continúa inspirando a generaciones de practicantes alrededor del mundo gracias a su enfoque innovador, práctico y filosófico del Kenpo.')">
         <div class="maestro-img">
           <div class="maestro-avatar">
-            <img src="img/maestros/edparker.png" alt="Ed Parker" width="200" height="300" loading="lazy" decoding="async">
+            <img src="img/maestros/edparker.png" alt="Ed Parker" width="200" height="300" loading="lazy" decoding="async" style="transform: scale(1.088); transform-origin: bottom center;">
           </div>
           <div class="maestro-overlay"></div>
-          <div class="maestro-belt">10° Dan</div>
         </div>
         <div class="maestro-info">
           <div class="maestro-name">Ed Parker</div>
@@ -2897,10 +2962,9 @@ footer {
       <div class="maestro-card reveal reveal-delay-1" onclick="openBio('Michael Robert Pick','10th Degree Black Belt · Grandmaster','Comenzó su entrenamiento en 1957 bajo la tutela directa de Ed Parker en Pasadena, California, y fue el único cinturón negro promovido personalmente con el propio cinturón del Gran Maestro. Veterano del Cuerpo de Marines en Vietnam, alcanzó el 10° Dan y el título de Segundo Gran Maestro del American Kenpo en 1997.')">
         <div class="maestro-img">
           <div class="maestro-avatar">
-            <img src="img/maestros/robertpick.webp" alt="Michael Robert Pick" width="200" height="300" loading="lazy" decoding="async">
+            <img src="img/maestros/robertpick.png" alt="Michael Robert Pick" width="200" height="300" loading="lazy" decoding="async" style="object-position: center 36%;">
           </div>
           <div class="maestro-overlay"></div>
-          <div class="maestro-belt">10° Dan</div>
         </div>
         <div class="maestro-info">
           <div class="maestro-name">Michael Robert Pick</div>
@@ -2911,10 +2975,9 @@ footer {
       <div class="maestro-card reveal reveal-delay-2" onclick="openBio('Sean P. Kelley','9th Degree Black Belt · Master of the Arts','Head instructor y presidente de la Chinese Karate Federation, formado bajo el sistema de Ed Parker desde 1978. Hoy ostenta el 9° Dan «Master of the Arts» y ha enseñado en Estados Unidos, Canadá, Sudamérica, Reino Unido e Irlanda.')">
         <div class="maestro-img">
           <div class="maestro-avatar">
-            <img src="img/maestros/seankelley.webp" alt="Sean P. Kelley" width="200" height="300" loading="lazy" decoding="async">
+            <img src="img/maestros/seankelley.png" alt="Sean P. Kelley" width="200" height="300" loading="lazy" decoding="async">
           </div>
           <div class="maestro-overlay"></div>
-          <div class="maestro-belt">9° Dan</div>
         </div>
         <div class="maestro-info">
           <div class="maestro-name">Sean P. Kelley</div>
@@ -2925,10 +2988,9 @@ footer {
       <div class="maestro-card reveal reveal-delay-3" onclick="openBio('Rainer Schulte','10th Degree Black Belt · Vicepresidente CKF','Recibió su primer cinturón negro de manos de Ed Parker en 1970 y hoy es 10° Dan y Vicepresidente de la Chinese Karate Federation. Fue el encargado de introducir el American Kenpo en Europa, estableciendo la primera filial de la IKKA en Alemania.')">
         <div class="maestro-img">
           <div class="maestro-avatar">
-            <img src="img/maestros/rainershulte.webp" alt="Rainer Schulte" width="200" height="300" loading="lazy" decoding="async">
+            <img src="img/maestros/rainershulte.png" alt="Rainer Schulte" width="200" height="300" loading="lazy" decoding="async">
           </div>
           <div class="maestro-overlay"></div>
-          <div class="maestro-belt">10° Dan</div>
         </div>
         <div class="maestro-info">
           <div class="maestro-name">Rainer Schulte</div>
@@ -2939,10 +3001,9 @@ footer {
       <div class="maestro-card reveal" onclick="openBio('Bill «Superfoot» Wallace','Grandmaster · PKA Champion','Campeón invicto de la Asociación Profesional de Karate (PKA), reconocido mundialmente como «Superfoot» por la velocidad de sus patadas de pierna izquierda, registradas en más de 60 millas por hora. Triple integrante del Salón de la Fama de Black Belt Magazine.')">
         <div class="maestro-img">
           <div class="maestro-avatar">
-            <img src="img/maestros/billwallace.webp" alt="Bill «Superfoot» Wallace" width="200" height="300" loading="lazy" decoding="async">
+            <img src="img/maestros/billwallace.png" alt="Bill «Superfoot» Wallace" width="200" height="300" loading="lazy" decoding="async" style="object-position: center 22%;">
           </div>
           <div class="maestro-overlay"></div>
-          <div class="maestro-belt">Grandmaster</div>
         </div>
         <div class="maestro-info">
           <div class="maestro-name">Bill «Superfoot» Wallace</div>
@@ -2953,10 +3014,9 @@ footer {
       <div class="maestro-card reveal reveal-delay-1" onclick="openBio('Arturo Petit','8th Degree Black Belt · Fundador del Kenpo en Chile','Primer chileno en obtener el cinturón negro de Kenpo (1964) e introductor del Kenpo Karate en Chile y Sudamérica. Alcanzó el 8° Dan en 1995 y formó a generaciones de instructores hasta su fallecimiento en 2000.')">
         <div class="maestro-img">
           <div class="maestro-avatar">
-            <img src="img/maestros/arturopetit.webp" alt="Arturo Petit" width="200" height="300" loading="lazy" decoding="async">
+            <img src="img/maestros/arturopetit.png" alt="Arturo Petit" width="200" height="300" loading="lazy" decoding="async" style="object-position: center 43%;">
           </div>
           <div class="maestro-overlay"></div>
-          <div class="maestro-belt">8° Dan</div>
         </div>
         <div class="maestro-info">
           <div class="maestro-name">Arturo Petit</div>
@@ -2967,10 +3027,9 @@ footer {
       <div class="maestro-card reveal reveal-delay-2" onclick="openBio('Roberto Vidal C.','8th Degree Black Belt · Associate Master of the Arts','Representante de la Chinese Karate Federation para Chile y Sudamérica, formado bajo el Maestro Arturo Petit desde 1976. Alcanzó el 8° Dan «Associate Master of the Arts» en 2023 y fue incorporado al Kenpo Karate Hall of Fame en 2018.')">
         <div class="maestro-img">
           <div class="maestro-avatar">
-            <img src="img/maestros/robertovidal.webp" alt="Roberto Vidal C." width="200" height="300" loading="lazy" decoding="async">
+            <img src="img/maestros/robertovidal.png" alt="Roberto Vidal C." width="200" height="300" loading="lazy" decoding="async" style="object-position: center 49%;">
           </div>
           <div class="maestro-overlay"></div>
-          <div class="maestro-belt">8° Dan</div>
         </div>
         <div class="maestro-info">
           <div class="maestro-name">Roberto Vidal C.</div>
@@ -2981,10 +3040,9 @@ footer {
       <div class="maestro-card reveal reveal-delay-3" onclick="openBio('Frank Trejo','10th Degree Black Belt · Grandmaster','Excampeón de kickboxing con récord profesional de 21-1 y creador del sistema «Kenpo Fusión», que combina boxeo, kickboxing, karate, judo y lucha en el suelo. Entrenó bajo Ed Parker desde 1969 y alcanzó el 10° Dan.')">
         <div class="maestro-img">
           <div class="maestro-avatar">
-            <img src="img/maestros/franktrejo.webp" alt="Frank Trejo" width="200" height="300" loading="lazy" decoding="async">
+            <img src="img/maestros/franktrejo.png" alt="Frank Trejo" width="200" height="300" loading="lazy" decoding="async" style="object-position: center 67%;">
           </div>
           <div class="maestro-overlay"></div>
-          <div class="maestro-belt">10° Dan</div>
         </div>
         <div class="maestro-info">
           <div class="maestro-name">Frank Trejo</div>
@@ -3614,6 +3672,41 @@ if (waDisplayEl) waDisplayEl.textContent = CONFIG.whatsappDisplay;
 // ── MOTION / DEVICE PREFERENCES ──
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+// ── STATS COUNT-UP ──
+const countObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const el = entry.target;
+    countObserver.unobserve(el);
+    const target = Number(el.dataset.countTo);
+    const prefix = el.dataset.countPrefix || '';
+    const suffix = el.dataset.countSuffix || '';
+    if (prefersReducedMotion) { el.textContent = prefix + target + suffix; return; }
+    const duration = 1200;
+    const start = performance.now();
+    function tick(now) {
+      const elapsed = Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - elapsed, 3);
+      el.textContent = prefix + Math.round(target * eased) + suffix;
+      if (elapsed < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('[data-count-to]').forEach(el => countObserver.observe(el));
+
+// ── HERO VIDAL ROTATOR ──
+(function () {
+  const frames = document.querySelectorAll('#heroVidalRotator .hero-vidal-frame');
+  if (frames.length < 2 || prefersReducedMotion) return;
+  let idx = 0;
+  setInterval(() => {
+    frames[idx].classList.remove('is-active');
+    idx = (idx + 1) % frames.length;
+    frames[idx].classList.add('is-active');
+  }, 4500);
+})();
+
 // ── NAVBAR ──
 const navbar = document.getElementById('navbar');
 window.addEventListener('scroll', () => {
@@ -3777,12 +3870,14 @@ let currentInsigniaIndex = -1;
 function openLightbox() {
   const lb = document.getElementById('lightbox');
   lb.classList.add('open');
+  requestAnimationFrame(() => requestAnimationFrame(() => lb.classList.add('is-open')));
   lb.querySelector('.lightbox-close').focus();
 }
 function closeLightbox() {
   const lb = document.getElementById('lightbox');
   if (!lb.classList.contains('open')) return;
-  lb.classList.remove('open', 'lightbox-gallery', 'lb-chart');
+  lb.classList.remove('is-open');
+  setTimeout(() => lb.classList.remove('open', 'lightbox-gallery', 'lb-chart'), 220);
   const lbImage = document.getElementById('lbImage');
   lbImage.style.width = '100%';
   lbImage.style.maxWidth = '320px';
@@ -4085,8 +4180,8 @@ function renderEscuelasGridAndPager() {
     empty.style.display = 'block';
   } else {
     empty.style.display = 'none';
-    grid.innerHTML = pageItems.map(e => `
-      <div class="escuela-card">
+    grid.innerHTML = pageItems.map((e, i) => `
+      <div class="escuela-card" style="animation-delay:${i * 50}ms">
         <div class="escuela-icon"><img src="img/escuelas-insignias/${e.insignia}" alt="Insignia ${e.nombre}" loading="lazy" decoding="async"></div>
         <div class="escuela-nombre">${e.nombre}</div>
         <div class="escuela-director">Dir. ${e.director}</div>
@@ -4867,12 +4962,14 @@ function openInstructorModal(idx) {
   const modal = document.getElementById('instructorModal');
   modal.classList.toggle('is-gallery', currentInstructorPageItems.length > 1);
   modal.classList.add('open');
+  requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add('is-open')));
   modal.querySelector('.lightbox-close').focus();
 }
 function closeInstructorModal() {
   const modal = document.getElementById('instructorModal');
   if (!modal.classList.contains('open')) return;
-  modal.classList.remove('open', 'is-gallery');
+  modal.classList.remove('is-open');
+  setTimeout(() => modal.classList.remove('open', 'is-gallery'), 220);
   instructorModalIndex = -1;
   if (instructorModalTrigger) { instructorModalTrigger.focus(); instructorModalTrigger = null; }
 }
@@ -5545,12 +5642,14 @@ function openProgramaModal(id) {
 
   const modal = document.getElementById('programaModal');
   modal.classList.add('open');
+  requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add('is-open')));
   modal.querySelector('.lightbox-close').focus();
 }
 function closeProgramaModal() {
   const modal = document.getElementById('programaModal');
   if (!modal.classList.contains('open')) return;
-  modal.classList.remove('open');
+  modal.classList.remove('is-open');
+  setTimeout(() => modal.classList.remove('open'), 220);
   if (programaModalTrigger) { programaModalTrigger.focus(); programaModalTrigger = null; }
 }
 document.getElementById('programaModal').addEventListener('click', function(e) {
@@ -5593,13 +5692,17 @@ function openEmpresaPreview(nombre, url) {
   document.getElementById('empresaPreviewFallback').href = url;
   const modal = document.getElementById('empresaPreviewModal');
   modal.classList.add('open');
+  requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add('is-open')));
   modal.querySelector('.empresa-preview-close').focus();
 }
 function closeEmpresaPreview() {
   const modal = document.getElementById('empresaPreviewModal');
   if (!modal.classList.contains('open')) return;
-  modal.classList.remove('open');
-  document.getElementById('empresaPreviewFrame').src = '';
+  modal.classList.remove('is-open');
+  setTimeout(() => {
+    modal.classList.remove('open');
+    document.getElementById('empresaPreviewFrame').src = '';
+  }, 220);
   if (empresaPreviewTrigger) { empresaPreviewTrigger.focus(); empresaPreviewTrigger = null; }
 }
 document.getElementById('empresaPreviewModal').addEventListener('click', function(e) {
