@@ -4361,7 +4361,7 @@ function renderEscuelasGridAndPager() {
   } else {
     empty.style.display = 'none';
     grid.innerHTML = pageItems.map((e, i) => `
-      <div class="escuela-card" style="animation-delay:${i * 50}ms">
+      <div class="escuela-card" tabindex="0" style="animation-delay:${i * 50}ms">
         <div class="escuela-icon"><img src="img/escuelas-insignias/${e.insignia}" alt="Insignia ${e.nombre}" loading="lazy" decoding="async"></div>
         <div class="escuela-nombre">${e.nombre}</div>
         <div class="escuela-director">Dir. ${e.director}</div>
@@ -4401,11 +4401,13 @@ function renderEscuelasSection() {
 }
 renderEscuelasSection();
 
-// Flechas del teclado en las etiquetas de país/región/comuna de Nuestras Escuelas:
-// activas mientras la sección está a la vista (igual que el atajo "B" de buscar), sin
-// necesidad de enfocar antes ninguna etiqueta. → ← seleccionan la etiqueta contigua de
-// la fila donde está el "cursor" de teclado; ↓ ↑ mueven ese cursor a la fila siguiente/
-// anterior que esté visible, permitiendo recorrer país → región → comuna sin soltar el teclado.
+// Flechas del teclado en Nuestras Escuelas: activas mientras la sección está a la vista
+// (igual que el atajo "B" de buscar), sin necesidad de enfocar antes nada. En las etiquetas
+// de país/región/comuna, → ← seleccionan la contigua de la fila donde está el cursor;
+// ↓ ↑ mueven ese cursor entre filas visibles. Al bajar desde la última fila de etiquetas,
+// el cursor entra a la grilla de tarjetas de resultados: ahí las flechas recorren las
+// tarjetas (en sus filas reales, ya que la grilla usa columnas fluidas), ↑ desde la primera
+// fila vuelve a las etiquetas, y Enter sobre una tarjeta activa su botón "Inscribirme".
 (function() {
   let sectionInView = false;
   const section = document.getElementById('escuelas');
@@ -4424,12 +4426,98 @@ renderEscuelasSection();
     const tag = (el.tagName || '').toLowerCase();
     return tag === 'input' || tag === 'textarea' || el.isContentEditable;
   }
+  // Agrupa las tarjetas en filas según la cantidad real de columnas del grid (resuelta por
+  // el navegador a partir de auto-fill, que cambia con el ancho de pantalla). Se usa el
+  // conteo de columnas del contenedor en vez de la posición vertical de cada tarjeta porque
+  // estas entran con una animación (fade-up con translateY escalonado): justo después de
+  // renderizar una página nueva, sus getBoundingClientRect().top todavía están a mitad de
+  // esa animación y agruparían mal las filas.
+  function getEscuelaCardRows() {
+    const grid = document.getElementById('escuelasGrid');
+    const cards = Array.from(grid.querySelectorAll('.escuela-card'));
+    if (!cards.length) return [];
+    const colCount = getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length || 1;
+    const rows = [];
+    for (let i = 0; i < cards.length; i += colCount) rows.push(cards.slice(i, i + colCount));
+    return rows;
+  }
+  function focusTabRow(rowId) {
+    const rowEl = escuelaTabRowEl(rowId);
+    if (!rowEl) return false;
+    escuelaKeyboardRow = rowId;
+    (rowEl.querySelector('button.active') || rowEl.querySelector('button'))?.focus();
+    return true;
+  }
+  // Continúa la secuencia de lectura hacia la página siguiente/anterior cuando el cursor
+  // sale por el borde de una fila: mantiene la MISMA fila en la nueva página (la fila 2
+  // sigue en la fila 2), enfocando su primera tarjeta al avanzar o su última al retroceder.
+  // Si la nueva página tiene menos filas, se ajusta a la última fila disponible.
+  function goEscuelaPage(direction, rowIdx, edge) {
+    const totalPages = Math.max(1, Math.ceil(getFilteredEscuelas().length / ESCUELAS_PAGE_SIZE));
+    const newPage = escuelaPage + direction;
+    if (newPage < 1 || newPage > totalPages) return false;
+    escuelaPage = newPage;
+    renderEscuelasGridAndPager();
+    const rows = getEscuelaCardRows();
+    if (!rows.length) return true;
+    const targetRow = rows[Math.min(rowIdx, rows.length - 1)];
+    const target = edge === 'first' ? targetRow[0] : targetRow[targetRow.length - 1];
+    target?.focus();
+    return true;
+  }
+
   document.addEventListener('keydown', e => {
-    if (!['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp'].includes(e.key)) return;
+    if (!['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp', 'Enter'].includes(e.key)) return;
     if (!sectionInView || isTypingTarget(e.target)) return;
     if (document.getElementById('lightbox')?.classList.contains('open')) return;
     if (document.getElementById('instructorModal')?.classList.contains('open')) return;
 
+    const focusedCard = e.target.closest('#escuelasGrid .escuela-card');
+
+    if (e.key === 'Enter') {
+      if (!focusedCard) return;
+      e.preventDefault();
+      focusedCard.querySelector('.btn-escuela')?.click();
+      return;
+    }
+
+    // ── Cursor sobre una tarjeta de la grilla ──
+    if (focusedCard) {
+      const rows = getEscuelaCardRows();
+      const rowIdx = rows.findIndex(r => r.includes(focusedCard));
+      if (rowIdx === -1) return;
+      const colIdx = rows[rowIdx].indexOf(focusedCard);
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        const dir = e.key === 'ArrowRight' ? 1 : -1;
+        const next = rows[rowIdx][colIdx + dir];
+        if (next) {
+          e.preventDefault();
+          next.focus();
+        } else if (dir === 1) {
+          // Tarjeta más a la derecha de la fila (cualquier fila): pasa a la página siguiente,
+          // a la primera tarjeta de esa MISMA fila.
+          if (goEscuelaPage(1, rowIdx, 'first')) e.preventDefault();
+        } else {
+          // Tarjeta más a la izquierda de la fila (cualquier fila): retrocede a la página
+          // anterior, a la última tarjeta de esa MISMA fila.
+          if (goEscuelaPage(-1, rowIdx, 'last')) e.preventDefault();
+        }
+      } else if (e.key === 'ArrowDown') {
+        const nextRow = rows[rowIdx + 1];
+        if (nextRow) { e.preventDefault(); nextRow[Math.min(colIdx, nextRow.length - 1)].focus(); }
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (rowIdx === 0) {
+          focusTabRow(escuelaKeyboardRow) || focusTabRow('paisTabs');
+        } else {
+          const prevRow = rows[rowIdx - 1];
+          prevRow[Math.min(colIdx, prevRow.length - 1)].focus();
+        }
+      }
+      return;
+    }
+
+    // ── Cursor sobre las etiquetas de país/región/comuna ──
     let rowEl = escuelaTabRowEl(escuelaKeyboardRow) || escuelaTabRowEl('paisTabs');
     if (!rowEl) return;
     escuelaKeyboardRow = rowEl.id;
@@ -4446,18 +4534,24 @@ renderEscuelasSection();
       // el botón recién marcado como activo: eso muestra con el anillo de foco del sitio
       // en cuál fila y etiqueta está el cursor de teclado.
       document.getElementById(escuelaKeyboardRow)?.querySelector('button.active')?.focus();
-    } else {
+    } else if (e.key === 'ArrowDown') {
       e.preventDefault();
-      const dir = e.key === 'ArrowDown' ? 1 : -1;
-      let pos = ESCUELA_TAB_ROW_IDS.indexOf(escuelaKeyboardRow) + dir;
-      while (pos >= 0 && pos < ESCUELA_TAB_ROW_IDS.length) {
-        const targetRow = escuelaTabRowEl(ESCUELA_TAB_ROW_IDS[pos]);
-        if (targetRow) {
-          escuelaKeyboardRow = ESCUELA_TAB_ROW_IDS[pos];
-          (targetRow.querySelector('button.active') || targetRow.querySelector('button'))?.focus();
-          break;
-        }
-        pos += dir;
+      let pos = ESCUELA_TAB_ROW_IDS.indexOf(escuelaKeyboardRow) + 1;
+      let moved = false;
+      while (pos < ESCUELA_TAB_ROW_IDS.length) {
+        if (focusTabRow(ESCUELA_TAB_ROW_IDS[pos])) { moved = true; break; }
+        pos += 1;
+      }
+      if (!moved) {
+        // Ya estaba en la última fila de etiquetas visible: continúa hacia la grilla.
+        document.querySelector('#escuelasGrid .escuela-card')?.focus();
+      }
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      let pos = ESCUELA_TAB_ROW_IDS.indexOf(escuelaKeyboardRow) - 1;
+      while (pos >= 0) {
+        if (focusTabRow(ESCUELA_TAB_ROW_IDS[pos])) break;
+        pos -= 1;
       }
     }
   });
