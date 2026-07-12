@@ -2754,7 +2754,7 @@ footer {
       </div>
       <div class="hero-side-right">
         <div class="hero-vidal-rotator" id="heroVidalRotator" role="img" aria-label="Maestro Roberto Vidal C. practicando Kenpo Karate">
-          <img src="img/vidal/04.png" alt="" class="hero-vidal-frame is-active" width="480" height="960" loading="eager" fetchpriority="high" aria-hidden="true">
+          <img src="img/vidal/04.png" alt="" class="hero-vidal-frame" width="480" height="960" loading="eager" fetchpriority="high" aria-hidden="true">
           <img src="img/vidal/01.png" alt="" class="hero-vidal-frame" width="480" height="960" loading="eager" aria-hidden="true">
           <img src="img/vidal/02.png" alt="" class="hero-vidal-frame" width="480" height="960" loading="eager" aria-hidden="true">
           <img src="img/vidal/03.png" alt="" class="hero-vidal-frame" width="480" height="960" loading="eager" aria-hidden="true">
@@ -3692,12 +3692,24 @@ document.querySelectorAll('[data-count-to]').forEach(el => countObserver.observe
 // ── HERO VIDAL ROTATOR ──
 (function () {
   const frames = document.querySelectorAll('#heroVidalRotator .hero-vidal-frame');
-  if (frames.length < 2 || prefersReducedMotion) return;
-  let idx = 0;
+  if (frames.length < 2) return;
+
+  // shuffle the display order fresh on every page load/refresh
+  const order = [...frames.keys()];
+  for (let i = order.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [order[i], order[j]] = [order[j], order[i]];
+  }
+
+  frames.forEach(f => f.classList.remove('is-active'));
+  let pos = 0;
+  frames[order[pos]].classList.add('is-active');
+  if (prefersReducedMotion) return;
+
   setInterval(() => {
-    frames[idx].classList.remove('is-active');
-    idx = (idx + 1) % frames.length;
-    frames[idx].classList.add('is-active');
+    frames[order[pos]].classList.remove('is-active');
+    pos = (pos + 1) % order.length;
+    frames[order[pos]].classList.add('is-active');
   }, 4500);
 })();
 
@@ -3971,9 +3983,9 @@ const ESCUELAS = [
   { nombre: 'International Caliga Kenpo Studio', director: 'Aaron Torres', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'Torres_lineaje.webp' },
   { nombre: 'International Cornejo Kenpo Studio', director: 'Daniel Cornejo', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'INTERNATIONAL-CORNEJO-v2.webp' },
   { nombre: 'International Manríquez Kenpo Studio', director: 'Miguel Ángel Manríquez', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'International-Manriquez-Kenpo-Studio.webp' },
-  { nombre: 'International Pérez Kenpo Studio', director: 'Francisco Pérez y Marcelo Pérez', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'Insignia-Hermanos-Perez.webp' },
-  { nombre: 'International Lorca Kenpo Studio', director: 'Roberto Lorca Pacheco', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'Insignia-Roberto-Lorca.webp' },
-  { nombre: 'Taller de Kenpo Karate del departamento de deportes de la Ilustre Municipalidad de Maipú', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: ESCUELA_COMUNA_MUNICIPAL, lugar: 'Maipú · Depto. de Deportes', insignia: 'maipu_2021.webp' },
+  { nombre: 'International Pérez Kenpo Studio', director: 'Francisco Pérez y Marcelo Pérez', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'Insignia-Hermanos-Perez.png' },
+  { nombre: 'International Lorca Kenpo Studio', director: 'Roberto Lorca Pacheco', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'Insignia-Roberto-Lorca.png' },
+  { nombre: 'Taller de Kenpo Karate del departamento de deportes de la Ilustre Municipalidad de Maipú', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: ESCUELA_COMUNA_MUNICIPAL, lugar: 'Maipú · Depto. de Deportes', insignia: 'maipu_2021.png' },
   { nombre: 'Instituto Nacional de Deportes', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: ESCUELA_COMUNA_MUNICIPAL, lugar: 'Maipú', insignia: 'IND.webp' },
   { nombre: 'Gimnasio Alemán', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: ESCUELA_COMUNA_MUNICIPAL, lugar: 'Región Metropolitana', insignia: 'Gym-Aleman.webp' },
   { nombre: 'DuocUC', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: ESCUELA_COMUNA_MUNICIPAL, lugar: 'Sedes Alameda, Maipú y Plaza Oeste', insignia: 'Insignia-Duoc-v2-1.webp' },
