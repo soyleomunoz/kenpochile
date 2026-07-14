@@ -5378,10 +5378,16 @@ document.addEventListener('click', e => {
     closeInstructorSearch();
   }
 });
-// Flechas del teclado en las etiquetas de grado de Nuestros Instructores: activas mientras
-// la sección está a la vista (igual que Nuestras Escuelas y el atajo "B" de buscar), sin
-// necesidad de enfocar antes ninguna etiqueta. → ← seleccionan la etiqueta contigua,
-// permitiendo recorrer todos los grados sin soltar el teclado.
+// Flechas del teclado en Nuestros Instructores: activas mientras la sección está a la
+// vista (igual que Nuestras Escuelas y el atajo "B" de buscar), sin necesidad de enfocar
+// antes ninguna etiqueta. En las etiquetas de grado, → ← seleccionan la contigua, y ↓ ↑
+// SOLO mueven el foco a la etiqueta de la fila visual de abajo/arriba (misma columna) sin
+// cambiar el filtro: así se puede atravesar las etiquetas y llegar a las tarjetas del
+// filtro vigente sin alterarlo; Enter o Espacio seleccionan la etiqueta enfocada. Al bajar
+// desde la última fila de etiquetas el cursor continúa hacia la grilla de resultados,
+// donde ← → recorren tarjeta por tarjeta en orden de lectura (y al salir por el borde de
+// la página pasan a la página siguiente/anterior), ↓ ↑ cambian de fila y Enter abre la
+// foto; subir desde la primera fila vuelve a las etiquetas.
 (function() {
   let sectionInView = false;
   const section = document.getElementById('instructores');
@@ -5394,13 +5400,56 @@ document.addEventListener('click', e => {
     const tag = (el.tagName || '').toLowerCase();
     return tag === 'input' || tag === 'textarea' || el.isContentEditable;
   }
+  // Agrupa los hijos de una grilla CSS en filas visuales contando las columnas resueltas,
+  // en vez de comparar getBoundingClientRect(): las tarjetas entran con una animación
+  // vertical (fade-up) y sus posiciones aún no son definitivas recién renderizadas.
+  function getGridRows(container, selector) {
+    if (!container) return [];
+    const items = Array.from(container.querySelectorAll(selector));
+    if (!items.length) return [];
+    const colCount = getComputedStyle(container).gridTemplateColumns.split(' ').filter(Boolean).length || 1;
+    const rows = [];
+    for (let i = 0; i < items.length; i += colCount) rows.push(items.slice(i, i + colCount));
+    return rows;
+  }
+  // Entre las etiquetas y la grilla de tarjetas las columnas no coinciden (anchos mínimos
+  // distintos), así que "justo debajo" se detecta por cercanía de los centros horizontales.
+  function nearestByCenterX(refEl, candidates) {
+    const ref = refEl.getBoundingClientRect();
+    const refX = ref.left + ref.width / 2;
+    let best = null, bestDist = Infinity;
+    candidates.forEach(el => {
+      const r = el.getBoundingClientRect();
+      const d = Math.abs(r.left + r.width / 2 - refX);
+      if (d < bestDist) { bestDist = d; best = el; }
+    });
+    return best;
+  }
+  function activateTab(tab) {
+    tab.click();
+    // El click re-renderiza las etiquetas (innerHTML), así que el foco se aplica sobre el
+    // botón recién marcado como activo: el anillo de foco muestra dónde quedó el cursor.
+    document.querySelector('#instructorTabs button.active')?.focus();
+  }
+  // Continúa la secuencia de lectura hacia la página siguiente/anterior cuando el cursor
+  // sale por el borde de la página: al avanzar enfoca la primera tarjeta de la página
+  // nueva; al retroceder, la última.
+  function goInstructorPage(direction) {
+    const totalPages = Math.max(1, Math.ceil(getFilteredInstructores().length / INSTRUCTORES_PAGE_SIZE));
+    const newPage = instructorPage + direction;
+    if (newPage < 1 || newPage > totalPages) return;
+    instructorPage = newPage;
+    renderInstructoresGridAndPager();
+    const cards = instructoresGrid.querySelectorAll('.instructor-card');
+    (direction === 1 ? cards[0] : cards[cards.length - 1])?.focus();
+  }
   document.addEventListener('keydown', e => {
-    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight' && e.key !== 'Escape') return;
+    if (!['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp', 'Enter', ' ', 'Escape'].includes(e.key)) return;
     if (!sectionInView || isTypingTarget(e.target)) return;
     if (document.getElementById('lightbox')?.classList.contains('open')) return;
     if (document.getElementById('instructorModal')?.classList.contains('open')) return;
-    const rowEl = document.getElementById('instructorTabs');
-    if (!rowEl || !rowEl.children.length) return;
+    const tabsEl = document.getElementById('instructorTabs');
+    if (!tabsEl || !tabsEl.children.length) return;
 
     // Esc: descarta cualquier filtro/búsqueda activo y vuelve a "Todos", sin destacar
     // la etiqueta con el anillo de foco (es un reset, no un movimiento de cursor).
@@ -5421,13 +5470,83 @@ document.addEventListener('click', e => {
       return;
     }
 
+    const focusedCard = e.target.closest?.('#instructoresGrid .instructor-card');
+    const focusedTab = e.target.closest?.('#instructorTabs button');
+
+    if (e.key === 'Enter' || e.key === ' ') {
+      if (focusedCard) {
+        e.preventDefault();
+        focusedCard.click();
+      } else if (focusedTab) {
+        // Selección explícita de la etiqueta enfocada (las flechas ↓ ↑ solo mueven foco).
+        e.preventDefault();
+        activateTab(focusedTab);
+      }
+      return;
+    }
+
+    // ── Cursor sobre una tarjeta de la grilla de resultados ──
+    if (focusedCard) {
+      const rows = getGridRows(instructoresGrid, '.instructor-card');
+      const rowIdx = rows.findIndex(r => r.includes(focusedCard));
+      if (rowIdx === -1) return;
+      const colIdx = rows[rowIdx].indexOf(focusedCard);
+      e.preventDefault();
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        // Tarjeta por tarjeta en orden de lectura; al salir por el borde de la página
+        // continúa hacia la página siguiente (primera tarjeta) o anterior (última).
+        const cards = rows.flat();
+        const dir = e.key === 'ArrowRight' ? 1 : -1;
+        const next = cards[cards.indexOf(focusedCard) + dir];
+        if (next) next.focus(); else goInstructorPage(dir);
+      } else if (e.key === 'ArrowDown') {
+        const nextRow = rows[rowIdx + 1];
+        nextRow?.[Math.min(colIdx, nextRow.length - 1)].focus();
+      } else if (e.key === 'ArrowUp') {
+        if (rowIdx === 0) {
+          // Vuelve a las etiquetas: solo foco (sin cambiar el filtro), a la de la última
+          // fila más cercana horizontalmente a la tarjeta.
+          const tabRows = getGridRows(tabsEl, ':scope > button');
+          if (tabRows.length) nearestByCenterX(focusedCard, tabRows[tabRows.length - 1])?.focus();
+        } else {
+          const prevRow = rows[rowIdx - 1];
+          prevRow[Math.min(colIdx, prevRow.length - 1)].focus();
+        }
+      }
+      return;
+    }
+
+    // ── Cursor sobre las etiquetas de grado ──
     e.preventDefault();
-    const buttons = Array.from(rowEl.querySelectorAll(':scope > button'));
-    const active = rowEl.querySelector('button.active') || buttons[0];
-    const idx = buttons.indexOf(active);
-    const dir = e.key === 'ArrowRight' ? 1 : -1;
-    const next = buttons[(idx + dir + buttons.length) % buttons.length];
-    next.click();
+    const tabRows = getGridRows(tabsEl, ':scope > button');
+    if (!tabRows.length) return;
+    // Posición de partida: la etiqueta enfocada si el cursor ya está sobre las etiquetas
+    // (puede ser distinta de la activa, porque ↓ ↑ no seleccionan); si no, la activa.
+    const ref = focusedTab || tabsEl.querySelector('button.active') || tabRows[0][0];
+    const rowIdx = Math.max(0, tabRows.findIndex(r => r.includes(ref)));
+    const colIdx = Math.max(0, tabRows[rowIdx].indexOf(ref));
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+      const buttons = tabRows.flat();
+      const idx = buttons.indexOf(ref);
+      const dir = e.key === 'ArrowRight' ? 1 : -1;
+      activateTab(buttons[(idx + dir + buttons.length) % buttons.length]);
+    } else if (e.key === 'ArrowDown') {
+      const nextRow = tabRows[rowIdx + 1];
+      if (nextRow) {
+        // Mueve el foco a la etiqueta justo debajo (misma columna, ajustada si la fila
+        // de abajo tiene menos etiquetas) SIN seleccionarla: el filtro y sus tarjetas
+        // se conservan, y Enter/Espacio la seleccionan si se desea.
+        nextRow[Math.min(colIdx, nextRow.length - 1)].focus();
+      } else {
+        // Última fila de etiquetas: el cursor continúa hacia la tarjeta de la primera
+        // fila de la grilla más cercana horizontalmente.
+        const cardRows = getGridRows(instructoresGrid, '.instructor-card');
+        if (cardRows.length) nearestByCenterX(ref, cardRows[0])?.focus();
+      }
+    } else if (e.key === 'ArrowUp') {
+      const prevRow = tabRows[rowIdx - 1];
+      prevRow?.[Math.min(colIdx, prevRow.length - 1)].focus();
+    }
   });
 })();
 
