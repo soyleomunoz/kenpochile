@@ -1753,9 +1753,16 @@ section { padding: 6rem 2rem; }
     linear-gradient(180deg, #1B140D, #14100D);
   background-blend-mode: normal, normal, soft-light, normal;
 }
-.blogs-tabs {
-  display: flex; gap: 0.5rem; margin-bottom: 3rem;
+/* Fila superior del blog: pestañas de sección a la izquierda y filtro por escuela a la
+   derecha, compartiendo la misma línea (el borde inferior vive en el contenedor). */
+.blogs-tabs-row {
+  display: flex; align-items: center; gap: 1rem;
+  flex-wrap: wrap;
   border-bottom: 1px solid var(--border);
+  margin-bottom: 3rem;
+}
+.blogs-tabs {
+  display: flex; gap: 0.5rem;
   flex-wrap: wrap;
 }
 .blog-tab {
@@ -1786,6 +1793,7 @@ section { padding: 6rem 2rem; }
   border: 1px solid rgba(228,87,46,0.15);
   border-radius: 8px;
   overflow: hidden;
+  cursor: pointer;
   transition: transform 0.4s, border-color 0.4s, box-shadow 0.4s;
 }
 .blog-card:hover {
@@ -1793,13 +1801,27 @@ section { padding: 6rem 2rem; }
   border-color: rgba(228,87,46,0.4);
   box-shadow: 0 15px 50px rgba(0,0,0,0.4);
 }
+.blog-card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
 .blog-img {
+  position: relative;
   aspect-ratio: 16/9;
   background: linear-gradient(135deg, rgba(228,87,46,0.3), rgba(36,26,20,1));
   display: flex; align-items: center; justify-content: center;
   color: var(--accent);
+  overflow: hidden;
 }
 .blog-img .icon { width: 2.2rem; height: 2.2rem; }
+/* La portada real del artículo cubre el ícono; si no carga, el ícono queda de respaldo. */
+.blog-img img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.blog-card:hover .blog-img img { transform: scale(1.04); }
+.blog-img img { transition: transform 0.4s var(--ease-out); }
 .blog-body { padding: 1.5rem; }
 .blog-meta {
   display: flex; align-items: center; gap: 1rem;
@@ -1841,6 +1863,291 @@ section { padding: 6rem 2rem; }
   background: none; border: none; cursor: pointer;
 }
 .blog-link:hover { gap: 0.8rem; }
+/* Filtro por escuela de la pestaña Noticias: selector desplegable con nombres completos,
+   ubicado a la derecha de las pestañas de sección. El ancho es FIJO para que el borde
+   derecho quede siempre alineado (bajo la lupa del buscador), sin importar el largo del
+   nombre seleccionado; los nombres que no caben se recortan con puntos suspensivos. */
+.blog-escuela-select {
+  display: flex; align-items: center;
+  margin-left: auto;
+  margin-bottom: 0.5rem;
+}
+.blog-escuela-dd { position: relative; width: 340px; max-width: 100%; }
+#blogEscuelaDdText { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.blog-escuela-dd-btn {
+  width: 100%;
+  display: flex; align-items: center; justify-content: space-between; gap: 0.6rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.55rem 1rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.8rem; font-weight: 700;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--text-main);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+.blog-escuela-dd-btn:hover { border-color: rgba(228,87,46,0.5); }
+.blog-escuela-dd-caret {
+  width: 1rem; height: 1rem; flex: 0 0 auto;
+  color: var(--accent);
+  transition: transform 0.3s var(--ease-out);
+}
+.blog-escuela-dd.open .blog-escuela-dd-btn { border-color: var(--accent); }
+.blog-escuela-dd.open .blog-escuela-dd-caret { transform: rotate(180deg); }
+.blog-escuela-dd-menu {
+  position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+  z-index: 50;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.55);
+  display: none;
+}
+.blog-escuela-dd.open .blog-escuela-dd-menu { display: block; }
+.blog-escuela-dd-option {
+  width: 100%;
+  display: flex; align-items: center; justify-content: space-between; gap: 0.8rem;
+  background: none; border: none;
+  padding: 0.6rem 1rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.8rem; font-weight: 600;
+  color: var(--text-muted);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.blog-escuela-dd-option:hover { background: rgba(228,87,46,0.12); color: var(--text-main); }
+.blog-escuela-dd-option.active { color: var(--accent); }
+/* Botón "Actividades (N)" en la tarjeta de escuela: salta al blog filtrado por ella.
+   Comparte la forma del botón "Inscribirme" (clase btn-escuela) pero en tono dorado,
+   para que el CTA principal siga destacando. Solo existe si la escuela tiene entradas. */
+.escuela-actividades {
+  background: rgba(245,166,35,0.12);
+  border-color: rgba(245,166,35,0.4);
+  color: var(--secondary);
+}
+.escuela-actividades:hover {
+  background: rgba(245,166,35,0.28);
+  box-shadow: 0 0 20px var(--glow-gold);
+}
+/* Con ambos botones presentes, "Actividades" absorbe el empuje hacia el pie de la
+   tarjeta (margin-top:auto de btn-escuela) e "Inscribirme" queda pegado debajo. */
+.escuela-actividades + .btn-escuela { margin-top: 0.5rem; }
+
+/* ── MODAL ENTRADA DE BLOG ── */
+.blog-modal {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.92);
+  z-index: 10000;
+  align-items: center; justify-content: center;
+  backdrop-filter: blur(10px);
+  padding: 1rem;
+  opacity: 0;
+  transition: opacity 220ms var(--ease-out);
+}
+.blog-modal.open { display: flex; }
+.blog-modal.is-open { opacity: 1; }
+.blog-modal-content {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  max-width: 760px; width: 100%;
+  max-height: 96vh;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  box-shadow: 0 0 45px var(--glow-gold);
+  transform: scale(0.94);
+  transition: transform 220ms var(--ease-out);
+}
+.blog-modal.is-open .blog-modal-content { transform: scale(1); }
+.blog-modal-img {
+  position: relative;
+  flex-shrink: 0;
+  aspect-ratio: 16/9;
+  max-height: 38vh;
+  background: linear-gradient(135deg, rgba(228,87,46,0.3), rgba(36,26,20,1));
+  overflow: hidden;
+}
+.blog-modal-img img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+/* Categoría + título superpuestos en la parte inferior de la portada, sobre un degradado
+   que garantiza la legibilidad con cualquier imagen. */
+.blog-modal-img-overlay {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 3rem 1.75rem 1.1rem;
+  background: linear-gradient(180deg, transparent, rgba(10,8,6,0.55) 40%, rgba(10,8,6,0.92));
+}
+.blog-modal-body {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1.5rem 1.75rem 1.75rem;
+}
+.blog-modal-titulo {
+  font-family: 'Cinzel', serif;
+  font-size: 1.3rem; font-weight: 700;
+  color: var(--text-main);
+  margin: 0.5rem 0 0;
+  line-height: 1.35;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.7);
+}
+.blog-article {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.08rem; line-height: 1.7;
+  color: var(--text-muted);
+}
+.blog-article p { margin-bottom: 1rem; }
+.blog-article strong { color: var(--text-main); }
+.blog-article h4 {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.85rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--accent);
+  margin: 1.5rem 0 0.6rem;
+}
+.blog-article ul, .blog-article ol { margin: 0 0 1rem 1.3rem; }
+.blog-article li { margin-bottom: 0.45rem; }
+.blog-article blockquote {
+  border-left: 2px solid var(--accent);
+  padding-left: 1rem;
+  font-style: italic;
+  margin: 1.2rem 0;
+}
+.blog-article a { color: var(--accent); }
+/* Enlaces "Ver más actividades de <escuela>" al pie del artículo (uno por escuela). */
+.blog-modal-escuelas {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 0.5rem;
+}
+.blog-modal-escuelas:not(:empty) {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(228,87,46,0.15);
+}
+@media (max-width: 640px) {
+  .blog-modal-body { padding: 1.25rem 1.25rem 1.5rem; }
+  .blog-modal-img-overlay { padding: 2rem 1.25rem 0.9rem; }
+}
+
+/* ── MODAL BIOGRAFÍA DE MAESTRO (reutiliza la estructura del modal de blog) ── */
+/* Nombre de otro maestro citado en una biografía: al hacer click se reemplaza el
+   contenido del modal por la biografía de ese maestro. */
+.maestro-link {
+  display: inline;
+  background: none; border: none; padding: 0; margin: 0;
+  font: inherit;
+  color: var(--accent);
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: rgba(228,87,46,0.45);
+  text-underline-offset: 2px;
+  transition: text-decoration-color 0.3s;
+}
+.maestro-link:hover { text-decoration-color: var(--accent); }
+.maestro-modal-video-frame {
+  position: relative;
+  aspect-ratio: 16/9;
+  margin: 1.5rem 0 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #000;
+}
+.maestro-modal-video-frame iframe {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  border: 0;
+}
+.maestro-modal-gallery-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.85rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--accent);
+  margin: 1.75rem 0 0.7rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(228,87,46,0.15);
+}
+/* Thumbnails horizontales, 4 por fila × 2 filas (8 por página del paginador). */
+.maestro-modal-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+}
+.maestro-modal-gallery-grid img {
+  width: 100%;
+  aspect-ratio: 3/2;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid rgba(228,87,46,0.15);
+  cursor: pointer;
+  transition: transform 0.3s var(--ease-out), border-color 0.3s;
+}
+.maestro-modal-gallery-grid img:hover {
+  transform: scale(1.03);
+  border-color: rgba(228,87,46,0.5);
+}
+@media (max-width: 640px) {
+  .maestro-modal-gallery-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.maestro-galeria-pager { margin-top: 1rem; }
+/* Botón para volver al modal del maestro desde el que se llegó (vía enlace de mención).
+   Vive en la esquina superior izquierda de la portada y SOLO existe cuando hay un salto
+   que deshacer: [hidden] debe ganarle al display propio del botón. */
+.maestro-modal-back {
+  position: absolute; top: 0.8rem; left: 0.8rem; z-index: 2;
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  background: rgba(20,16,13,0.75);
+  border: 1px solid rgba(228,87,46,0.4);
+  border-radius: 50px;
+  padding: 0.35rem 0.9rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--accent);
+  cursor: pointer;
+  transition: border-color 0.3s, background 0.3s;
+}
+.maestro-modal-back[hidden] { display: none; }
+.maestro-modal-back:hover { border-color: var(--accent); background: rgba(228,87,46,0.25); }
+/* Visor de imagen de galería: por encima del modal de maestro, solo la imagen. */
+.maestro-img-modal {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.94);
+  z-index: 10001;
+  align-items: center; justify-content: center;
+  padding: 1.5rem;
+  cursor: zoom-out;
+  opacity: 0;
+  transition: opacity 220ms var(--ease-out);
+}
+.maestro-img-modal.open { display: flex; }
+.maestro-img-modal.is-open { opacity: 1; }
+.maestro-img-modal img {
+  max-width: 100%;
+  max-height: 94vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 0 45px rgba(0,0,0,0.8);
+  transform: scale(0.94);
+  transition: transform 220ms var(--ease-out);
+}
+.maestro-img-modal.is-open img { transform: scale(1); }
+
+/* Con cualquier modal abierto, la página de fondo queda bloqueada: el scroll no se
+   "encadena" al llegar al inicio/fin del contenido del modal. Los cuerpos con scroll
+   propio llevan además overscroll-behavior: contain como refuerzo. */
+body:has(#lightbox.open, .instructor-modal.open, .programa-modal.open, .seminario-modal.open, .blog-modal.open, .empresa-preview-modal.open) {
+  overflow: hidden;
+}
+.programa-modal-content, .seminario-modal-body, .empresa-preview-content {
+  overscroll-behavior: contain;
+}
 
 /* ── BUSCADOR DE SECCIÓN (compartido: instructores, maestros, escuelas, seminarios, videos, blogs) ── */
 .section-title-row {
@@ -3083,7 +3390,7 @@ footer {
       </button>
       <div class="maestros-grid" id="maestrosGrid">
       <!-- Maestro Principal -->
-      <div class="maestro-card reveal" onclick="openBio('Ed Parker','Founder of American Kenpo Karate','Ed Parker fue el fundador del American Kenpo Karate y una de las figuras más influyentes en las artes marciales modernas. Su legado continúa inspirando a generaciones de practicantes alrededor del mundo gracias a su enfoque innovador, práctico y filosófico del Kenpo.')">
+      <div class="maestro-card reveal" onclick="openMaestroBio('parker')">
         <div class="maestro-img">
           <div class="maestro-avatar">
             <img src="img/maestros/edparker.png" alt="Ed Parker" width="200" height="300" loading="lazy" decoding="async" style="transform: scale(1.088); transform-origin: bottom center;">
@@ -3096,7 +3403,7 @@ footer {
           <div class="maestro-grade">Founder of American Kenpo Karate</div>
         </div>
       </div>
-      <div class="maestro-card reveal reveal-delay-1" onclick="openBio('Michael Robert Pick','10th Degree Black Belt · Grandmaster','Comenzó su entrenamiento en 1957 bajo la tutela directa de Ed Parker en Pasadena, California, y fue el único cinturón negro promovido personalmente con el propio cinturón del Gran Maestro. Veterano del Cuerpo de Marines en Vietnam, alcanzó el 10° Dan y el título de Segundo Gran Maestro del American Kenpo en 1997.')">
+      <div class="maestro-card reveal reveal-delay-1" onclick="openMaestroBio('pick')">
         <div class="maestro-img">
           <div class="maestro-avatar">
             <img src="img/maestros/robertpick.png" alt="Michael Robert Pick" width="200" height="300" loading="lazy" decoding="async" style="object-position: center 36%;">
@@ -3109,7 +3416,7 @@ footer {
           <div class="maestro-grade">10th Degree Black Belt · Grandmaster</div>
         </div>
       </div>
-      <div class="maestro-card reveal reveal-delay-2" onclick="openBio('Sean P. Kelley','9th Degree Black Belt · Master of the Arts','Head instructor y presidente de la Chinese Karate Federation, formado bajo el sistema de Ed Parker desde 1978. Hoy ostenta el 9° Dan «Master of the Arts» y ha enseñado en Estados Unidos, Canadá, Sudamérica, Reino Unido e Irlanda.')">
+      <div class="maestro-card reveal reveal-delay-2" onclick="openMaestroBio('kelley')">
         <div class="maestro-img">
           <div class="maestro-avatar">
             <img src="img/maestros/seankelley.png" alt="Sean P. Kelley" width="200" height="300" loading="lazy" decoding="async" style="transform: scale(1.3); transform-origin: 50% 5.1%;">
@@ -3122,7 +3429,7 @@ footer {
           <div class="maestro-grade">9th Degree Black Belt · Master of the Arts</div>
         </div>
       </div>
-      <div class="maestro-card reveal reveal-delay-3" onclick="openBio('Rainer Schulte','10th Degree Black Belt · Vicepresidente CKF','Recibió su primer cinturón negro de manos de Ed Parker en 1970 y hoy es 10° Dan y Vicepresidente de la Chinese Karate Federation. Fue el encargado de introducir el American Kenpo en Europa, estableciendo la primera filial de la IKKA en Alemania.')">
+      <div class="maestro-card reveal reveal-delay-3" onclick="openMaestroBio('schulte')">
         <div class="maestro-img">
           <div class="maestro-avatar">
             <img src="img/maestros/rainershulte.png" alt="Rainer Schulte" width="200" height="300" loading="lazy" decoding="async">
@@ -3135,7 +3442,7 @@ footer {
           <div class="maestro-grade">10th Degree Black Belt · Vicepresidente CKF</div>
         </div>
       </div>
-      <div class="maestro-card reveal" onclick="openBio('Bill «Superfoot» Wallace','Grandmaster · PKA Champion','Campeón invicto de la Asociación Profesional de Karate (PKA), reconocido mundialmente como «Superfoot» por la velocidad de sus patadas de pierna izquierda, registradas en más de 60 millas por hora. Triple integrante del Salón de la Fama de Black Belt Magazine.')">
+      <div class="maestro-card reveal" onclick="openMaestroBio('wallace')">
         <div class="maestro-img">
           <div class="maestro-avatar">
             <img src="img/maestros/billwallace.png" alt="Bill «Superfoot» Wallace" width="200" height="300" loading="lazy" decoding="async" style="object-position: center 22%;">
@@ -3148,7 +3455,7 @@ footer {
           <div class="maestro-grade">Grandmaster · PKA Champion</div>
         </div>
       </div>
-      <div class="maestro-card reveal reveal-delay-1" onclick="openBio('Arturo Petit','8th Degree Black Belt · Fundador del Kenpo en Chile','Primer chileno en obtener el cinturón negro de Kenpo (1964) e introductor del Kenpo Karate en Chile y Sudamérica. Alcanzó el 8° Dan en 1995 y formó a generaciones de instructores hasta su fallecimiento en 2000.')">
+      <div class="maestro-card reveal reveal-delay-1" onclick="openMaestroBio('petit')">
         <div class="maestro-img">
           <div class="maestro-avatar">
             <img src="img/maestros/arturopetit.png" alt="Arturo Petit" width="200" height="300" loading="lazy" decoding="async" style="object-position: center 43%;">
@@ -3161,7 +3468,7 @@ footer {
           <div class="maestro-grade">8th Degree Black Belt · Fundador del Kenpo en Chile</div>
         </div>
       </div>
-      <div class="maestro-card reveal reveal-delay-2" onclick="openBio('Roberto Vidal C.','8th Degree Black Belt · Associate Master of the Arts','Representante de la Chinese Karate Federation para Chile y Sudamérica, formado bajo el Maestro Arturo Petit desde 1976. Alcanzó el 8° Dan «Associate Master of the Arts» en 2023 y fue incorporado al Kenpo Karate Hall of Fame en 2018.')">
+      <div class="maestro-card reveal reveal-delay-2" onclick="openMaestroBio('vidal')">
         <div class="maestro-img">
           <div class="maestro-avatar">
             <img src="img/maestros/robertovidal.png" alt="Roberto Vidal C." width="200" height="300" loading="lazy" decoding="async" style="object-position: center 49%; transform: scale(1.3); transform-origin: 50% 5.1%;">
@@ -3174,7 +3481,7 @@ footer {
           <div class="maestro-grade">8th Degree Black Belt · Associate Master of the Arts</div>
         </div>
       </div>
-      <div class="maestro-card reveal reveal-delay-3" onclick="openBio('Frank Trejo','10th Degree Black Belt · Grandmaster','Excampeón de kickboxing con récord profesional de 21-1 y creador del sistema «Kenpo Fusión», que combina boxeo, kickboxing, karate, judo y lucha en el suelo. Entrenó bajo Ed Parker desde 1969 y alcanzó el 10° Dan.')">
+      <div class="maestro-card reveal reveal-delay-3" onclick="openMaestroBio('trejo')">
         <div class="maestro-img">
           <div class="maestro-avatar">
             <img src="img/maestros/franktrejo.png" alt="Frank Trejo" width="200" height="300" loading="lazy" decoding="async" style="object-position: center 67%;">
@@ -3334,103 +3641,36 @@ footer {
     </div>
     <div class="divider"></div>
     <div id="blogsContent">
-    <div class="blogs-tabs">
-      <button class="blog-tab active" data-tab="tab-noticias" onclick="switchTab(this,'tab-noticias')">Blog de Noticias</button>
-      <button class="blog-tab" data-tab="tab-historia" onclick="switchTab(this,'tab-historia')">Blog de Historia</button>
-      <button class="blog-tab" data-tab="tab-salud" onclick="switchTab(this,'tab-salud')">Salud y Bienestar</button>
-    </div>
-    <div class="blog-panel active" id="tab-noticias">
-      <div class="blog-grid">
-        <div class="blog-card reveal">
-          <div class="blog-img"><svg class="icon"><use href="#icon-newspaper"/></svg></div>
-          <div class="blog-body">
-            <div class="blog-meta"><span class="blog-cat">Noticias</span><span class="blog-date">Junio 2025</span></div>
-            <div class="blog-title">Nuevas Escuelas Afiliadas en el Sur de Chile</div>
-            <div class="blog-excerpt">El International Vidal Kenpo Studio suma nuevas escuelas en la región de la Araucanía, consolidando su presencia nacional bajo la Chinese Karate Federation.</div>
-            <button class="blog-link" onclick="interesEvento('Nuevas Escuelas Afiliadas en el Sur de Chile')">Leer Más →</button>
-          </div>
-        </div>
-        <div class="blog-card reveal reveal-delay-1">
-          <div class="blog-img"><svg class="icon"><use href="#icon-trophy"/></svg></div>
-          <div class="blog-body">
-            <div class="blog-meta"><span class="blog-cat">Eventos</span><span class="blog-date">Mayo 2025</span></div>
-            <div class="blog-title">Resultados del Campeonato Nacional Kenpo 2025</div>
-            <div class="blog-excerpt">Estudiantes de KenpoChile obtienen destacadas posiciones en el campeonato nacional, reflejando el alto nivel técnico de nuestras escuelas.</div>
-            <button class="blog-link" onclick="interesEvento('Resultados del Campeonato Nacional Kenpo 2025')">Leer Más →</button>
-          </div>
-        </div>
-        <div class="blog-card reveal reveal-delay-2">
-          <div class="blog-img"><svg class="icon"><use href="#icon-graduation"/></svg></div>
-          <div class="blog-body">
-            <div class="blog-meta"><span class="blog-cat">Graduaciones</span><span class="blog-date">Abril 2025</span></div>
-            <div class="blog-title">Ceremonia de Cinturones Negros — Santiago 2025</div>
-            <div class="blog-excerpt">Una emotiva ceremonia marcó el ascenso de 12 nuevos cinturones negros del International Vidal Kenpo Studio, un logro de dedicación y sacrificio.</div>
-            <button class="blog-link" onclick="interesEvento('Ceremonia de Cinturones Negros — Santiago 2025')">Leer Más →</button>
-          </div>
+    <div class="blogs-tabs-row">
+      <div class="blogs-tabs">
+        <button class="blog-tab active" data-tab="tab-noticias" onclick="switchTab(this,'tab-noticias')">Noticias</button>
+        <button class="blog-tab" data-tab="tab-historia" onclick="switchTab(this,'tab-historia')">Historia</button>
+        <button class="blog-tab" data-tab="tab-bienestar" onclick="switchTab(this,'tab-bienestar')">Bienestar</button>
+      </div>
+      <!-- Filtro por escuela (solo visible con Noticias activa): desplegable con nombres
+           completos de las escuelas con actividades publicadas (generado desde BLOG_POSTS) -->
+      <div class="blog-escuela-select" id="blogEscuelaSelect">
+        <div class="blog-escuela-dd" id="blogEscuelaDd">
+          <button type="button" class="blog-escuela-dd-btn" id="blogEscuelaDdBtn" aria-haspopup="listbox" aria-expanded="false">
+            <span id="blogEscuelaDdText"></span>
+            <svg class="blog-escuela-dd-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="blog-escuela-dd-menu" id="blogEscuelaDdMenu" role="listbox" aria-label="Filtrar noticias por escuela"></div>
         </div>
       </div>
+    </div>
+    <!-- Las tarjetas se generan desde BLOG_POSTS (contenido real de kenpochile.cl/blog) -->
+    <div class="blog-panel active" id="tab-noticias">
+      <div class="blog-grid" data-cat="Noticias"></div>
+      <div class="escuelas-pager blog-pager" data-cat="Noticias"></div>
     </div>
     <div class="blog-panel" id="tab-historia">
-      <div class="blog-grid">
-        <div class="blog-card reveal">
-          <div class="blog-img"><svg class="icon"><use href="#icon-award"/></svg></div>
-          <div class="blog-body">
-            <div class="blog-meta"><span class="blog-cat">Historia</span><span class="blog-date">Marzo 2025</span></div>
-            <div class="blog-title">El Legado de Edmund K. Parker: Padre del American Kenpo</div>
-            <div class="blog-excerpt">Exploramos la vida y obra del Grandmaster que transformó el Kenpo en el sistema marcial más completo y racional del siglo XX.</div>
-            <button class="blog-link" onclick="interesEvento('El Legado de Edmund K. Parker: Padre del American Kenpo')">Leer Más →</button>
-          </div>
-        </div>
-        <div class="blog-card reveal reveal-delay-1">
-          <div class="blog-img"><svg class="icon"><use href="#icon-landmark"/></svg></div>
-          <div class="blog-body">
-            <div class="blog-meta"><span class="blog-cat">Orígenes</span><span class="blog-date">Febrero 2025</span></div>
-            <div class="blog-title">Del Shaolin al Kenpo: Raíces del Arte Marcial</div>
-            <div class="blog-excerpt">Un viaje a través de los siglos para entender cómo las antiguas tradiciones chinas y japonesas confluyeron en el Kenpo moderno.</div>
-            <button class="blog-link" onclick="interesEvento('Del Shaolin al Kenpo: Raíces del Arte Marcial')">Leer Más →</button>
-          </div>
-        </div>
-        <div class="blog-card reveal reveal-delay-2">
-          <div class="blog-img"><svg class="icon"><use href="#icon-landmark"/></svg></div>
-          <div class="blog-body">
-            <div class="blog-meta"><span class="blog-cat">Chile</span><span class="blog-date">Enero 2025</span></div>
-            <div class="blog-title">20 Años de Kenpo en Chile: Una Historia de Dedicación</div>
-            <div class="blog-excerpt">La historia del International Vidal Kenpo Studio y cómo el Kenpo auténtico llegó y arraigó en tierras chilenas de la mano del Maestro Roberto Vidal.</div>
-            <button class="blog-link" onclick="interesEvento('20 Años de Kenpo en Chile: Una Historia de Dedicación')">Leer Más →</button>
-          </div>
-        </div>
-      </div>
+      <div class="blog-grid" data-cat="Historia"></div>
+      <div class="escuelas-pager blog-pager" data-cat="Historia"></div>
     </div>
-    <div class="blog-panel" id="tab-salud">
-      <div class="blog-grid">
-        <div class="blog-card reveal">
-          <div class="blog-img"><svg class="icon"><use href="#icon-leaf"/></svg></div>
-          <div class="blog-body">
-            <div class="blog-meta"><span class="blog-cat">Nutrición</span><span class="blog-date">Junio 2025</span></div>
-            <div class="blog-title">Alimentación del Artista Marcial: Guía Básica</div>
-            <div class="blog-excerpt">Cómo nutrir el cuerpo para rendir al máximo en el entrenamiento de Kenpo. Principios de alimentación funcional aplicada a las artes marciales.</div>
-            <button class="blog-link" onclick="interesEvento('Alimentación del Artista Marcial: Guía Básica')">Leer Más →</button>
-          </div>
-        </div>
-        <div class="blog-card reveal reveal-delay-1">
-          <div class="blog-img"><svg class="icon"><use href="#icon-focus"/></svg></div>
-          <div class="blog-body">
-            <div class="blog-meta"><span class="blog-cat">Mental</span><span class="blog-date">Mayo 2025</span></div>
-            <div class="blog-title">El Kenpo como Herramienta contra el Estrés</div>
-            <div class="blog-excerpt">Estudio sobre cómo la práctica regular del Kenpo Karate reduce los niveles de cortisol y mejora la resiliencia mental ante situaciones desafiantes.</div>
-            <button class="blog-link" onclick="interesEvento('El Kenpo como Herramienta contra el Estrés')">Leer Más →</button>
-          </div>
-        </div>
-        <div class="blog-card reveal reveal-delay-2">
-          <div class="blog-img"><svg class="icon"><use href="#icon-activity"/></svg></div>
-          <div class="blog-body">
-            <div class="blog-meta"><span class="blog-cat">Fitness</span><span class="blog-date">Abril 2025</span></div>
-            <div class="blog-title">Rutina de Acondicionamiento Físico para Kenpoistas</div>
-            <div class="blog-excerpt">Programa de entrenamiento complementario diseñado específicamente para potenciar las habilidades físicas requeridas en el Kenpo Karate.</div>
-            <button class="blog-link" onclick="interesEvento('Rutina de Acondicionamiento Físico para Kenpoistas')">Leer Más →</button>
-          </div>
-        </div>
-      </div>
+    <div class="blog-panel" id="tab-bienestar">
+      <div class="blog-grid" data-cat="Bienestar"></div>
+      <div class="escuelas-pager blog-pager" data-cat="Bienestar"></div>
     </div>
     </div>
   </div>
@@ -3794,6 +4034,50 @@ footer {
   </div>
 </div>
 
+<!-- Modal biografía de maestro (contenido real de kenpochile.cl/maestros-2) -->
+<div id="maestroModal" class="blog-modal maestro-modal" role="dialog" aria-modal="true" aria-labelledby="maestroModalName">
+  <div class="blog-modal-content">
+    <button type="button" class="seminario-modal-close" onclick="closeMaestroModal()" aria-label="Cerrar"><svg class="icon"><use href="#icon-x"/></svg></button>
+    <div class="blog-modal-img">
+      <img id="maestroModalImg" src="" alt="">
+      <button type="button" class="maestro-modal-back" id="maestroModalBack" onclick="volverMaestroAnterior()" hidden></button>
+      <div class="blog-modal-img-overlay">
+        <span class="blog-cat" id="maestroModalGrade"></span>
+        <h3 class="blog-modal-titulo" id="maestroModalName"></h3>
+      </div>
+    </div>
+    <div class="blog-modal-body">
+      <div class="blog-article" id="maestroModalBio"></div>
+      <div id="maestroModalVideo"></div>
+      <div id="maestroModalGallery"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Visor de imagen de galería de maestros (encima del modal de biografía) -->
+<div id="maestroImgModal" class="maestro-img-modal" role="dialog" aria-modal="true" aria-label="Imagen de galería ampliada" onclick="closeMaestroImgModal()">
+  <button type="button" class="seminario-modal-close" onclick="closeMaestroImgModal()" aria-label="Cerrar"><svg class="icon"><use href="#icon-x"/></svg></button>
+  <img id="maestroImgModalImg" src="" alt="Imagen de galería ampliada">
+</div>
+
+<!-- Modal entrada de blog -->
+<div id="blogModal" class="blog-modal" role="dialog" aria-modal="true" aria-labelledby="blogModalTitle">
+  <div class="blog-modal-content">
+    <button type="button" class="seminario-modal-close" onclick="closeBlogModal()" aria-label="Cerrar"><svg class="icon"><use href="#icon-x"/></svg></button>
+    <div class="blog-modal-img">
+      <img id="blogModalImg" src="" alt="">
+      <div class="blog-modal-img-overlay">
+        <span class="blog-cat" id="blogModalCat"></span>
+        <h3 class="blog-modal-titulo" id="blogModalTitle"></h3>
+      </div>
+    </div>
+    <div class="blog-modal-body">
+      <div class="blog-article" id="blogModalArticle"></div>
+      <div class="blog-modal-escuelas" id="blogModalEscuelas"></div>
+    </div>
+  </div>
+</div>
+
 <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Volver arriba">
   <svg viewBox="0 0 24 24"><polyline points="18,15 12,9 6,15"/></svg>
 </button>
@@ -3987,6 +4271,7 @@ reveals.forEach(r => observer.observe(r));
     if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
     if (!sectionInView || isTypingTarget(e.target)) return;
     if (document.getElementById('lightbox')?.classList.contains('open')) return;
+    if (document.getElementById('maestroModal')?.classList.contains('open')) return;
     if (document.getElementById('instructorModal')?.classList.contains('open')) return;
     e.preventDefault();
     if (e.key === 'ArrowLeft') goPrev(); else goNext();
@@ -4020,11 +4305,16 @@ document.addEventListener('keydown', e => {
     e.target.click();
   }
   if (e.key === 'Escape') {
+    // El visor de imagen de galería está sobre el modal de biografía: si está abierto,
+    // Esc cierra solo el visor y el modal del maestro permanece abierto debajo.
+    if (closeMaestroImgModal()) return;
     closeLightbox();
     closeInstructorModal();
     closeProgramaModal();
     closeEmpresaPreview();
     closeSeminarioModal();
+    closeBlogModal();
+    closeMaestroModal();
     closeMobile();
   }
   if (document.getElementById('lightbox').classList.contains('lightbox-gallery')) {
@@ -4082,17 +4372,415 @@ function closeLightbox() {
 document.getElementById('lightbox').addEventListener('click', function(e) {
   if(e.target === this) closeLightbox();
 });
-function openBio(name, grade, desc) {
-  lightboxTrigger = document.activeElement;
-  document.getElementById('lightbox').classList.remove('lightbox-gallery');
-  document.getElementById('lbImage').style.display = 'none';
-  document.getElementById('lbIcon').style.display = 'block';
-  document.getElementById('lbIcon').innerHTML = '<svg class="icon" style="width:5rem;height:5rem"><use href="#icon-user"/></svg>';
-  document.getElementById('lbTitle').textContent = name;
-  document.getElementById('lbGrade').textContent = grade;
-  document.getElementById('lbDesc').textContent = desc;
-  document.getElementById('lbCounter').textContent = '';
-  openLightbox();
+// ── BIOGRAFÍAS DE MAESTROS (contenido real de kenpochile.cl/maestros-2) ──
+// Cada entrada replica el artículo publicado en kenpochile.cl: la tarjeta abre el modal
+// (openMaestroBio) con la portada del artículo, la biografía completa, el video embebido
+// si la entrada lo tiene y la galería de imágenes al final. Las imágenes viven en
+// img/maestros/bio/<id>/. "patrones" son las formas en que el nombre del maestro aparece
+// citado en las biografías de los demás: al abrir un modal se convierten en enlaces que
+// reemplazan el contenido por la biografía del maestro citado.
+const MAESTROS_BIO = [
+  {
+    id: 'parker', nombre: 'Ed Parker', grado: 'Founder of American Kenpo Karate',
+    patrones: [/Edmund Kealoha Parker/g, /(?:Ed\.?|ED) Parker(?!\s*Jr)/g, /Mr\.? Parker/g],
+    portada: 'img/maestros/bio/parker/portada.jpg',
+    portadaPos: 'center top',
+    galeria: [
+      'img/maestros/bio/parker/123824380_158505252691335_1387623938733875557_n-400x516.jpg',
+      'img/maestros/bio/parker/122425686_137975631410964_861007352226622042_n.jpg'
+    ],
+    bio: `
+      <p>Senior Grandmaster Edmund Kealoha Parker nació el 19 de marzo de 1931 en Honolulu, Hawaii, y se crió como miembro de la Iglesia de Jesucristo de los Santos de los Últimos Días. Fue el sexto hijo de Arthur y Eva Parker. Su tatarabuelo fue el rey Kamehameha I, que reinó en Hawaii. A los 16 años, Mr. Parker tuvo su primera experiencia con el Kenpo, en la iglesia. Fue aquí donde encontró a Frank Chow, otro chico que iba a la iglesia que estaba hablando de cómo había derrotado a un matón local. Mr. Parker se asombró de que su compañero mintiese en la iglesia, pero cuando Frank le enseñó cómo lo había ganado, Mr. Parker luego de verlo quiso aprender más.</p>
+      <p>Fue así que el primer profesor de Kenpo de Mr. Parker fue Frank Chow, que le presentó a William Chow. Para ser miembro de la escuela de William, tenías que ser recomendado por otro estudiante. A la hora de la admisión, Adriano y Joe Emperado eran alumnos avanzados; tras la muerte de Joe, Adriano formó el sistema Kajukenbo. El profesor Chow insistía en la necesidad de modificaciones, innovaciones y adiciones en el sistema para que cubriese las necesidades de la gente. Fue esta enseñanza la que puso a Mr. Parker en el camino del pensamiento lógico y realista, así como en la experimentación y evaluación constante con los ajustes que fueran necesarios.</p>
+      <p>En 1949, Mr. Parker se inscribió en la Universidad de Brigham Young en Provo, Utah. Tras dos años allí, fue reclutado para la guerra de Corea y fue afortunadamente destacado en Hawaii durante dos años y medio de los tres que duraba el servicio con los guardacostas de los EE.UU. Por supuesto, continuó entrenando con Chow a tiempo completo.</p>
+      <p>Tras ser licenciado a mediados de 1954, Mr. Parker volvió a la Brigham Young para continuar sus estudios y abrió un club en el campus. En diciembre de 1954, durante el descanso de un partido de baloncesto entre la BYU y la UCLA, Mr. Parker hizo una demostración de Kenpo. Viendo el partido estaban varios policías de Utah que se interesaron mucho. En una semana, Mr. Parker empezó a enseñar también comercialmente en el gimnasio Body Building de Provo, propiedad de Roy Woodward.</p>
+      <p>Tras graduarse en la BYU en Sociología y Psicología, Mr. Parker tuvo una oferta para enseñar en el nuevo estudio de Roy Woodward en Pasadena, California. Una vez allí, el centro de salud fue vendido y Mr. Parker se encontró sin empleo. En septiembre de 1956, Mr. Parker lo intentó por su cuenta y abrió una escuela en Pasadena, que todavía está abierta. Al principio de su carrera, Mr. Parker encontró a Terry Robinson, un instructor de combate de la Segunda Guerra Mundial que quedó impresionado por el Kenpo. A través de Terry, Mr. Parker empezó a enseñar a famosos en el Beverly Wilshire Health Club o en sus casas. Enseñó a algunos notables como Robert Culp, Robert Wagner, Robert Conrad, Darrin McGavin, George Hamilton, Warren Beatty, Audie Murphy y muchos otros. Fue también a través de Terry que Mr. Parker se reunió con Elvis Presley. Elvis se reunió con él tras una exhibición en el Beverly Wilshire Hotel y se interesó por su estilo de karate tras haber estudiado algo mientras estaba en Alemania.</p>
+      <p>Como Mr. Parker enseñaba a actores, directores y otros, pudo introducir el Kenpo en el mundo de la televisión y las películas. Elvis podía hacer exhibiciones en los platós de televisión y usar un poco de artes marciales en sus películas. El escudo de Kenpo también aparecía en la guitarra de Elvis de vez en cuando. El Kenpo también apareció en películas y episodios de «La Pantera Rosa», la fotografía «Experiment in Terror», el show televisivo «The Dangerous Robin», que duró hasta 1959, pero ayudó a dar a conocer el Kenpo. Robert Culp empleó el Kenpo en su serie «I Spy». El nombre de Parker apareció en la revista Time en 1961. También apareció en «I Love Lucy» y en otros espacios televisivos. Hay muchas más contribuciones que ayudaron a expandir las artes marciales en los Estados Unidos, y muchas se deben a su exposición en los Campeonatos Internacionales de Karate de Mr. Parker (IKC).</p>
+      <p>Los medios internacionales dieron al mundo las primeras imágenes de Bruce Lee y, en una película de su exhibición mostrada a Bill Dozier, Mr. Parker abrió una puerta para un joven artista marcial. «The Green Hornet», producida por Bill Dozier, tenía a Lee como Kato, el ayudante de Green Hornet. El IKC era un evento anual que duró muchos años y abrió muchas puertas para promesas del mundo de las artes marciales. Algunas de estas futuras estrellas que pasaron por el IKC fueron Chuck Norris, Mike Stone y Joe Lewis. Fue en los IKC donde Dan Inosanto, un cinturón negro de Parker, se encontró y continuó una relación de por vida con Bruce Lee.</p>
+      <p>El mismo Mr. Parker también empezó a publicar una serie de libros sobre el Kenpo y la defensa personal. También tuvo apariciones estelares en algunas películas e hizo giras con Elvis Presley y con el grupo de guardaespaldas, que incluía a Dave Hebler entre otros, como protector acompañante.</p>
+      <p>La historia del Kenpo americano en sí misma empieza más o menos aquí. Obviamente, por lo anterior, Mr. Parker tuvo un lugar para empezar a enseñar y promocionar las artes marciales. Tenía a famosos trabajando con él que transmitieron su interés a sus directores, agentes, productores, etc. Tenía un torneo que lanzó a muchos famosos notables.</p>
+      <p>Fundó la Asociación de Kenpo Karate de América, una asociación registrada en el estado de California. En 1960, cambió a la Asociación Internacional de Kenpo Karate (IKKA).</p>
+      <p>El torneo, el Campeonato Internacional de Karate, atrajo a los mejores artistas marciales del mundo. Fue aquí donde Bruce Lee fue descubierto primero y firmó un contrato para aparecer como Kato, el ayudante de Green Hornet. Este papel lo lanzó posteriormente al estrellato.</p>
+      <p>Otros también participaron en el IKC, aparte de los estudiantes de Mr. Parker. Se sabe que Chuck Norris participó antes de romper en su papel como oponente de Bruce Lee en Return of the Dragon. Esto le llevó a numerosas películas antes de su último proyecto televisivo que sorprendió a las emisoras por sus altas audiencias: «Walker Texas Ranger».</p>
+      <p>Mr. Parker apareció en revistas nacionales e internacionales durante toda su vida: Time, Look, Strength and Health, Show Business Illustrated, Iron Man, Action Karate, Black Belt Magazine, Karate Illustrated, Official Karate, Inside Kung Fu, American Karate y Karate/Kung Fu Illustrated; en periódicos de todo el país; revistas de artes marciales de todo el mundo; artículos en la Enciclopedia Mundial y otros muchos.</p>
+      <p>A lo largo de los años, Mr. Parker fue también el autor de varios libros: «Basic Karate Book», «Kenpo Karate», «The Women's Guide to Self Defense», «Secrets of Chinese Karate», «Infinite Insights into Kenpo» (volúmenes 1-5), «The Zen of Kenpo», «Inside Elvis», y otros.</p>
+      <p>Mr. Parker fundó el mayor y más conocido torneo de karate, los Campeonatos Internacionales de Karate en Long Beach, California. Mr. Parker también fue consejero y consultor en otros muchos torneos de karate en el mundo.</p>
+      <p>La singularidad de Mr. Parker radica en sus esfuerzos continuos para combatir las restricciones tradicionales que coartaban un pensamiento progresivo. Fue verdaderamente un genio creativo por su increíble facilidad para descubrir los problemas de las artes marciales. Sus contribuciones e innovaciones son infinitas, cubriendo lógica y razonamientos que no habían sido empleados nunca antes por otros. Sus cuatro décadas de experiencia, contribuciones y descubrimientos lo establecieron como el maestro de nuestro sistema, el autor de nuestro material de entrenamiento y la voz final de aprobación.</p>
+      <p>El 15 de diciembre de 1990, Mr. Parker murió de un ataque al corazón en el aeropuerto de Honolulu, Hawaii. Su muerte es llorada por miles de estudiantes de Kenpo en todo el mundo.</p>
+      <blockquote>«El verdadero valor del Kenpo no está en lo que conoces, sino en lo que haces.»</blockquote>`
+  },
+  {
+    id: 'pick', nombre: 'Michael Robert Pick', grado: '10th Degree Black Belt · Grandmaster',
+    patrones: [/Michael Robert Pick(?!\s*Jr)/g, /(?:Michael|Mike) Pick(?!\s*Jr)/g, /Grandmaster Pick/g],
+    portada: 'img/maestros/bio/pick/portada.jpg',
+    galeria: [],
+    video: 'pBaazFRM7_Y',
+    bio: `
+      <p>En 1957, un niño pequeño y hambriento, Mike Pick, se topó con las antiguas puertas del Kenpo Karate Studio de Ed Parker en Walnut Street en Pasadena, California. Desconocido para el niño, mientras miraba a través de la ventana delantera, había un mundo que abrazaría, amaría y eventualmente lideraría en su vida. A los diez años, Michael Robert Pick no tenía ninguna aspiración de convertirse en un gran maestro o incluso en un experto en las artes marciales; solo tenía una cosa en mente… ¡supervivencia! Ese mismo día, Mike Pick fue golpeado por cinco compañeros mayores. Sintiéndose herido e indefenso, Mike Pick decidió que en ese momento aprendería a defenderse, aprendería a pelear.</p>
+      <p>No es una pequeña coincidencia que Mike Pick viviera en Pasadena, California: es la ciudad donde el Gran Maestro Edmund Kealoha Parker abrió su primera escuela de Kenpo comercial en los Estados Unidos. Con el labio hinchado y sangre seca bajo la nariz, Mike Pick se encogió de hombros y entró en el estudio. En ese momento conoció al hombre que le presentó su destino y lo que se convertiría en el trabajo de su vida. Ed Parker tenía 26 años en 1957. Su cabello negro azabache y su magnífica fuerza y velocidad asombraron al pequeño Mike. Desde el principio, Mike Pick sintió y supo que estaba en casa en el estudio. En ese momento, la escuela de Pasadena tenía aproximadamente de veinticinco a treinta estudiantes; Mike Pick era el único niño. El Gran Maestro Ed Parker decidió enseñarle a Mike si a cambio Mike limpiaba el estudio, lo que para un niño de diez años no era una tarea fácil. Mike cumplió su palabra y limpió y mantuvo la escuela. A cambio, comenzando con la Postura del Caballo, el Gran Maestro Ed Parker comenzó a desarrollar la ciencia marcial del Kenpo.</p>
+      <p>Al principio, el Gran Maestro Ed Parker no tenía una forma sistemática de enseñar lo que ahora es Kenpo; todavía no había manuales. El Gran Maestro creaba un movimiento o técnica y lo probaba y demostraba con quienquiera que estuviera alrededor. Mike Pick estudió e imitó cada movimiento que vio ejecutar al Gran Maestro Ed Parker. Para Mike Pick, el Kenpo era ahora una forma de vida. Pasaba tiempo en el estudio todos los días, absorbiendo todo lo que podía. En cada momento libre, Mike se apresuraba a ir a la escuela para seguir y aprender del «Viejo». Su dedicación y motivación internas transformaron al manso niño en un joven guerrero hambriento. A los trece había creado un régimen de 1000 patadas, 1000 bloqueos y 1000 golpes por día.</p>
+      <p>A los trece años, Mike Pick conoció a otro hombre que lo influiría enormemente: el Gran Maestro Tuumamao «Tino» Tuiolosega, «hermano mayor» de Mike, de ascendencia real de Samoa. El Gran Maestro Tuiolosega fue campeón de boxeo de la Infantería de Marina de los Estados Unidos y campeón de peso welter en todos los servicios, veterano de la guerra de Corea y un luchador callejero tenaz. De vez en cuando pasaba por la escuela de Pasadena y se ejercitaba con el Gran Maestro Ed Parker y cualquier otra persona que se subiera a las esteras con él. De inmediato, Mike y el Gran Maestro Tino entablaron una relación fraternal. Mucho de lo que Mike Pick es en las artes marciales puede atribuirse a su tiempo con el Gran Maestro Tino Tuiolosega en las esteras. De estas sesiones, Mike Pick aprendió a pelear. Más tarde, el Gran Maestro Tuiolosega formaría las Artes de Autodefensa de Limalama, que goza de popularidad en todo el mundo.</p>
+      <p>Junto con la influencia del Gran Maestro Tuiolosega y el Gran Maestro Parker, el Sr. Leonard Mau también influyó en Mike Pick en sus primeros años de Kenpo. El Sr. Mau era de Hawái y era uno de los mejores estudiantes del Gran Maestro Parker: un luchador callejero tenaz y exitoso en torneos que compitió en el primer combate del Gran Campeón Internacional de Karate como cinturón marrón. Muchas veces, el Sr. Mau compartía y ejercitaba sus habilidades de lucha con Mike Pick.</p>
+      <p>En su decimosexto cumpleaños, Mike Pick permaneció en posición de caballo durante dieciséis horas seguidas: un regalo para el Kenpo y un regalo para sí mismo. Su nivel de compromiso con el Kenpo superó todo lo demás en su vida. Mientras las fuerzas destructivas de su vida externa golpeaban sus jóvenes e impresionables años, Mike Pick recurrió a una búsqueda espiritual a través del Kenpo. Alimentando su mente con grandes dosis de filosofía, historia y ciencia — leyendo la «Anatomía» de Henry Gray, «El ser y la nada» de Jean-Paul Sartre, «El profeta» de Kahlil Gibran, el Bushido, el «Go Rin No Sho» de Miyamoto Musashi, «El arte de la guerra» de Sun-Tzu, «Siddhartha» de Hermann Hesse y «La psicología del inconsciente» de Carl Gustav Jung, entre muchos otros — Mike Pick comenzó a atribuir fundamentos filosóficos, espirituales y científicos al camino marcial por el que ahora viajaba. Su enfoque científico, filosófico y espiritual para la comprensión intelectual del humano marcial es en gran parte responsable de su éxito como maestro y practicante de Kenpo.</p>
+      <p>A los dieciséis años, Mike Pick había abandonado la escuela secundaria por necesidad para sobrevivir. Su vida hogareña, tras años de abuso y conflicto, se había deteriorado hasta un estado que Mike no controlaba. Entre asumir la responsabilidad de sus 4 hermanos menores y cuidar de su madre afligida, lo único que lo mantenía cuerdo era su arte, su Kenpo. En ese momento Mike Pick era una fuerza en las artes marciales: su habilidad en Kenpo era rivalizada por pocos. Debido a su intensidad y habilidad, tuvo la oportunidad, en varias ocasiones, de entrenar con el difunto Bruce Lee cuando solo tenía dieciséis años.</p>
+      <p>Durante este tiempo Mike Pick escribió una tesis sobre la visión periférica del tigre depredador. Después de presentarla a Ed Parker, el 19 de marzo de 1965, Mike Pick fue llevado a las esteras donde Ed Parker se quitó el cinturón, pateó a Mike y lo ascendió a cinturón negro. Mike Pick es el único cinturón negro que el Gran Maestro Ed Parker promovió con un cinturón fuera de su propia cintura. A los dieciocho años, Mike Pick era cinturón negro y guerrero, y fue el primer cinturón negro adolescente que el Gran Maestro Ed Parker promovió.</p>
+      <p>En busca de su lugar en una era de tumultuosa evolución social, Mike Pick tomó la única decisión lógica que tomaría cualquier joven patriota: se alistó en el Cuerpo de Marines de los Estados Unidos. En 1967 era soldado de infantería adscrito a la Compañía Hotel, 2º Batallón, 3ª División de Infantería de Marina, y su unidad se desplegó en Vietnam, participando en las operaciones Pegasus, Kentucky, Napoleón, Thor, Trusdale, Escocia 1 y 2, Mutter's Ridge, Lancaster 1 y 2 y Dragón. Por su servicio fue galardonado con el Corazón Púrpura, la Cinta de Acción de Combate, la Mención de Unidad Presidencial, la Mención de Unidad Naval, la Medalla de Buena Conducta, la Cruz de Galantería de Vietnam, la Legión de Mérito de Vietnam, la Medalla de Servicio Vietnamita con dos estrellas de bronce, la Medalla de la Campaña Vietnamita y la cinta de despliegue del servicio marítimo.</p>
+      <p>El Kenpo fue puesto a prueba por Mike Pick en Vietnam. Si no fuera por este período de su vida, la aplicación basada en la realidad de lo que enseña hoy estaría en duda. Al regresar a casa como un veterano de guerra condecorado en agosto de 1969, en lugar de la bienvenida de héroe que se ganó y mereció, fue recibido por manifestantes. Cuando regresó de Vietnam, continuó sus estudios con Ed Parker de inmediato, trabajó en numerosos oficios y dedicó gran parte de su tiempo al Kenpo.</p>
+      <p>El Gran Maestro Ed Parker siempre había tenido una persona que le brindaba seguridad mientras asistía a eventos y viajaba. El primero fue el Sr. Leonard Mau; luego el Gran Maestro Tuiolosega; y cuando este siguió su propio camino, la responsabilidad pasó a Mike Pick, quien fue el guardaespaldas elegido por el Gran Maestro Ed Parker hasta su muerte en 1990. En el 25º aniversario del Campeonato Internacional de Karate, durante la final del domingo, Mike Pick llevó el cinturón del Gran Maestro Parker, un acto simbólico de lo que vendría.</p>
+      <p>Buscando respuestas y algo de tranquilidad tras la guerra, un matrimonio fallido y los fantasmas de la infancia, Mike Pick se retiró a las montañas Bitterroot de Montana, donde vivió 10 meses. Sobreviviendo a un duro invierno, tuvo una gran cantidad de tiempo para explorar el Kenpo. Fue durante este tiempo que hizo muchos avances, incluyendo fuentes de energía, alineación anatómica, compromiso y golpe. Su dedicación en el desierto se manifestó como una catarsis y regeneración física, emocional y espiritual.</p>
+      <p>A su regreso comenzó a dedicarse a la herrería y la herradura a tiempo completo. Tras graduarse del Oklahoma Farriers College, se encontró con una nueva carrera, una nueva esposa y su primera escuela de Kenpo, primero en su casa en Steptoe, Washington, y luego en una escuela dedicada en Colfax, Washington. En distintas ocasiones, el Gran Maestro Ed Parker visitaba su escuela, o Mike Pick lo acompañaba por varias escuelas de Estados Unidos.</p>
+      <p>Durante la década de 1980, la habilidad y el conocimiento de Mike Pick con el cuchillo florecieron. Su entrenamiento serio y análisis científico lo llevaron a avances que le permitieron llevar el cuchillo Kenpo más lejos. El Gran Maestro Parker dijo de él: «El éxito de sus esfuerzos en ese entonces y su comprensión de la terminología y los principios ahora lo han convertido en mi mejor alumno en la lucha con cuchillos». En esencia, la máxima expresión del kenpoísta es el cuchillo, y por esta razón Mike Pick lo ha ampliado a un nuevo nivel.</p>
+      <p>En 1982 publicó una colección de sus poemas en un libro titulado «Childhood, Namhood, Manhood», que trata de las tensiones emocionales, físicas y espirituales de una infancia maltratada y de ir a la guerra. En mayo de 1993 fue nombrado «Maestro del año» y «Empleador veterano destacado del año» por el Departamento de Desarrollo del Empleo de California por su programa de aprendizaje de herrería creado para veteranos discapacitados, reconocido como el estándar para el estado de California.</p>
+      <p>En diciembre de 1990, el Gran Maestro Parker sufrió un ataque cardíaco y murió, provocando ondas de choque en todo el mundo del Kenpo. En el funeral, Mike Pick fue portador del féretro y la primera persona en saludar a todos los que vinieron a presentar sus respetos. Antes de su muerte, el Gran Maestro Parker había programado que Mike Pick fuera ascendido a Cinturón Negro de 8º Grado el 27 de enero de 1991 en Santa Clara, California. Para entonces, Mike Pick había revisado todo el sistema de Kenpo con el Gran Maestro Parker once veces. Para su tesis de 8º grado presentó 92 técnicas ilustradas y coreografiadas, completando el sistema a través de las Formas 9 y 10 y transformándolo por completo en un sistema de cuchillas.</p>
+      <p>Después de la muerte del Gran Maestro Parker, su organización, la IKKA, quedó en un estado de amarga rivalidad política. Sintiendo lo inevitable, Mike Pick se separó de ella para preservar su carácter e integridad, y a principios de la década de 1990 fundó la Federación Universal de Kenpo, que le proporcionó el vehículo necesario para la proliferación del Kenpo Americano y consiguió de inmediato un gran número de seguidores leales.</p>
+      <p>El 19 de marzo de 1965, el Gran Maestro Edmund Kealoha Parker se quitó el cinturón personal de su cintura y promovió a Michael Robert Pick al rango de Cinturón Negro de 1er Grado. El 8 de noviembre de 1997, bajo la sanción y el respaldo del Gran Maestro Tuumamao «Tino» Tuiolosega, el Sr. Pick retiró el cinturón del Sr. Parker a su lugar en la historia y se forjó a sí mismo con los principios fundamentales del Kenpo como Cinturón Negro de 10º Grado y 2º Gran Maestro del Kenpo Americano, reconociendo además las obligaciones de su paso y linaje como el 39º Gran Maestro de Shaolin Kenpo.</p>
+      <blockquote>«Ha estado en las artes marciales por más de 40 años y es un practicante responsable y dedicado que siempre ha ejemplificado los principios y virtudes que son la base de las artes marciales. […] Él es un "rebelde" tradicionalista en el sentido más honorable de la palabra y ha tomado su conocimiento y aumentado su valor mostrando a otros cómo mejorar sus conocimientos y habilidades en el arte.» — Gran Maestro Tuumamao «Tino» Tuiolosega</blockquote>
+      <p>Desde su aceptación como Gran Maestro en 1997, ha dedicado sus energías a perfeccionar la evolución del Kenpo americano. La Federación Universal de Kenpo organiza talleres semestrales de estandarización de instructores, y Grandmaster Pick viaja por todo el país compartiendo su riqueza de conocimientos. Se convirtió además en el miembro número 22 de la Asociación Internacional de Instructores de Combate Cuerpo a Cuerpo, creada por el famoso Coronel Rex Applegate, y ha sido el principal instructor de artes marciales y combate cuerpo a cuerpo para las Fuerzas Especiales, 10º Grupo (Aerotransportado) del Ejército de los Estados Unidos. También enseña a niños de cinco a diecisiete años con la Police Activities League (PAL) de la Policía Estatal de Colorado, transmitiendo confianza, autoconciencia, autosuficiencia, integridad y honor a través del Kenpo.</p>
+      <p>El Sr. Pick vive actualmente en las montañas de Colorado con su esposa e hijos, disfrutando de un exitoso negocio de herrería. Como miembro activo de su templo, continúa su estudio del judaísmo místico y la Torá. Amante del aire libre, le gusta la caza, la pesca con mosca y acampar. De todos sus intereses, pasiones y actividades, el más grande es su familia.</p>`
+  },
+  {
+    id: 'kelley', nombre: 'Sean P. Kelley', grado: '9th Degree Black Belt · Master of the Arts',
+    patrones: [/Sean (?:P\.? )?Kelle?y/g],
+    portada: 'img/maestros/bio/kelley/portada.jpg',
+    portadaPos: 'center 30%',
+    galeria: ['img/maestros/bio/kelley/124276999_10218239700881062_3744374255201326031_n.jpg'],
+    bio: `
+      <p>Sean P. Kelley, quien es 9th Degree Black Belt (Master of the Arts) en karate americano de Ed Parker Kenpo, es el instructor jefe y propietario del centro Kelley Karate, Inc. (ahora Sean Kelley's VIP Training Systems), ubicado en West Palm Beach, Florida, y es presidente de la federación Chinese Karate Federation (CKF).</p>
+      <p>Sean Kelley es un instructor internacional: ha enseñado en los Estados Unidos, Canadá, América del Sur (Chile) y a través del Reino Unido e Irlanda.</p>
+      <p>Desde su creación en 1985, el Kelley Karate Center ha proporcionado calidad en la instrucción de artes marciales para niños y adultos. Además, Sean Kelley y su equipo han demostrado ser una fuerza importante en la comunidad educativa a través de numerosos programas en el ámbito local para preescolares, escuelas primarias, colegios y centros de recreación. El objetivo de los programas de Sean Kelley es fomentar la confianza en sí mismo, fomentar la autodisciplina, apaciguar la violencia y aumentar la seguridad personal.</p>
+      <p>Además de sus clases regulares y los estudiantes privados, el Sr. Kelley ha enseñado a través de los Estados Unidos, el Reino Unido y Chile. En 2007, el Sr. Kelley apareció en la revista española «El Budoka» junto al maestro Roberto Vidal.</p>
+      <h4>Currículo marcial</h4>
+      <p>Comenzó su entrenamiento de artes marciales en Moo Duk Kwan en 1975 con Francisco Conde, y obtuvo su cinturón negro en 1983. Sin embargo, cuando se reunió con el Gran Maestro Ed Parker en 1978, Mr. Kelley desarrolló un gran aprecio y respeto por el American Kenpo. Cuando se mudó a Florida en 1983, comenzó el entrenamiento serio en el arte de Mr. Parker, hasta abrir su propia escuela de Kenpo en 1985. Durante este tiempo, organizó y auspició seminarios con profesores como Ed Parker, Bill Wallace, Joe Lewis, Jeff Speakman y Billy Blanks. En la actualidad, Mr. Kelley entrena bajo la tutela del Gran Maestro Michael Robert Pick.</p>
+      <p>Desde 1994, Sean Kelley ha promocionado el Florida Kenpo Camp, un seminario de tres días al año en el Kelley Karate Center. Como instructores invitados se han incluido kenpoistas destacados como Michael Robert Pick, Richard «Huk» Planas, Frank Trejo, Tom Kelly, Gil Hibben, Lee Wedlake, Dave Hebler, David Stanley, Larry Tatum y Rich Hale; en el ámbito de la enseñanza del kickboxing, las leyendas Joe Lewis y Bill «Superfoot» Wallace han sido habituales. Por su ubicación, el Florida Kenpo Camp es un gran evento internacional, con gente proveniente desde Irlanda, Alemania, Canadá, Alaska, Venezuela, Argentina y Estados Unidos.</p>
+      <p>Sean Kelley fue incluido en el «Kenpo Karate Hall of Fame» en el año 2016 y continúa siendo el mentor de sus propios cinturones negros, quienes se convertirán en los futuros líderes en el legado del GM Ed Parker.</p>
+      <h4>Obtención de grados</h4>
+      <ul>
+        <li>Promovido a 5th Degree Black Belt en 1995 por Lee Wedlake.</li>
+        <li>Promovido a 6th Degree Black Belt en 1999 por Richard «Huk» Planas, cinturón negro de primera generación de Parker y diez años vicepresidente de la IKKA de Ed Parker.</li>
+        <li>Promovido a 5th Degree Black Belt en 2000 por la leyenda del kickboxing Joe Lewis, en Joe Lewis's American Karate Systems.</li>
+        <li>Promovido a 7th Degree Black Belt en 2007 por Michael Robert Pick, maestro de la primera generación de cinturones negros de Ed Parker.</li>
+      </ul>
+      <h4>Premios, citaciones y afiliaciones</h4>
+      <ul>
+        <li>Artista marcial más joven incluido en el libro de 2001 «The Journey», las historias orales de los 24 kenpoistas más influyentes de hoy en día.</li>
+        <li>Elegido en el «Who's Who» de las Artes Marciales en 1992 por la revista International Magazine.</li>
+        <li>Elegido para el Premio Crime Stoppers en 1989 por la Asociación de Palm Beach de Prevención del Delito.</li>
+        <li>Título de «Citizen of the Month» en 1987 por el diario Town Crier Newspaper.</li>
+        <li>Miembro de los Sistemas Superfoot de Bill Wallace.</li>
+        <li>Miembro de Joe Lewis' American Karate Systems.</li>
+        <li>Apareció en 2007 en la película «Protecting the King», una producción de D. Edward Stanley.</li>
+        <li>Creó TCB de Seguridad / Patrulla de Seguridad Privada y Corporativa en el condado de Palm Beach junto con Brian Phelan.</li>
+        <li>Recibió el premio SACC 2007-2008 de Hagen Ranch Elementary School como entrenador/instructor.</li>
+        <li>Premio «Dare to Care» (03/12/08) de los Ángeles Guardianes de Palm Beach, por más de 20 años de capacitación en prevención del delito y seguridad.</li>
+        <li>Apareció como invitado en el Danny & Theresa Zaino Martial Arts Radio Show junto con GM Dave Hebler, GM Mike Pick y David Stanley en un episodio destacado.</li>
+        <li>Destacado en julio de 2008 en la revista «Inside Kung-Fu» con GM Dave Hebler.</li>
+      </ul>
+      <h4>Proyectos realizados</h4>
+      <ul>
+        <li><strong>Kenpo for Kids</strong> (producido por Sean Kelley, con Cindy Graham, cinturón negro): en este video original, Miss Graham muestra métodos eficaces para la enseñanza de los principios del Kenpo a los estudiantes más jóvenes.</li>
+        <li><strong>Sticky Hands</strong> (producido por Sean Kelley): Frank Trejo, 9º grado de cinturón negro, junto con Sean Kelley, demuestra los ejercicios de «manos pegajosas» y cómo utilizarlos con eficacia en la manipulación, control y maniobra de un oponente.</li>
+        <li><strong>The Guardian</strong> (producido por Scott Johnson): diseñado para hombres, mujeres y niños, este video proporciona instrucción simple por Dave Hebler, Sean Kelley y Martin Wheeler sobre el uso de un palo de bolsillo y un kubotan (llavero) como dispositivos eficaces de autodefensa.</li>
+      </ul>`
+  },
+  {
+    id: 'schulte', nombre: 'Rainer Schulte', grado: '10th Degree Black Belt · Vicepresidente CKF',
+    patrones: [/Rainer S(?:ch|h)ulte/g, /Mr\.? Schulte/g],
+    portada: 'img/maestros/bio/schulte/portada.png',
+    galeria: [
+      'img/maestros/bio/schulte/122026467_121950786346782_2849611964731884974_n-400x284.jpg',
+      'img/maestros/bio/schulte/121650730_10225043122724932_5721927981203821097_n-400x284.jpg',
+      'img/maestros/bio/schulte/121461402_10225043049923112_3478345565669594969_n-400x284.jpg'
+    ],
+    bio: `
+      <p>Grandmaster Rainer Schulte, 10th Degree Black Belt, es actualmente Vicepresidente de la Chinese Karate Federation (CKF). Recibió su primer cinturón negro de Senior Grandmaster Ed Parker en 1970, y el 6º grado del Sr. Parker en 1989. Cuando el Sr. Schulte se enteró de la muerte de su maestro, juró que nunca utilizaría otro cinturón en su cintura. Mantuvo este voto hasta febrero de 2005, cuando aceptó su 7th Degree Black Belt en el seminario CKF de Florida en el Kelley Karate Center. El Sr. Schulte fue ascendido al 8th Degree Black Belt en el año 2007 por Grandmaster Michael Robert Pick.</p>
+      <p>GM Rainer Schulte nació y se crió en Alemania. Se mudó a Estados Unidos y comenzó a estudiar Kenpo a la edad de 25 años. En 1970, el Departamento de Estado de EE.UU. le pidió al Sr. Schulte que aceptara un trabajo en el consulado de EE.UU. en Alemania. Cuando Mr. Parker escuchó la noticia, le dio a Mr. Schulte la asignación especial de la introducción del American Kenpo Karate en Europa. Poco después, Mr. Schulte abrió un club de Kenpo cerca de Düsseldorf y llegó a establecer una sucursal de la International Kenpo Karate Association (IKKA) en Europa. Debido en gran medida a la decisión y los esfuerzos permanentes de Mr. Schulte, con el tiempo el American Kenpo de Ed Parker se convirtió en una fuerza importante de artes marciales en Alemania, Jersey, Inglaterra, Irlanda, Holanda y España. El Sr. Schulte y su esposa residen actualmente en Florida (EE.UU.). Mr. Schulte fue el primero de una serie de biografías de leyendas Kenpo de Michael Miller, «Leyendas de Kenpo».</p>
+      <p>Su primer instructor en Kenpo fue un alumno cinturón negro de Senior Grand Master Ed Parker llamado Dan Inosanto, el cual posteriormente sería alumno personal de Bruce Lee y, con los años, es uno de los maestros más respetados en el uso del Kali y guardián del Jeet Kune Do, el arte de Bruce Lee.</p>
+      <p>Dos años más tarde le ofrecieron a Mr. Schulte un trabajo en el Consulado de los EE.UU. en Alemania en temas relacionados con el antiterrorismo. Su fluidez en alemán y su maestría en las artes marciales lo hacían perfecto para el trabajo. Trabajó de incógnito hasta que fue demasiado conocido y entonces comenzó a entrenar al personal de seguridad.</p>
+      <p>Durante su estancia en Alemania también abrió una escuela de Kenpo y en unos pocos meses tenía cientos de estudiantes. Desde entonces, ha fundado una compañía que diseña equipo para artes marciales, así como una compañía de seguridad para diplomáticos y celebridades que trabajó para la gira mundial de Paul McCartney en 1989, entre otros eventos.</p>
+      <h4>Una nota personal de Mr. Schulte</h4>
+      <blockquote>
+        <p>«En el año 2000, tuve la suerte de ser introducido a un kenpoista del cual estoy orgulloso de llamar mi amigo; ese hombre es Sean Kelley. En los años transcurridos desde que lo conocí, he observado a Sean Kelley como artista marcial y como líder.»</p>
+        <p>«Sean Kelley ha conservado la visión de Mr. Parker, tanto para los que vienen nuevos en el sistema como para los "viejos" como yo.»</p>
+        <p>«Después de 41 años en Kenpo, la mayor parte estando en la IKKA, me siento orgulloso de ser parte de la CKF.»</p>
+      </blockquote>`
+  },
+  {
+    id: 'wallace', nombre: 'Bill «Superfoot» Wallace', grado: 'Grandmaster · PKA Champion',
+    patrones: [/Bill (?:[«"“]Superfoot[»"”] )?Wall?ace/g, /[«"“]?Superfoot[»"”]? Wall?ace/g],
+    portada: 'img/maestros/bio/wallace/portada.jpg',
+    galeria: [
+      'img/maestros/bio/wallace/5a72c1ea-5f98-44c0-84fa-52e5b99e7b0e-400x516.jpg',
+      'img/maestros/bio/wallace/051a592e-e99d-46be-bb13-e83afe81bb32-400x516.jpg',
+      'img/maestros/bio/wallace/199ea602-514e-463a-a59b-36af45de63e0-400x516.jpg',
+      'img/maestros/bio/wallace/Bill_Wallace_Roberto_Vidal-400x516.jpg',
+      'img/maestros/bio/wallace/e2109fc5-d8d2-4acd-8ada-05c4b2cc4c42-400x516.jpg',
+      'img/maestros/bio/wallace/IMG-20230320-WA0008-400x516.jpg',
+      'img/maestros/bio/wallace/IMG-20230320-WA0014-400x516.jpg',
+      'img/maestros/bio/wallace/IMG-20230320-WA0012-400x516.jpg',
+      'img/maestros/bio/wallace/IMG-20230320-WA0009-400x516.jpg',
+      'img/maestros/bio/wallace/fnbfNAhnmas0-tf9ldrdR2qmWypUzYWsAEvrlYt5_Tc_plaintext_638149184223512907-400x516.jpg'
+    ],
+    bio: `
+      <p>Bill Wallace se retiró como campeón invicto de peso medio de la Asociación Profesional de Karate (PKA) después de derrotar a Bill Biggs en una pelea a 12 asaltos en junio de 1980. La victoria señaló el final de una ilustre carrera de 15 años en torneos y la lucha de full contact.</p>
+      <p>Conocido en el mundo del karate simplemente como «Superfoot», símbolo de la pierna izquierda impresionante, que fue registrada en más de 60 millas por hora (más de 96 km/h), dejó una serie de rivales maltratados y golpeados en su camino en las artes marciales.</p>
+      <p>Él utilizó sus pies como los otros utilizaban sus manos, fingiendo dos o tres patadas rápidas falsas y continuando con una sólida técnica de nocaut. Su fuerza fue increíble, su precisión asombrosa.</p>
+      <p>Wallace, de 1,79 m aprox., nativo de Portland, Indiana, comenzó a estudiar karate en febrero de 1967 después de sufrir una lesión en la pierna derecha en un accidente de judo. La lesión le dejó sin el uso de la pierna en la competencia de karate. Algunos observadores dijeron que Wallace cometía un suicidio en las artes marciales. Él, sin embargo, tenía otras ideas.</p>
+      <p>En los siguientes siete años, «Superfoot» — el nombre que le dio su mánager cuando vio un anuncio de un «super hot dog largo y caluroso» en un evento deportivo — dominó el circuito de puntos de los torneos.</p>
+      <p>Fue campeón nacional de punto durante tres años consecutivos, y capturó casi todos los eventos más importantes del circuito de torneos. Las victorias más prestigiosas fueron el Campeonato de EE.UU. (3 veces), el Gran USKA Nacionales (3 veces) y el Top Ten de los nacionales (dos veces).</p>
+      <p>Fue figura dominante en la revista de artes marciales Black Belt, la biblia de las publicaciones de la industria, que lo nombró en su Salón de la Fama tres veces en siete años: dos veces «Competidor del Año» y una vez «Hombre del Año».</p>
+      <p>En 1973, Wallace — cuya educación incluye una licenciatura (1971) en educación física de la Ball State University y una maestría (1976) en kinesiología (estudio del movimiento humano) de la Universidad Estatal de Memphis — sufrió lo que muchos consideraron una lesión que finalizaría su carrera. Sin embargo, uno de los amigos de Wallace, el difunto Elvis Presley, voló con un acupunturista de Los Ángeles para tratar al campeón de karate en Graceland.</p>
+      <p>Un año más tarde, Wallace se convirtió en profesional y consiguió el campeonato PKA de peso medio de karate con un nocaut en la segunda ronda (patada de gancho) al alemán occidental Bernd Grothe en Los Ángeles. Renunció a la corona en 1980, invicto y respetado en todo el mundo.</p>
+      <p>A pesar de su retiro, Wallace sigue siendo una de las figuras de artes marciales más populares. Es autor de tres libros: «Karate: Conceptos Básicos y Habilidades», «Dynamic Kicking & Stretching» y «The Ultimate Kick».</p>
+      <p>Ex miembro del Consejo Presidencial sobre la Actividad Física, Wallace también ha participado activamente en la industria del cine. Sus créditos incluyen «A Force of One» con Chuck Norris; «Killpoint» con Cameron Mitchell; «Continental Divide» y «Neighbors» con John Belushi, de quien se desempeñó como entrenador y guardaespaldas; «The Protector» con Jackie Chan; «A Prayer for the Dying» con Mickey Rourke; «Ninja Turf» y «Sword of Heaven».</p>`
+  },
+  {
+    id: 'petit', nombre: 'Arturo Petit', grado: '8th Degree Black Belt · Fundador del Kenpo en Chile',
+    patrones: [/(?:Sensei |Maestro |maestro )?Arturo Petit/g, /(?:Sensei|Maestro|maestro) Petit/g],
+    portada: 'img/maestros/bio/petit/portada.jpg',
+    galeria: ['01-400x516.jpeg','02-400x516.jpeg','03-400x516.jpeg','04-400x516.jpeg','WhatsApp-Image-2020-08-17-at-16.36.10-400x516.jpeg','05-400x516.jpeg','06-400x516.jpeg','07-400x516.jpeg','WhatsApp-Image-2022-08-23-at-8.36.00-AM.jpeg','08-400x516.jpg','09-400x516.jpg','10-400x516.jpg','11.jpg','12-400x516.jpeg','13-400x516.jpeg','14-400x516.jpeg','15-400x516.jpeg','16-400x516.jpeg','17-400x516.jpg','18-400x516.jpg','19-400x516.jpg','20.jpg','21-400x516.jpg','22-400x516.jpeg','23-400x516.jpeg','24-400x516.jpg','25-400x516.jpg','26-400x516.jpg','27-400x516.jpg','28-400x516.jpg','29-400x516.jpeg','30-400x516.jpeg','31-400x516.jpeg','32-400x516.jpeg','33.jpeg','34-400x516.jpeg','35-400x516.jpeg','36-400x516.jpeg','37-400x516.jpeg','38-400x516.jpeg','39-400x516.jpeg','40-400x516.jpeg','41.jpeg','42-400x516.jpeg','43.jpeg','44-400x516.jpeg','45.jpeg','46-400x516.jpeg','47-400x516.jpeg','48-400x516.jpeg','49-400x516.jpeg','50-400x516.jpeg','51-400x516.jpeg','52-400x516.jpeg','53-400x516.jpeg','54.jpeg','55-400x516.jpeg','56-400x516.jpeg','57-400x516.jpeg','58-400x516.jpeg','59-400x516.jpeg','60-400x516.jpeg','61-400x516.jpeg','62.jpeg','63-400x516.jpeg','64-400x516.jpeg','65.jpeg','66.jpeg','67-400x516.jpeg','68-400x516.jpeg','69-400x516.jpeg','70-400x516.jpeg','71.jpeg','72-400x516.jpeg','73-400x516.jpeg','74.jpeg','75-400x516.jpeg','WhatsApp-Image-2020-08-23-at-14.13.06-400x516.jpeg','76-400x516.jpeg','77-400x516.jpeg','78-400x516.jpeg','WhatsApp-Image-2020-08-26-at-20.54.46-400x516.jpeg','WhatsApp-Image-2020-08-26-at-20.55.57-400x516.jpeg','79-400x516.jpeg','80.jpeg','81.jpeg','82.jpeg','WhatsApp-Image-2020-08-26-at-20.30.04-400x516.jpeg','83-400x516.jpeg','WhatsApp-Image-2020-08-17-at-18.01.12.jpeg','05.png','06.png','02.png','03.png','07.png','01.png'].map(f => 'img/maestros/bio/petit/' + f),
+    bio: `
+      <h4>Agradecimientos</h4>
+      <p>Esta biografía ha sido desarrollada gracias a la ayuda de los siguientes maestros y profesores, a través de los cuales se pudo reunir y completar una biografía más detallada: Adelmo Cortez, José Garay, Héctor Jofre, José Miguel Morales, Claudio Soto, Sifu Julio Hernández y Alberto Petit. A todos, ¡muchas gracias!</p>
+      <p>¡¡Va bene!! Sensei Arturo Petit…</p>
+      <p>Sensei Arturo Petit nace el 6 de junio de 1943 en Antofagasta, hijo de Arturo Santiago Petit Díaz y Nelly Almonte Ceballos (Q.E.P.D.). Realizó sus estudios en el colegio San Luis, de donde egresó luego de cumplir la enseñanza primaria y secundaria. Rindió su bachillerato en la Universidad de Chile y la Universidad Católica de Valparaíso con mención en Ciencias Físicas y Químicas, ingresando en 1961 a la Universidad Católica de Santiago en la Facultad de Química Industrial, donde realizó estudios regulares.</p>
+      <p>Comienza la práctica del karate a la edad de 18 años, realizando sus estudios en Argentina y Brasil. Su pasión por esta disciplina lo lleva a obtener su 1er Dan en 1964, siendo el primer chileno en la historia en obtenerlo. Continúa sus estudios de karate en Estados Unidos bajo las órdenes directas de Robert Trias.</p>
+      <p>En 1967, el Sensei Petit trajo a Chile al maestro Robert Trias (9º Dan), junto con Dirk Mosing y Hideo Tsuchiya, quienes impresionaron con una exhibición en la Escuela Militar, Santiago. Durante esta visita, el maestro Trias observó a Sensei Petit trabajar y, al preguntarle sobre su estilo de karate, este respondió que practicaba Shotokan. Mr. Trias sonrió y le dijo: «¡No! Lo que Ud. hace es Kenpo», añadiendo que debería conocer al maestro SGM Ed Parker con el fin de acrecentar su base técnica y filosófica.</p>
+      <p>En 1968, Sensei Petit viajó a Pasadena, California, donde entró en contacto por primera vez con el maestro Parker. Durante su estancia en los Estados Unidos, Petit adquirió conocimientos sobre Kenpo y fue designado por el propio maestro Ed Parker como representante de la International Kenpo Karate Association (IKKA) para Latinoamérica, con el grado de cinturón negro 3er Dan — un grado bastante alto para la época, especialmente considerando que en Europa los más altos grados ostentados por los maestros eran de 5º Dan. A su regreso, Petit fundó la «Escuela Chilena e Internacional de Karate».</p>
+      <p>El 1 de junio de 1968 le fue otorgado el grado de Cinturón Negro 2º Dan por Robert Trias, con reconocimiento de la USKA. En diciembre de 1968, Sensei Petit realiza la primera visita del SGM Ed Parker a Chile; a la vez se le da el reconocimiento de 3rd Degree Black Belt y comienza la incorporación del Kenpo Karate en Chile y Sudamérica.</p>
+      <p>En 1970 nuestro país comenzaba a tener desestabilidades políticas y, junto con eso, llega a Chile la película «El Boxeador Chino», la cual provocó un gran auge y dio a conocer las artes marciales orientales. La escuela de Kenpo Karate, que en ese momento estaba en la Alameda, llenó sus dojos en todos sus horarios. Era tanto el auge que se empiezan a ofrecer concursos y becas en la conocida revista «Ritmo». Junto a eso, se comienza a conformar la primera generación de cinturones negros del Kenpo Karate chileno.</p>
+      <p>Ya siendo la disciplina del karate ampliamente difundida, llega a Chile en agosto (un mes después de la muerte de Bruce Lee) la película «Operación Dragón», la cual alcanzó a estar solo un par de semanas debido al Golpe Militar ocurrido en 1973. Posteriormente, de todas las escuelas que fueron cerradas en 1975, se le concede la autorización solo al Sensei Petit para abrir su escuela.</p>
+      <p>En 1975 es invitado por primera vez, como Juez Internacional, al Campeonato Internacional de Long Beach, en California, evento que reunía a los mejores expertos del mundo. Sensei Petit estuvo presente en los años 77, 78, 81, 82, 85, 87 y en el «Ed Parker Memorial» de 1991.</p>
+      <p>En 1976 aparece la primera revista de artes marciales en Chile, «Sensei», la cual tuvo solo dos números debido a las restricciones impuestas. En 1977 escribió la columna «Con las manos vacías», que aparecía semanalmente en el diario La Tercera. Era un artículo muy esperado por los practicantes marciales de la época, que compraban el diario los días miércoles, cuando se publicaba la columna. Más de algún cinturón negro en la actualidad inició su camino en las artes marciales gracias a esta columna, la cual duró varios años publicada.</p>
+      <p>En 1978 se efectúa la segunda visita de SGM Ed Parker a Chile, y Sensei Arturo Petit asciende a 5th Degree Black Belt.</p>
+      <p>Fue instructor de artes marciales en la Escuela Militar, Escuela de Aviación y Escuela de Investigaciones, desempeñándose como profesor y asesor en los cuerpos militares y presidenciales, como es el caso de la Compañía de Guardia Presidencial, Escuela de Infantería, Comandos, Fuerzas Especiales de Carabineros y muchas otras. A nivel internacional dictó cursos a la Policía de Montevideo, Uruguay. Fue jefe de la Comisión Técnica Asesora de las Artes Marciales en Chile y fue designado capitán del equipo chileno que participó en el 4º Campeonato Sudamericano de Karate.</p>
+      <p>En 1979 organiza la visita de Bill «Superfoot» Wallace a Chile y comienza el interés por el karate full contact. Además obtiene la representación de la I.A.K.F. (International Amateur Karate Federation). Dentro de las presentaciones que efectuó Bill «Superfoot» Wallace, una de las más memorables, donde mostró la velocidad de su pierna izquierda, fue en el programa «Sábados Gigantes».</p>
+      <p>En 1981 se efectúan en Chile dos grandes torneos para elegir un equipo que representara a Chile en USA. El primero se realizó en Talca y fue de combates al punto o marcación, y el de Santiago fue de contacto, organizado por Sensei Arturo Petit. De esta forma se conformó el equipo que en julio de 1981 viajó al mundial de USKA en Nueva Orleans, además de participar en diferentes cursos.</p>
+      <p>De regreso en Chile, comienza a organizar «La Primera Gran Noche de los Maestros», que tuvo como invitados a los maestros SGM Ed Parker, Eric Lee, Dominique Valera y Tadashi Yamashita, los cuales vinieron con sus respectivos sparrings Frank Trejo, Julio Hernández y Daniel Brand (Q.E.P.D.). Se efectuaron grandes presentaciones con llenos totales en el Fortín Prat de Valparaíso, la Base Naval de Concepción, La Tortuga de Talcahuano y el Estadio Nataniel de Santiago, además de aparecer en dos importantes programas — «Al Despertar» y «Sábados Gigantes» — y en todos los noticieros y diarios de Chile.</p>
+      <p>En 1982, debido a la gran expectación que causaron las presentaciones de los maestros, Sensei Petit, haciendo un gran esfuerzo, viaja a USA donde es ascendido a 6th Degree Black Belt y se contacta con el campeón mundial y leyenda del kickboxing Benny «The Jet» Urquidez, el cual vino con su sparring, el futuro campeón mundial de semipesados Blinky Rodríguez. Junto con ellos vendría el maestro de karate tradicional y kobudo Fumio Demura con su sparring Chuck Lanza. De esta forma organiza la «Segunda Gran Noche de los Maestros», llenando el Estadio Chile, además de ser invitados al programa más visto de la televisión, «Sábados Gigantes».</p>
+      <p><em>Nota: Fumio Demura posteriormente se hizo conocido por ser el doble de Miyagi y el coordinador de las escenas de peleas en «Karate Kid».</em></p>
+      <p>Una vez terminada la visita de los maestros, Sensei Petit, junto con Artecrom y el diario La Tercera, dan a luz el álbum «Karate, el deporte más completo». En ese mismo año (1982), el gobierno de Venezuela, a través del Ministerio de Deportes, lo invitó como juez principal para el Campeonato Internacional realizado en Isla Margarita, Venezuela.</p>
+      <p>Son incontables sus entrevistas en los distintos medios de comunicación de la época; invitado recurrente en programas de radio y televisión, así como en revistas especializadas de artes marciales como Black Belt, Inside Kung Fu, Action Karate, Budo, Budoka, Sensei, Karate Internacional, etc. También aparece en el libro «Quién es quién en las Artes Marciales» del norteamericano John Corcoran, siendo el único chileno en aparecer en este libro. En 1983, junto al diario La Tercera, realiza un programa de artes marciales en el canal de la UCV.</p>
+      <p>Encargándose de la difusión del arte marcial, imparte cursos por toda Sudamérica, además de fundar escuelas de Kenpo Karate en Ecuador, Venezuela, Argentina, Perú y Bolivia.</p>
+      <p>En 1983, debido al éxito que provocó Dominique Valera en la «Primera Gran Noche de los Maestros», es invitado nuevamente para demostrar el karate full contact, haciendo exhibiciones y clases en Talca, Concepción y Osorno, finalizando con una gran exhibición y graduación de cinturones café y negros de las escuelas de Kenpo Karate de Chile.</p>
+      <p>En 1984, Sensei Arturo Petit trae a Chile a dictar seminarios al amigo y alumno personal del gran Bruce Lee y heredero del Jeet Kune Do, el maestro «Guro» Dan Inosanto, el cual marca y da a conocer en el mundo el arte marcial filipino Eskrima o Arnis. Su instructor ayudante es el actual maestro, actor, doble y coreógrafo de cine Jeff Imada.</p>
+      <p>En ese mismo año (1984), la escuela de Kenpo Karate de Viña del Mar organiza un torneo por equipos en el Fortín Everton, donde Santiago participa y gana. De esa forma se alberga la idea de la creación de un equipo de combate; pertenecer a ese grupo era tremendamente difícil, debido a que las escuelas Madrid y Portugal de Sensei Petit tenían más de 2.500 personas, aparte de las filiales. Se efectuaron varias pruebas hasta ir confirmando un grupo estable que durante los años 84, 85, 86, 87 y 88 compitió en muchos eventos y torneos en Santiago, Viña del Mar, Valparaíso, Concepción, Villa Alemana, Antofagasta e Iquique; uno muy importante fue la Copa Teleférico San Cristóbal, además de los muy recordados torneos de Osorno.</p>
+      <p>En 1985 viaja como maestro invitado al gran torneo «Caracas 750» realizado en Venezuela, organizado por el maestro Óscar González (Q.E.P.D.), que contó además con la presencia de los maestros SGM Ed Parker, Jhoon Rhee, Joe Palanzo, Raúl Gutiérrez y Felipe Soto. En esa oportunidad, el 27 de abril del mismo año, es ascendido a 7th Degree Black Belt de manos de su maestro SGM Ed Parker, lo cual lo coloca entre los mejores 5 karatekas a nivel mundial en el estilo Kenpo.</p>
+      <p>En junio de 1987, Sensei Petit invita a Chile al campeón europeo y posterior campeón mundial de full contact/kickboxing, el italiano Giorgio Perreca, quien vino acompañado de su socio y también campeón Daniele Malori; dictaron seminarios en Santiago y una demostración junto al equipo de combate del Sensei Petit en la ciudad de Osorno. Desde ese mismo año en adelante, Sensei Petit es comentarista en la radio Portales, en el programa «Portaleando» que animaba Ricardo Calderón.</p>
+      <p>El domingo 3 de enero de 1988, Sensei Arturo Petit organiza un Torneo Nacional de Kenpo Karate que reunió a más de 400 personas, con competencias de combate individual y por equipos. En ese mismo año fue llamado por Canal 13 para desarrollar un completo análisis sobre las artes marciales en el programa Sábados Gigantes, el cual se prolongó por seis semanas consecutivas, constituyéndose en un verdadero impacto.</p>
+      <p>En 1990 fallece SGM Ed Parker y se producen varios movimientos dentro de la organización IKKA. Es por esto que el Sensei Petit viaja en 1991 a USA al «Memorial Ed Parker», donde se encuentra con varios maestros como Jeff Speakman, Frank Trejo y Benny «The Jet» Urquidez. Debido a esto, el maestro Petit participó en la nueva asociación, la World Wide Kenpo Karate Association, dirigida por el maestro Joe Palanzo, en la que también estaban maestros como Tom Kelly, Frank Trejo y Richard «Huk» Planas, entre muchos más.</p>
+      <p>En mayo de 1995, el Sensei Arturo Petit fue nominado por el Comité Técnico de la W.K.K.A., que presidía Joe Palanzo, Cinturón Negro 10º Dan, siendo aprobado en forma unánime por el Comité Ejecutivo su ascenso al grado de 8th Degree Black Belt.</p>
+      <p>En mayo de 1998, Sensei Petit gestionó la visita a Chile del Máster Mohamad Tabatabai, actual 10th Degree Black Belt de reconocida trayectoria, donde realizó clases y seminarios. En ese mismo año, viaja a Buenos Aires, Argentina, junto con un grupo de alumnos e instructores al seminario del maestro Richard «Huk» Planas. Al año siguiente, en 1999, el maestro Frank Trejo (Q.E.P.D.) visitó nuestro país en un evento, como siempre, implacable, organizado por el Sensei Petit.</p>
+      <p>En el año 2000, Sensei Petit organiza la que sería su última actividad: un seminario en Santiago con el maestro de jiu-jitsu de Brasil, Rolker Gracie. El 31 de agosto de ese mismo año, Sensei Petit fallece en la ciudad de Concepción.</p>
+      <blockquote>«La técnica no se perfecciona a través de videos ni de lectura de libros, sino a través de la práctica.»</blockquote>`
+  },
+  {
+    id: 'vidal', nombre: 'Roberto Vidal C.', grado: '8th Degree Black Belt · Associate Master of the Arts',
+    patrones: [/Roberto Vidal(?: C\.| Carvajal)?/g, /(?:maestro|Maestro|Professor|profesor) Vidal/g],
+    portada: 'img/maestros/bio/vidal/portada.jpg',
+    galeria: ['Imagen-de-WhatsApp-2023-11-25-a-las-00.05.38_10e9dade-400x284.jpg','17-1.png','18.png','45487266_10217843706744032_7804198732110495744_n-400x284.jpg','diploma01-400x284.png','diploma02-400x284.png','q1.png','q2.png','q3-400x284.png','q4.png','q5.png','q6.png','q7.png','01-1.png','02-1.png','03-1.png','04-1.png','05-1.png','06-1.png','07-1-400x284.png','08-1-400x284.png','09-1.png','10-1.png','11-1.png','12-1.png','13-1.png','14-1.png','15-1.png','16-1.png','20230219_110242-400x284.jpg','IMG_20230223_124255-1-400x284.jpg','Diploma-BIM-400x284.png'].map(f => 'img/maestros/bio/vidal/' + f),
+    bio: `
+      <p>Roberto Vidal comenzó su viaje en las Artes Marciales en 1976 junto a un familiar cercano el cual tomaba clases de Kenpo Karate y Judo. Estas lecciones caseras engendrarían en él la semilla de la pasión por el Kenpo y otras artes marciales. Al año siguiente inicia formalmente su práctica en la academia del Maestro Arturo Petit, 4th Degree Black Belt en aquella época en Kenpo Karate. Desde el primer día en el dojo, Roberto supo a qué dedicaría su vida.</p>
+      <p>Durante este período de aprendizaje, Roberto se mantuvo fiel a la escuela del Maestro Petit. Su calidad técnica y espíritu aguerrido le llevaron a formar parte del Grupo de Combate y a representarla en diversas ciudades del país. Si bien era miembro activo como alumno del Maestro Petit, ello no fue impedimento para seguir aprendiendo de diferentes estilos, practicando Kung-Fu, Tae Kwon Do, Boxeo, Lucha Olímpica, Judo y Full Contact.</p>
+      <p>Su ímpetu lo hizo destacar en diversos torneos: en 1980 participa en el torneo clasificatorio para representar a Chile en el Torneo de Nueva Orleans, USA. En 1981 es semifinalista en el primer torneo de full contact realizado en Chile. En 1984 es vicecampeón en el Torneo de Karate Fortín Everton, Viña del Mar. En 1985 obtiene el 1er lugar como Campeón Metropolitano de Karate, Copa Teleférico San Cristóbal. En 1986 defiende su título de Campeón Metropolitano de Full Contact en el estadio Sokol de Antofagasta, pelea transmitida por TVN.</p>
+      <p>Entre 1982 y 1987 es además instructor de la «Kenpo Karate Central Santiago». Este último fue un año de grandes éxitos: obtiene el 1st Degree Black Belt y además logra ser campeón nacional de fisicoculturismo y uno de los tres mejores fisicoculturistas de Chile, venciendo a 35 competidores en su categoría y ocupando el tercer lugar en la competencia general como el participante de menor peso (64,8 kg), siendo el primer atleta de una categoría liviana en llegar al podio. Apareció en variados capítulos de la revista Equilibrio, especializada en fisicoculturismo, que destacó en su edición N° 6 sus tres importantes victorias y su «físico muy bien presentado y una personalidad ganadora».</p>
+      <p>En el mismo año toma bajo su dirección la escuela Full Kenpo Karate Maipú, la cual conduce durante 14 años logrando reunir una gran cantidad de alumnos activos. Las clases impartidas comenzaban muy temprano por la mañana y finalizaban tarde por la noche.</p>
+      <p>En esta etapa de su vida comenzó a viajar como competidor individual, visitando en reiteradas ocasiones Uruguay, Brasil y Argentina. En este último país, en 1994, en la ciudad de Buenos Aires, dicta un seminario en la escuela de Ricardo Fabián Valiño, campeón de Argentina varias veces, campeón del mundo de Taekwondo ATA 1999 y uno de los grados más altos en USA de GTA Taekwondo, entablando con él una gran amistad que hasta el presente perdura.</p>
+      <p>Al año siguiente continuaría su perfeccionamiento en el sistema Kenpo de Ed Parker, ahora en Europa, visitando las ciudades españolas de Madrid, Barcelona y Guadalajara, así como Dinamarca y Suecia, participando en seminarios con los mejores maestros del Kenpo: Frank Trejo, Roy McDonald, Doreen Dirienzo, Sascha Williams, John Sepúlveda, Graham Lelliott y Gilbert Vélez, encuentro que también contó con la presencia de la esposa del fallecido GM Ed Parker, Miss Leilani Parker.</p>
+      <p>En 1996 recibe de manos de su maestro Arturo Petit el 5th Degree Black Belt. Dos años más tarde, en 1998, es reconocido como instructor independiente por la Dirección General de Movilización Nacional del Ministerio de Defensa de Chile, organismo que fiscalizaba las artes marciales en Chile.</p>
+      <p>El acabado conocimiento de las artes marciales le ha llevado a figurar en su país en diferentes medios de comunicación social: prensa, radio y TV. También ha aparecido en revistas chilenas tales como Equilibrio y Desafío, como columnista en «Karate Artes Marciales», además de la revista Yudo Karate (Argentina), Ranking Marcial (programa de TV) y últimamente la revista «El Budoka» de España.</p>
+      <p>En este período destacó su participación como vicecampeón de full contact en Iquique en 1988; 1er lugar «Copa Teletón» Santiago 1991, además del 3er lugar en el Torneo Nacional de Fisicoculturismo ese mismo año; 3er lugar en el torneo «Rumbo al Luna Park», Buenos Aires, Argentina, en 1992; 1er lugar «Copa Juan Jaque» Santiago 1993; 1er lugar «Copa Araucanía» Temuco en 1994; también 1er lugar en formas individuales y 2º lugar en formas con armas en el Torneo Sudamericano de Artes Marciales de Buenos Aires, y Campeón Americano en formas y vicecampeón en formas con armas en Punta del Este, Uruguay, todos logros del mismo año; y 1er lugar en «Duelo de Campeones», categoría maestros, Coquimbo, en 1999.</p>
+      <p>Entre sus logros se cuenta la organización de grandes eventos internacionales: en 1994 el encuentro «Chile – Argentina», efectuado en el Mall Arauco Maipú y auspiciado por la Ilustre Municipalidad de Maipú, y el 1er Torneo Sudamericano «Copa Ilustre Municipalidad de Maipú», con un multitudinario desfile por pleno centro de la ciudad, partiendo desde el Templo Votivo de Maipú hasta el Estadio Santiago Bueras.</p>
+      <h4>Distinciones otorgadas</h4>
+      <ul>
+        <li>1994 «Deportista Destacado», I. Municipalidad de Maipú</li>
+        <li>1995 «Deportista del Año», I. Municipalidad de Maipú</li>
+        <li>1999 «Deportista de élite a nivel nacional», I. Municipalidad de Maipú</li>
+        <li>2006 «Mérito Docente», Duoc UC Sede San Carlos de Apoquindo</li>
+        <li>2007 «Mérito Docente», Duoc UC Sede Antonio Varas</li>
+        <li>2008 «Deportista Destacado» de la comuna de Maipú (junto a Martín Vargas, Hans Martínez, Gonzalo Fierro y Cristian Escalante)</li>
+        <li>2010 «Mérito Docente», Duoc UC Sede Maipú</li>
+        <li>2013 «Mérito Docente», Duoc UC Sede Alameda</li>
+        <li>2017 «Hall of Fame Chile Awards 2017», ciudad de Quintero</li>
+        <li>2018 «Hall of Fame Chile Awards 2018», ciudad de San Fernando</li>
+      </ul>
+      <p>Entre los años 2002 y 2009 se desempeñó como docente en la Universidad de las Américas, en la asignatura electiva «Artes Marciales Sistema American Kenpo» en los campus Casa Central Providencia y Maipú.</p>
+      <p>Roberto Vidal siempre ha seguido perfeccionándose y entregando estos conocimientos incansablemente a sus alumnos; es por eso que cuenta con variados cursos de perfeccionamiento, algunos de ellos: curso de Tai-Chi en la Facultad de Ingeniería de la Universidad de Chile (1993); cursos de primeros auxilios de la Mutual de Seguridad y RCP de la Academia de Bomberos; Seminario Europeo de la IKKA en Madrid, España, con perfeccionamiento en Dinamarca y Suecia (1995); seminario con el fundador del Taekwondo, General Choi Hong Hi (1996); seminario Hung-Gar Kung-Fu con el maestro Li Hon Ki (1999); seminarios Gracie Jiu-Jitsu (2000 y 2001, este último con el maestro Rolker Gracie); seminario con el maestro Manny Reyes, 10º Dan USA, presidente de la World Kenpo Federation (2002); y seminario de Kobudo estilo Okinawa Shorin-ryu (2004).</p>
+      <p>En 2006, el 30 de julio, asume la representatividad de la Chinese Karate Federation (CKF) para Chile y Sudamérica, trabajando incansablemente en la organización de seminarios para su federación y trayendo maestros de renombre:</p>
+      <ul>
+        <li>2006 «1er Seminario CKF Chile y Sudamérica», maestro invitado Sean P. Kelley.</li>
+        <li>2008 «2do Seminario CKF Chile y Sudamérica», maestros invitados Sean P. Kelley y Ed Parker Jr. En esta ocasión Roberto Vidal es ascendido a 6th Degree Black Belt, «Professor of the Art», certificado otorgado por los maestros Sean P. Kelley, Michael Robert Pick, Rainer Schulte, Dave Hebler y Edmund K. Parker Jr.</li>
+        <li>2009 «3er Seminario CKF Chile y Sudamérica», maestros invitados Sean P. Kelley, Kevin Kuliga y Bill Larson.</li>
+        <li>2010 «4to Seminario CKF Chile y Sudamérica», maestros invitados Michael Robert Pick, 10th Degree Black Belt UKF, y Sean P. Kelley.</li>
+        <li>2010 «5to Seminario CKF Chile y Sudamérica», maestro invitado Sean P. Kelley.</li>
+        <li>2013 «6to Seminario CKF Chile y Sudamérica», maestros invitados Sean P. Kelley, Rainer Schulte, Mike Friedman y Raffy Pambuan.</li>
+        <li>2014 «7mo Seminario CKF Chile y Sudamérica», maestros invitados Sean P. Kelley y Bill «Superfoot» Wallace. En la oportunidad el Professor Vidal es ascendido a 7th Degree Black Belt, «Senior Professor», certificado entregado por los maestros Sean P. Kelley, Bill «Superfoot» Wallace y Rainer Schulte.</li>
+        <li>2015 «8vo Seminario CKF Chile y Sudamérica», maestros invitados Sean Kelley, Bill «Superfoot» Wallace y Jeff Speakman, este último conocido mundialmente por su película «El Arma Perfecta», un clásico dentro del cine de artes marciales.</li>
+        <li>2016 «9no Seminario CKF Chile y Sudamérica», maestros invitados Sean Kelley y Rich Hale. Además fue premiado en el «Hall of Fame Chile de las Artes Marciales y Maestros del Mundo».</li>
+        <li>2017 «10mo Seminario CKF Chile y Sudamérica», maestros invitados Sean P. Kelley, Mohamad Tabatabai, Rich Hale, Brian Duffy y Matías Raúl Pino.</li>
+      </ul>
+      <p>Además ha sido invitado a dictar seminarios en ciudades tales como Buenos Aires, Córdoba, Cutral Có/Plaza Huincul, Neuquén y San Martín de los Andes (Argentina), y Antofagasta, Puerto Natales, Viña del Mar, Illapel, Las Cabras, Valdivia, Quintero, Vicuña (2017 a 2023), San Fernando, Tomé, Calama, Quellón en Chiloé (2018, 2020, 2022, 2024) y Calbuco (2022 y 2023) en Chile.</p>
+      <p>Cabe destacar que a partir del año 2017, junto a la I. Municipalidad de Maipú y los jardines infantiles de Fundación INTEGRA, se creó el proyecto «Karate Kid», impartiendo clases en los distintos establecimientos a niños de entre 3 y 4 años. El año 2018, debido al éxito que este tuvo, se incorpora al programa de psicomotricidad del departamento de deportes de la I. Municipalidad de Maipú en jardines de Fundación Integra y COCEDUC/JUNJI, llegando a cinco establecimientos: los jardines infantiles Bernardo O'Higgins, Centenario, Emanuel, Kim-Ruka, Pinceles y Colores, y Pehuén.</p>
+      <p>Entre el 18 y 19 de mayo de 2018 es invitado a un seminario en la ciudad de San Fernando, donde es reconocido por el «Hall of Fame Southamerica Martial Art» como uno de los indiscutidos pioneros, líderes y responsables de muchas generaciones de Kenpo en nuestro país. En junio de 2018, el Ministerio del Deporte le otorga, a través de la Confederación Deportiva de Artes Marciales Pioneros de Chile, un reconocimiento a los 40 años de trayectoria en su calidad de maestro en la disciplina Kenpo Karate. En noviembre de 2018 fue galardonado en Neuquén, Argentina, por el profesor argentino Carlos Wollman como uno de los profesores invitados a dictar parte de ese seminario.</p>
+      <p>El 23 de agosto de 2018 fue nominado al Kenpo Karate Hall of Fame, cuya premiación se realizó el sábado 10 de noviembre de 2018 en Los Ángeles, California, EE.UU. Destacar que es el único chileno y latinoamericano en obtener tal premiación en el «Hall of Fame» de Paul Casey.</p>
+      <p>Con fecha 20 de marzo de 2019, la PKA Worldwide, a través de su representante Don Willis, reconoce oficialmente a Roberto Vidal como miembro de la PKA Worldwide, por su trayectoria y su aporte por fomentar el deporte a través de las artes marciales. La PKA es la primera federación de full contact/kickboxing que profesionalizó los deportes de contacto en USA.</p>
+      <p>Entre el 4 y 6 de octubre de 2019 se llevó a cabo el «11vo Seminario CKF Chile y Sudamérica», contando con la participación de destacados artistas marciales internacionales: Mr. Sean P. Kelley, presidente de la CKF (USA); Mr. Marty Zaninovich, instructor certificado en artes marciales filipinas, Jun Fan Gung Fu/JKD y Silat (USA); Jocelyn González, life coach de «Stomp the Bullying» (USA); y el profesor Juan Almeyda, II Dan de Judo (Brasil). Entre el 6 y 8 de diciembre participó en el seminario y clases del campamento educativo de Lontué de San Martín de los Andes, Neuquén, Argentina.</p>
+      <p>En diciembre de 2020 recibe el premio y distinción «Dragón de Oro», auspiciado por la revista Visión Marcial y TV. En agosto de 2021, Duoc UC Deporte y Actividad Física le otorga «El reconocimiento a la trayectoria docente extracurricular». En septiembre de 2021 aparece en el libro del Professor Carlos Jódar de España, «Interpretaciones de Kenpo Americano», como uno de los 15 principales exponentes mundiales hispanohablantes del sistema. En noviembre de 2021, la revista chilena Visión Marcial lo nombra como uno de los 10 maestros de las artes marciales 2021/2022 de destacada carrera internacional, como «Embajador de las artes marciales de Chile».</p>
+      <p>Entre el 1 y el 4 de diciembre de 2021 participó en el seminario organizado por la Escuela International Chilean Kenpo Orellana Studio y su instructor Felipe Orellana Cofré, 2nd Degree Black Belt, en la ciudad de Vicuña, IV Región de Coquimbo. Entre el 4 y 6 de febrero de 2022 fue invitado a participar del Kenpo Camp Quellón-Chiloé, realizado por el señor Rubén Almonacid y su escuela. En los meses de marzo y junio de 2022, la revista Visión Marcial emitió un completo reportaje dividido en sus ediciones 7ma y 8va, donde el maestro Vidal fue portada principal de la 7ma edición. El 13 de agosto de 2022 fue el invitado especial de un seminario efectuado en la comuna de Calbuco, organizado por el instructor Ramón Morales Álvarez. El 3 de diciembre de 2022, Duoc UC le otorga un diploma de honor por su participación en el Programa de Formación de Facilitadores de Bienestar Integral en Movimiento para docentes, de 52 horas de duración. El 10 de septiembre de 2022 se efectuó una ceremonia de graduación en la escuela «International Orellana Kenpo Studio» de Vicuña, donde 43 alumnos fueron promovidos de grado por el director de escuela Felipe Orellana y por el maestro Vidal.</p>
+      <p>El 19 de febrero de 2023, en Florida, USA, el maestro Roberto Vidal fue ascendido al grado de 8th Degree Black Belt «Associate Master of the Arts» por los maestros Sean Kelley, GM Rainer Schulte y Bill «Superfoot» Wallace en el gran evento llamado «The Zen of Kenpo», organizado por el maestro Kelley.</p>
+      <p>Actualmente el maestro Roberto Vidal C. es 8th Degree Black Belt «Associate Master of the Arts» del Ed Parker American Kenpo System, representante de la Chinese Karate Federation (CKF) para Chile y Sudamérica, y continúa perpetuando el «lineage» de cinturones negros de primera generación de Ed Parker bajo la dirección de Mr. Sean P. Kelley, presidente de la CKF.</p>
+      <blockquote>«El Karate es práctica, sin práctica no hay Karate.»</blockquote>`
+  },
+  {
+    id: 'trejo', nombre: 'Frank Trejo', grado: '10th Degree Black Belt · Grandmaster',
+    patrones: [/Frank Trejo/g, /maestro Trejo/g],
+    portada: 'img/maestros/bio/trejo/portada.jpg',
+    galeria: [
+      'img/maestros/bio/trejo/7c9d6f98-e2cf-4935-8f11-d7b5e5849f98-400x284.jpg',
+      'img/maestros/bio/trejo/68ce4f30-42f8-4ac5-97fb-7ba742717d5b-400x284.jpg'
+    ],
+    bio: `
+      <p>La primera experiencia de Mr. Frank Trejo con el combate fue a la edad de 8 años, cuando empezó a boxear bajo la tutela de su abuelo. Su entrenamiento formal en las artes marciales empezó en 1966, en Karate Shotokan. Tres años más tarde encontró y empezó a entrenar con el legendario Ed Parker. En los increíbles años que siguieron, Mr. Trejo tuvo el privilegio de conocer de cerca muchos de los conceptos y preceptos que Mr. Parker creó y desarrolló. Demostraciones, seminarios y giras mundiales con Mr. Parker irían a continuación.</p>
+      <p>Como kickboxer amateur, su mejor registro fue de 14-0. Como profesional fue de 21-1. Continuó hasta ganar el título de kickboxing del estado de California en 1979. Ha sido también el sorprendente ganador de los Campeonatos Internacionales 19 veces y el primer y único kenpoísta en quedar primero en formas y combate en los Campeonatos Internacionales de Karate de Long Beach, logro que consiguió en 1984. En 1985, el mundo corporativo reconoció su talento y le nombró entrenador y capitán del equipo internacional Budweiser de Karate, acerca del cual puedes leer en varios artículos de la revista Black Belt. A lo largo de toda su carrera ha ganado más de 400 campeonatos.</p>
+      <p>Frank Trejo es conocido en todo el mundo por sus habilidades únicas a la hora de pelear. Ha cruzado todas las fronteras y límites al combinar boxeo, kickboxing, karate, judo y lucha en el suelo en un concepto que a él le gusta llamar «Kenpo Fusión».</p>
+      <p>Frank Trejo llegó a ser Décimo Grado en Kenpo.</p>
+      <p>La imagen de portada corresponde a una foto sacada en el Campo de Entrenamiento Europeo IKKA en el año 1995, Madrid, España, donde el maestro Trejo aparece junto al maestro Roberto Vidal.</p>`
+  }
+];
+
+// Convierte en enlaces las menciones a otros maestros de la sección: al hacer click se
+// reemplaza el contenido del modal por la biografía del maestro citado (el modal ofrece
+// entonces un botón "Volver a <maestro>" para deshacer el salto).
+function linkearMaestros(html, selfId) {
+  MAESTROS_BIO.forEach(m => {
+    if (m.id === selfId) return;
+    m.patrones.forEach(re => {
+      html = html.replace(re, match => `<button type="button" class="maestro-link" onclick="openMaestroBio('${m.id}', true)">${match}</button>`);
+    });
+  });
+  return html;
+}
+
+let maestroModalTrigger = null;
+let maestroActualId = null;
+// Pila de navegación entre biografías: cada salto vía enlace de mención apila el maestro
+// desde el que se saltó; "Volver a <maestro>" desapila. Se vacía al abrir desde una tarjeta.
+let maestroModalStack = [];
+let maestroGaleriaPage = 1;
+const MAESTRO_GALERIA_PAGE_SIZE = 8;
+
+function renderMaestroGaleria() {
+  const m = MAESTROS_BIO.find(x => x.id === maestroActualId);
+  const cont = document.getElementById('maestroModalGallery');
+  if (!m || !m.galeria.length) { cont.innerHTML = ''; return; }
+  const totalPages = Math.ceil(m.galeria.length / MAESTRO_GALERIA_PAGE_SIZE);
+  maestroGaleriaPage = Math.min(Math.max(1, maestroGaleriaPage), totalPages);
+  const start = (maestroGaleriaPage - 1) * MAESTRO_GALERIA_PAGE_SIZE;
+  const items = m.galeria.slice(start, start + MAESTRO_GALERIA_PAGE_SIZE);
+  let html = `<div class="maestro-modal-gallery-title">Galería</div><div class="maestro-modal-gallery-grid">`
+    + items.map(src => `<img src="${src}" alt="Galería de ${m.nombre}" loading="lazy" decoding="async" onclick="openMaestroImg('${src}')" onerror="this.remove()">`).join('')
+    + `</div>`;
+  if (totalPages > 1) {
+    html += `<div class="escuelas-pager maestro-galeria-pager">`
+      + `<button type="button" class="pager-btn" data-page="${maestroGaleriaPage - 1}" ${maestroGaleriaPage === 1 ? 'disabled' : ''} aria-label="Página anterior de la galería">‹</button>`;
+    for (let p = 1; p <= totalPages; p++) {
+      html += `<button type="button" class="pager-btn${p === maestroGaleriaPage ? ' active' : ''}" data-page="${p}">${p}</button>`;
+    }
+    html += `<button type="button" class="pager-btn" data-page="${maestroGaleriaPage + 1}" ${maestroGaleriaPage === totalPages ? 'disabled' : ''} aria-label="Página siguiente de la galería">›</button></div>`;
+  }
+  cont.innerHTML = html;
+  cont.querySelectorAll('.pager-btn[data-page]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const p = Number(btn.dataset.page);
+      if (p < 1 || p > totalPages || p === maestroGaleriaPage) return;
+      maestroGaleriaPage = p;
+      renderMaestroGaleria();
+    });
+  });
+}
+
+function openMaestroBio(id, desdeLink) {
+  const m = MAESTROS_BIO.find(x => x.id === id);
+  if (!m) return;
+  const modal = document.getElementById('maestroModal');
+  const yaAbierto = modal.classList.contains('open');
+  if (!yaAbierto) {
+    maestroModalTrigger = document.activeElement;
+    maestroModalStack = [];
+  } else if (desdeLink && maestroActualId && maestroActualId !== id) {
+    maestroModalStack.push(maestroActualId);
+  }
+  maestroActualId = id;
+  const img = document.getElementById('maestroModalImg');
+  img.src = m.portada;
+  img.alt = m.nombre;
+  // Algunas portadas recortan las cabezas con el encuadre centrado por defecto:
+  // portadaPos permite priorizar la parte superior de la foto.
+  img.style.objectPosition = m.portadaPos || '';
+  document.getElementById('maestroModalGrade').textContent = m.grado;
+  document.getElementById('maestroModalName').textContent = m.nombre;
+  document.getElementById('maestroModalBio').innerHTML = linkearMaestros(m.bio, id);
+  document.getElementById('maestroModalVideo').innerHTML = m.video
+    ? `<div class="maestro-modal-video-frame"><iframe src="https://www.youtube.com/embed/${m.video}" title="Video: ${m.nombre}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`
+    : '';
+  maestroGaleriaPage = 1;
+  renderMaestroGaleria();
+  const backBtn = document.getElementById('maestroModalBack');
+  if (maestroModalStack.length) {
+    const prev = MAESTROS_BIO.find(x => x.id === maestroModalStack[maestroModalStack.length - 1]);
+    backBtn.hidden = false;
+    backBtn.textContent = `← Volver a ${prev.nombre}`;
+  } else {
+    backBtn.hidden = true;
+  }
+  modal.querySelector('.blog-modal-body').scrollTop = 0;
+  if (!yaAbierto) {
+    modal.classList.add('open');
+    requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add('is-open')));
+  }
+  modal.querySelector('.seminario-modal-close').focus();
+}
+function volverMaestroAnterior() {
+  const prev = maestroModalStack.pop();
+  if (prev) openMaestroBio(prev);
+}
+function closeMaestroModal() {
+  const modal = document.getElementById('maestroModal');
+  if (!modal.classList.contains('open')) return;
+  modal.classList.remove('is-open');
+  setTimeout(() => {
+    modal.classList.remove('open');
+    // Vaciar el video detiene la reproducción al cerrar.
+    document.getElementById('maestroModalVideo').innerHTML = '';
+  }, 220);
+  maestroModalStack = [];
+  maestroActualId = null;
+  document.getElementById('maestroModalBack').hidden = true;
+  if (maestroModalTrigger) { maestroModalTrigger.focus(); maestroModalTrigger = null; }
+}
+document.getElementById('maestroModal').addEventListener('click', function(e) {
+  if (e.target === this) closeMaestroModal();
+});
+
+// ── VISOR DE IMAGEN DE GALERÍA ──
+// Muestra la imagen en su tamaño original (la galería usa thumbnails 400px; el visor
+// carga la versión completa quitando el sufijo -AAAxBBB, con el thumb como respaldo).
+function openMaestroImg(src) {
+  const modal = document.getElementById('maestroImgModal');
+  const img = document.getElementById('maestroImgModalImg');
+  const full = src.replace(/-\d+x\d+(\.\w+)$/, '$1');
+  img.onerror = () => { img.onerror = null; img.src = src; };
+  img.src = full;
+  modal.classList.add('open');
+  requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add('is-open')));
+}
+// Devuelve true si el visor estaba abierto (para que Esc cierre solo el visor y no
+// también el modal de biografía que está debajo).
+function closeMaestroImgModal() {
+  const modal = document.getElementById('maestroImgModal');
+  if (!modal.classList.contains('open')) return false;
+  modal.classList.remove('is-open');
+  setTimeout(() => modal.classList.remove('open'), 220);
+  return true;
 }
 
 // ── INSIGNIAS: navegación dentro del lightbox sin cerrarlo ──
@@ -4120,27 +4808,502 @@ function navInsignia(delta) {
   updateInsigniaContent((currentInsigniaIndex + delta + total) % total);
 }
 
-// ── INTERÉS EN SEMINARIOS / BLOGS → WhatsApp (en vez de enlaces muertos) ──
-function interesEvento(nombre) {
-  window.open(buildWhatsAppLink(`Hola, quiero más información sobre: ${nombre}`), '_blank');
-}
-
 // ── BLOG TABS ──
 function switchTab(btn, id) {
   document.querySelectorAll('.blog-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.blog-panel').forEach(p => p.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById(id).classList.add('active');
+  // El filtro por escuela (a la derecha de las pestañas) solo aplica a Noticias.
+  actualizarVisibilidadFiltroEscuela();
 }
 function switchTabById(id) {
   const btn = document.querySelector(`.blog-tab[data-tab="${id}"]`);
   if (btn) switchTab(btn, id);
 }
 
-// Flechas del teclado en las etiquetas de categoría de Noticias y Blogs: activas mientras
-// la sección está a la vista (igual que Nuestras Escuelas / Nuestros Instructores y el
-// atajo "B" de buscar), sin necesidad de enfocar antes ninguna etiqueta. → ← seleccionan
-// la etiqueta contigua, permitiendo recorrer todas las categorías sin soltar el teclado.
+// ── BLOG (entradas reales de kenpochile.cl/blog) ──
+// Cada entrada replica un artículo publicado en kenpochile.cl: la tarjeta muestra la
+// portada y el resumen; el modal (openBlogModal) muestra el artículo completo. Las
+// imágenes se sirven desde el mismo dominio (wp-content del blog).
+// "fecha" va en formato ISO (AAAA-MM-DD): no se muestra, pero ordena cada categoría de
+// más reciente a más antigua. "escuelas" (opcional) asocia una actividad a una o más
+// escuelas por su slug (ESCUELAS[].id): la entrada aparece en el filtro por escuela de
+// la pestaña Noticias y en el enlace "Actividades" de la tarjeta de la escuela.
+const BLOG_POSTS = [
+  {
+    id: 'gtf-san-pedro-de-la-paz', cat: 'Noticias', fecha: '2026-01-30', escuelas: ['gtf'],
+    titulo: 'Nueva Escuela International GTF Kenpo Studio en San Pedro de la Paz',
+    img: 'https://kenpochile.cl/wp-content/uploads/2026/02/portada-400x250.jpg',
+    imgFull: 'https://kenpochile.cl/wp-content/uploads/2026/02/portada-1080x675.jpg',
+    url: 'https://kenpochile.cl/nueva-escuela-international-gtf-kenpo-studio-en-san-pedro-de-la-paz/',
+    excerpt: 'El 30 de enero de 2026 abrió sus puertas la International GTF Kenpo Studio en San Pedro de la Paz, dirigida por Gisela Torres y supervisada por el maestro Roberto Vidal.',
+    contenido: `
+      <p>¡Ya abrimos nuestras puertas! International GTF Kenpo Studio ya es una realidad en San Pedro de la Paz.</p>
+      <p>Con enorme orgullo y muchísima emoción anunciamos que la <strong>Escuela International GTF Kenpo Studio</strong> ya se encuentra oficialmente en funcionamiento. Este gran paso marca un momento histórico para nuestra comunidad marcial: el <strong>30 de enero de 2026</strong> se realizó la <strong>apertura oficial</strong> de nuestra nueva escuela definitiva y propia, un espacio creado para entrenar con seriedad, disciplina y pasión.</p>
+      <h4>Escuela con respaldo internacional: disciplina y calidad real</h4>
+      <p>La International GTF Kenpo Studio es dirigida por su directora <strong>Gisela Torres</strong>, con el grado de <strong>Black Belt</strong>, y cuenta con la supervisión constante de nuestro maestro <strong>Roberto Vidal</strong>, <strong>8th Degree Black Belt</strong>, «Associate Master of the Arts». Ambos pertenecen a la federación internacional <strong>Chinese Karate Federation (CKF)</strong>, lo que respalda el entrenamiento con un estándar sólido y reconocido a nivel internacional.</p>
+      <h4>Apertura oficial: 30 de enero de 2026</h4>
+      <ul>
+        <li><strong>Fecha de apertura:</strong> 30 de enero de 2026, 18:00 hrs</li>
+        <li><strong>Dirección:</strong> Braulio Arenas 7786, Villa Coloane, San Pedro de la Paz</li>
+        <li><strong>Ubicación referencial:</strong> a solo dos cuadras del paradero 13</li>
+      </ul>
+      <p>¡Desde ese día, nuestra escuela comenzó a recibir alumnos con toda la energía y espíritu del Kenpo!</p>
+      <h4>¿Por qué entrenar Kenpo en International GTF?</h4>
+      <p>El Kenpo es una disciplina completa, intensa y transformadora. No es solo un arte marcial… es un estilo de vida.</p>
+      <ul>
+        <li>Mejora tu condición física</li>
+        <li>Aumenta tu seguridad y confianza</li>
+        <li>Te enseña disciplina y autocontrol</li>
+        <li>Aprendes defensa personal efectiva</li>
+        <li>Fortalece tu mente y tu carácter</li>
+        <li>Entrenas en un ambiente motivador y familiar</li>
+      </ul>
+      <p>Aquí entrenas fuerte, pero también aprendes valores.</p>
+      <h4>¡Inscripciones abiertas! Sé parte de esta nueva etapa</h4>
+      <p>Si siempre quisiste aprender artes marciales, este es el momento perfecto. No importa si eres principiante, si nunca has entrenado o si buscas volver a las artes marciales: niños y jóvenes, adultos, familias y personas que quieren superarse día a día tienen aquí su lugar.</p>
+      <h4>Contacto (consultas e inscripciones)</h4>
+      <ul>
+        <li><strong>Teléfono / WhatsApp:</strong> <a href="https://wa.me/56973871181?text=Contactado desde KenpoChile.cl" target="_blank" rel="noopener">+56 9 7387 1181</a></li>
+        <li><strong>Correo:</strong> <a href="mailto:gitftorres@hotmail.com">gitftorres@hotmail.com</a></li>
+        <li><strong>Instagram:</strong> @International.gtf.kenpostudio</li>
+        <li><strong>Página de la escuela:</strong> <a href="https://kenpochile.cl/internacional-gtf-kenpo-studio/" target="_blank" rel="noopener">kenpochile.cl/internacional-gtf-kenpo-studio</a></li>
+      </ul>
+      <p>Porque el Kenpo no solo se entrena… <strong>se vive</strong>. ¡Inscríbete y comienza tu camino marcial con nosotros!</p>`
+  },
+  {
+    id: 'torneo-interescuelas-2025', cat: 'Noticias', fecha: '2025-12-13', escuelas: ['lorca', 'perez'],
+    titulo: 'Último Torneo Interescuelas IVKS Kenpo Chile 2025: cierre de año marcado por el espíritu marcial',
+    img: 'https://kenpochile.cl/wp-content/uploads/2025/12/portada-1-400x250.jpg',
+    imgFull: 'https://kenpochile.cl/wp-content/uploads/2025/12/portada-1-1080x675.jpg',
+    url: 'https://kenpochile.cl/ultimo-torneo-interescuelas-ivks-kenpo-chile-2025-cierre-de-ano-marcado-por-el-espiritu-marcial/',
+    excerpt: 'Escuelas, instructores, cinturones negros y alumnos se reunieron el 13 de diciembre en el último torneo interescuelas del año, organizado por ILKS e IPKS.',
+    contenido: `
+      <p>El <strong>sábado 13 de diciembre</strong> se llevó a cabo el <strong>Último Torneo Interescuelas IVKS Kenpo Chile del año 2025</strong>, una instancia que reunió a escuelas, instructores, cinturones negros y alumnos en torno a la práctica, el compañerismo y los valores fundamentales del Kenpo Karate.</p>
+      <p>Este importante torneo fue organizado de manera conjunta por las escuelas del <strong>Instructor Roberto Luis Lorca Pacheco</strong>, representante del <strong>International Lorca Kenpo Studio (ILKS)</strong>, y por los <strong>hermanos Marcelo Pérez Concha y Francisco Javier Pérez Concha</strong>, representantes del <strong>International Pérez Kenpo Studio (IPKS)</strong>. Gracias a su compromiso y dedicación, el evento se desarrolló en un ambiente de respeto, disciplina y sana competencia.</p>
+      <h4>Participación de instructores y escuelas</h4>
+      <p>La jornada contó con la destacada asistencia de numerosos <strong>instructores, cinturones negros y sus respectivas escuelas</strong>, reflejando el crecimiento y la unidad del Kenpo Karate a nivel interescuelas. Entre los participantes se encontraron:</p>
+      <ul>
+        <li>Daniel Cornejo Cornejo</li>
+        <li>Miguel Ángel Manríquez</li>
+        <li>Fruz Kenpista</li>
+        <li>Juansho Rañinao</li>
+        <li>Aaron Torres</li>
+        <li>Karina Gatica</li>
+        <li>Sergio Rodríguez</li>
+        <li>Gladys Vergara</li>
+        <li>Diego Estay</li>
+        <li>Camila Manríquez</li>
+        <li>Julián Liberona</li>
+      </ul>
+      <p>Asimismo, participaron alumnos del <strong>Gym Alemán Maipú</strong> y del <strong>Taller de Kenpo Karate del Departamento de Deportes y Recreación de Maipú</strong>, programas que se encuentran bajo la dirección del Maestro <strong>Roberto Vidal Carvajal</strong>, fortaleciendo el vínculo entre el deporte, la formación y la comunidad.</p>
+      <h4>Un cierre de año con valores y agradecimientos</h4>
+      <p>El torneo no solo destacó por el nivel técnico de los competidores, sino también por el fuerte énfasis en los valores que sustentan el Kenpo Karate: <strong>fe, espíritu y disciplina</strong>. Fue una jornada entretenida y significativa, tanto para quienes compitieron como para quienes acompañaron y apoyaron desde las graderías.</p>
+      <p>Se extendió un especial agradecimiento a los <strong>organizadores</strong>, así como a los <strong>padres y apoderados</strong>, cuyo apoyo fue fundamental para hacer posible este evento y cerrar el año 2025 de manera exitosa dentro del calendario IVKS Kenpo Chile.</p>
+      <p>Como reflexión final, se recordó una frase que resume el sentir de la jornada y el camino marcial:</p>
+      <blockquote>«Escuchar es dudar, ver es creer, pero sentir es creer verdaderamente.»</blockquote>
+      <p>El Último Torneo Interescuelas IVKS Kenpo Chile 2025 quedó así marcado como una instancia de encuentro, aprendizaje y consolidación del Kenpo Karate en Chile, reafirmando que, tal como señala uno de sus principios esenciales: <strong>el karate es práctica, y sin práctica no hay karate</strong>.</p>`
+  },
+  {
+    id: 'graduacion-maipu-2025', cat: 'Noticias', fecha: '2025-12-16', escuelas: ['manriquez'],
+    titulo: 'Jornada de Graduación Kenpo Karate en Maipú',
+    img: 'https://kenpochile.cl/wp-content/uploads/2025/12/portada-400x250.jpg',
+    imgFull: 'https://kenpochile.cl/wp-content/uploads/2025/12/portada.jpg',
+    url: 'https://kenpochile.cl/jornada-de-graduacion-kenpo-karate-en-maipu/',
+    excerpt: 'Los alumnos de la International Manríquez Kenpo Studio rindieron su graduación en Maipú, en una jornada que contó con la visita del maestro Roberto Vidal.',
+    contenido: `
+      <p>El <strong>martes 16 de diciembre</strong> se realizó la <strong>Graduación de Kenpo Karate</strong> de los alumnos de la escuela <strong>International Manríquez Kenpo Studio</strong>, dirigida por el <strong>Instructor Miguel Ángel Manríquez</strong>, instancia que contó con la presencia de invitados y representantes de la comunidad marcial.</p>
+      <p>La actividad se desarrolló en la sede de la escuela, ubicada en <strong>Primera Transversal 3045, comuna de Maipú</strong>, dentro de las instalaciones del <strong>Club de Pádel de Primera</strong>, un espacio adecuado para el desarrollo de actividades formativas y evaluativas propias del Kenpo Karate.</p>
+      <h4>Evaluación técnica y trabajo formativo</h4>
+      <p>Durante la jornada se pudo apreciar parte del <strong>Programa Técnico</strong>, el cual fue revisado y trabajado junto a los instructores presentes. Los alumnos demostraron los conocimientos adquiridos durante su proceso de formación, reflejando disciplina, compromiso y una correcta ejecución técnica acorde a su nivel.</p>
+      <p>La graduación se llevó a cabo en un ambiente ordenado y respetuoso, permitiendo evaluar no solo el aspecto técnico, sino también valores fundamentales del Kenpo Karate, como el respeto, la constancia y la superación personal.</p>
+      <h4>Presencia del maestro Roberto Vidal</h4>
+      <p>Uno de los momentos más relevantes de la jornada fue la <strong>visita del maestro Roberto Vidal</strong>, cuya presencia otorgó un especial realce a la actividad. Su trayectoria y experiencia representan un referente importante dentro del Kenpo Karate, y su participación fue un reconocimiento al trabajo desarrollado por la escuela, sus instructores y alumnos.</p>
+      <h4>Una jornada positiva para la comunidad marcial</h4>
+      <p>En conclusión, se trató de una <strong>jornada muy positiva</strong>, tanto en lo formativo como en lo humano, fortaleciendo los lazos dentro de la comunidad marcial y reafirmando la importancia de estas instancias de evaluación y crecimiento continuo.</p>
+      <p>Se destaca el trabajo realizado por la <strong>International Manríquez Kenpo Studio</strong>, bajo la dirección del Instructor Miguel Ángel Manríquez, así como el compromiso de todos los alumnos que continúan avanzando de manera sólida en su camino dentro del Kenpo Karate.</p>`
+  },
+  {
+    id: 'bruce-lee', cat: 'Historia', fecha: '2024-07-01',
+    titulo: 'Bruce Lee: El Ícono Inmortal de las Artes Marciales',
+    img: 'https://kenpochile.cl/wp-content/uploads/2024/07/Portada-blog-Bruce-Lee-400x250.jpg',
+    imgFull: 'https://kenpochile.cl/wp-content/uploads/2024/07/Portada-blog-Bruce-Lee-1080x675.jpg',
+    url: 'https://kenpochile.cl/bruce-lee-el-icono-inmortal-de-las-artes-marciales/',
+    excerpt: 'La vida del legendario artista marcial, fundador del Jeet Kune Do, y su conexión con el Kenpo Americano y el gran maestro Ed Parker.',
+    contenido: `
+      <p>Bruce Lee, nacido como Lee Jun-fan el 27 de noviembre de 1940 en San Francisco, California, y fallecido el 20 de julio de 1973 en Hong Kong, es una de las figuras más influyentes en la historia de las artes marciales y el cine de acción. Su impacto se extiende más allá de las fronteras del cine, influenciando la filosofía, la práctica y la percepción de las artes marciales en todo el mundo. Este artículo explora su vida, su carrera y su profunda conexión con el Kenpo Americano y el gran maestro Ed Parker.</p>
+      <h4>Infancia y educación</h4>
+      <p>Bruce Lee nació en el seno de una familia de actores de la ópera china. Desde temprana edad estuvo expuesto a la actuación y las artes marciales en Hong Kong, donde creció. A los 13 años comenzó su entrenamiento en Wing Chun bajo la tutela del legendario maestro Ip Man. Su interés en el combate no se limitó a un solo estilo; también estudió boxeo y esgrima, demostrando desde joven una mentalidad abierta hacia la fusión de técnicas y filosofías.</p>
+      <h4>Carrera en artes marciales y filosofía</h4>
+      <p>Bruce Lee no solo era un practicante, sino también un innovador en el mundo de las artes marciales. Fundó el sistema de Jeet Kune Do (El Camino del Puño Interceptante), que enfatizaba la eficiencia, la flexibilidad y la adaptabilidad en el combate. Su filosofía era eliminar lo innecesario y adoptar lo útil, independientemente de su origen. Esta mentalidad lo llevó a integrar elementos de diferentes artes marciales, desafiando las tradiciones rígidas y establecidas.</p>
+      <h4>La conexión con el Kenpo Americano y SGM Ed Parker</h4>
+      <p>Una parte crucial del desarrollo marcial de Bruce Lee fue su relación con el Kenpo Americano y su fundador, el Gran Maestro Ed Parker. Parker, conocido como el padre del Kenpo Karate Americano, fue una figura influyente en el mundo de las artes marciales en los Estados Unidos. Nacido en Honolulu, Hawaii, Parker había desarrollado su propio estilo de Kenpo, combinando técnicas tradicionales con principios modernos de combate.</p>
+      <p>Bruce Lee conoció a Ed Parker en 1964 en el torneo de karate de Long Beach, California, organizado por Parker. Este evento se convirtió en un punto de encuentro para artistas marciales de todo tipo, y Lee impresionó a todos con sus habilidades y su carisma. Parker quedó tan impresionado con Lee que lo invitó a participar en futuros eventos, proporcionando a Lee una plataforma para mostrar su talento.</p>
+      <p>La amistad y el respeto mutuo entre Lee y Parker llevaron a una colaboración que beneficiaría a ambos. Ed Parker ayudó a Bruce Lee a abrir puertas en Hollywood, conectándolo con productores y directores. A su vez, Bruce Lee influenció a Parker con su enfoque filosófico y técnico, enriqueciendo el desarrollo del Kenpo Americano.</p>
+      <h4>Carrera en Hollywood</h4>
+      <p>Bruce Lee comenzó su carrera en Hollywood con el papel de Kato en la serie de televisión «The Green Hornet» (1966-1967). Sin embargo, su verdadero salto a la fama llegó cuando decidió regresar a Hong Kong y protagonizar una serie de películas que se convertirían en clásicos del cine de artes marciales, incluyendo:</p>
+      <ul>
+        <li><strong>«The Big Boss»</strong> (1971)</li>
+        <li><strong>«Fist of Fury»</strong> (1972)</li>
+        <li><strong>«Way of the Dragon»</strong> (1972), donde también fue director</li>
+        <li><strong>«Enter the Dragon»</strong> (1973), su película más icónica, lanzada póstumamente</li>
+      </ul>
+      <p>Estas películas no solo mostraron sus habilidades marciales sino también su capacidad como coreógrafo y director, elevando el género de artes marciales a un nuevo nivel de popularidad y sofisticación.</p>
+      <h4>Filosofía y escritura</h4>
+      <p>Bruce Lee fue un pensador profundo y un ávido lector, con una colección de más de 2.500 libros sobre diversos temas, desde filosofía y psicología hasta artes marciales. Sus escritos y enseñanzas sobre Jeet Kune Do y su enfoque filosófico hacia la vida y el combate han sido publicados y estudiados extensamente. Lee creía en la «honestidad expresada a través del movimiento» y promovió la idea de que las artes marciales son una forma de autoconocimiento y autoexpresión.</p>
+      <h4>Muerte y legado</h4>
+      <p>Bruce Lee falleció trágicamente el 20 de julio de 1973, a los 32 años, debido a un edema cerebral causado por una reacción adversa a un medicamento. Su muerte prematura fue un duro golpe para sus admiradores y el mundo de las artes marciales, pero su legado continúa vivo. Bruce Lee dejó una marca indeleble en la cultura popular, influenciando a generaciones de artistas marciales, actores y aficionados alrededor del mundo.</p>
+      <h4>Familia</h4>
+      <p>Bruce Lee estuvo casado con Linda Emery y tuvo dos hijos: Brandon Lee (1965-1993) y Shannon Lee (1969). Brandon también siguió una carrera en la actuación y las artes marciales, pero murió trágicamente durante la filmación de «The Crow». Shannon Lee ha trabajado para preservar y promover el legado de su padre a través de la Fundación Bruce Lee.</p>
+      <h4>Conclusión</h4>
+      <p>Bruce Lee fue mucho más que un artista marcial y actor; fue un visionario que desafió las normas y rompió barreras culturales y filosóficas. Su conexión con el Kenpo Americano y Ed Parker es solo una parte de su rica y multifacética historia. A través de su vida, Lee demostró que las artes marciales son una vía para la autoexploración y la autoexpresión, un legado que sigue inspirando y guiando a personas de todo el mundo.</p>
+      <p>Bruce Lee sigue siendo una figura icónica y su influencia perdura, recordándonos que, como él mismo dijo, «seamos adaptables, flexibles y siempre en movimiento hacia el autoconocimiento y la mejora continua».</p>`
+  },
+  {
+    id: 'fumio-demura', cat: 'Historia', fecha: '2023-04-24',
+    titulo: 'En Memoria del Sensei Fumio Demura: Un Legado Inolvidable en las Artes Marciales',
+    img: 'https://kenpochile.cl/wp-content/uploads/2023/04/343103033_629335065776531_1907948198038661671_n-400x250.jpg',
+    imgFull: 'https://kenpochile.cl/wp-content/uploads/2023/04/343103033_629335065776531_1907948198038661671_n.jpg',
+    url: 'https://kenpochile.cl/en-memoria-del-sensei-fumio-demura-un-legado-inolvidable-en-las-artes-marciales/',
+    excerpt: 'Homenaje al maestro de Shitō-ryū y kobudō fallecido el 24 de abril de 2023, y su emotivo mensaje sobre el respeto que merece todo Sensei.',
+    contenido: `
+      <p>El 24 de abril de 2023, el mundo de las artes marciales perdió a una de sus figuras más icónicas y respetadas: el Sensei Fumio Demura. Hoy rendimos homenaje a su vida, sus logros y su legado.</p>
+      <p>Fumio Demura nació el 15 de septiembre de 1938 en Yokohama, Japón. Comenzó su entrenamiento en karate Shitō-ryū a una temprana edad y más tarde se especializó en kobudō, el arte del manejo de armas tradicionales de Okinawa. A lo largo de su vida, Demura se convirtió en una figura influyente en la promoción y enseñanza del karate y el kobudō en todo el mundo.</p>
+      <p>Uno de los logros más notables de Demura fue su relación con el maestro de Kenpo, Ed Parker. Juntos trabajaron en la difusión de las artes marciales y en la creación de eventos y competencias internacionales, tales como el «Long Beach International». Además, Demura fue mentor y entrenador de numerosos artistas marciales exitosos y respetados.</p>
+      <p>El Sensei Demura también fue conocido por su habilidad como doble de acción en películas y programas de televisión. Su trabajo en Hollywood incluye películas como «Karate Kid», donde realizó acrobacias y coreografías de lucha, dejando una huella en la industria del cine.</p>
+      <p>A continuación, compartimos un emotivo mensaje del propio Fumio Demura, que refleja la dedicación y el sacrificio que implica ser un Sensei y su llamado al respeto hacia los maestros de las artes marciales:</p>
+      <blockquote>
+        <p>La persona a la que te refieres como «Sensei» está en esa posición por una razón válida. Para ayudarte a entender mejor por qué un Sensei merece, o mejor dicho, exige tu respeto, permíteme explicarlo.</p>
+        <p>El Sensei es quien ha dedicado su vida al arte que te enseña. Nunca tendrás tantos años de dedicación como él, porque llegaste después.</p>
+        <p>El Sensei es quien pasó muchos días y noches abriendo su dojo, limpiándolo, mejorándolo… para TI.</p>
+        <p>El Sensei es quien ha hecho sacrificios que nunca comprenderás para que tengas un lugar donde entrenar, aprender y crecer en tu arte.</p>
+        <p>El Sensei es quien, a menudo a gran costo, ha renunciado a su tiempo libre, su tiempo en familia… tiempo que podría haber dedicado a muchas otras cosas solo para que tú puedas aprender y entrenar.</p>
+        <p>El Sensei es quien ha invertido miles de dólares en su propia formación solo para aprender a enseñarte correctamente.</p>
+        <p>El Sensei es quien a menudo ha sufrido fracturas, pero aun así se presentó a dar clases. Ha soportado músculos y tendones retorcidos y esguinces, ha tenido migrañas, ha estado enfermo, ha tenido malos días… pero aun así se presentó a enseñar. Todas estas cosas son excusas por las que tú faltas a clase.</p>
+        <p>El Sensei a menudo renuncia a cosas para que el dojo y los estudiantes estén bien cuidados: cosas bonitas, vacaciones, salir a cenar, tiempo con amigos y familiares… todo para que puedas aprender karate.</p>
+        <p>El Sensei ha pasado más tiempo en un dojo que lo que la mayoría de quienes entrenan con él llevan vivos.</p>
+        <p>El Sensei es quien siempre está ahí para tu entrenamiento… Ve una necesidad y la satisface para sus estudiantes: consigue equipo para el niño que tiene poco, compra armas extra para Kobudo para quien no puede costearlas, y le dice al alumno que perdió su trabajo «no te preocupes por pagar hasta que estés al día». Este es el papel que juega el Sensei, y exige respeto.</p>
+        <p>Respeta a tu Sensei, cuida a tu Sensei, honra a tu Sensei… porque, un día, tu Sensei ya no estará más.</p>
+      </blockquote>
+      <p>— Fumio Demura</p>
+      <p>Este mensaje nos recuerda el profundo respeto que debemos tener hacia nuestros maestros y cómo su vida entera ha sido dedicada a enseñar y promover las artes marciales. Ellos merecen nuestro agradecimiento, admiración y lealtad.</p>
+      <p>Hoy honramos la memoria del Sensei Fumio Demura y agradecemos su incalculable contribución a las artes marciales. Su legado y enseñanzas seguirán inspirando a futuras generaciones de artistas marciales y a aquellos que busquen la excelencia en su camino.</p>
+      <p>Descansa en paz, Sensei Fumio Demura. Tu sabiduría, pasión y dedicación serán recordadas siempre.</p>`
+  },
+  {
+    id: 'elvis-presley', cat: 'Historia', fecha: '2022-12-01',
+    titulo: 'Elvis Presley y su pasión por el Kenpo Karate',
+    img: 'https://kenpochile.cl/wp-content/uploads/2022/12/descarga.jpeg',
+    imgFull: 'https://kenpochile.cl/wp-content/uploads/2022/12/descarga.jpeg',
+    url: 'https://kenpochile.cl/elvis-presley-y-su-pasion-por-el-kenpo-karate/',
+    excerpt: 'El Rey del Rock encontró el Kenpo en 1961 durante una visita a Hawai y alcanzó el cinturón negro bajo la tutela de Ed Parker.',
+    contenido: `
+      <p>Elvis Presley fue una de las figuras más destacadas de la música y el entretenimiento del siglo XX. También fue un apasionado del arte marcial y practicó el Kenpo Karate durante muchos años.</p>
+      <p>Elvis encontró el Kenpo en 1961 durante una visita a Hawai, con la intención de perfeccionar su ya existente conocimiento de lucha libre, judo y boxeo.</p>
+      <p>Elvis se enamoró del Kenpo Karate y fue entrenado por <strong>Ed Parker</strong>, un maestro de esta disciplina. Parker señaló que el Rey se entrenó duro y rápido y fue capaz de alcanzar el grado de cinturón negro en poco tiempo. Según Parker, Elvis era una persona muy disciplinada y aplicada.</p>
+      <p>En su libro «Elvis: What Happened?», el guardaespaldas de Elvis, Red West, escribió que el Rey solía practicar Kenpo en los escenarios antes de sus actuaciones. También dijo que Elvis seguía practicando Kenpo a pesar de su fama y su vida ocupada.</p>
+      <p>Además de su entrenamiento, Elvis también usó el Kenpo como una forma de expresar su fe. Su maestro de Kenpo, Ed Parker, escribió que Elvis usaba el Kenpo como una forma de «conectar con el universo».</p>
+      <p>En conclusión, Elvis Presley fue un gran fanático del Kenpo Karate. Esta disciplina marcial tuvo una gran influencia en su vida, tanto como forma de entrenamiento como de expresión de su fe. Fue un gran practicante y logró alcanzar el grado de cinturón negro en poco tiempo. Gracias a Elvis, el Kenpo se hizo más conocido y popular.</p>`
+  },
+  {
+    id: 'rutina-principiantes', cat: 'Bienestar', fecha: '2022-12-01',
+    titulo: 'Rutina de 10 ejercicios para principiantes',
+    img: 'https://kenpochile.cl/wp-content/uploads/2022/12/rutina-para-principiantes-1-400x250.png',
+    imgFull: 'https://kenpochile.cl/wp-content/uploads/2022/12/rutina-para-principiantes-1.png',
+    url: 'https://kenpochile.cl/rutina-de-10-ejercicios-para-principiantes/',
+    excerpt: 'Diez ejercicios simples para comenzar a entrenar: sentadillas, abdominales, estocadas, flexiones, burpees y más, con repeticiones y descansos.',
+    contenido: `
+      <ol>
+        <li><strong>Sentadillas: 15 repeticiones con 30 segundos de descanso.</strong><br>Coloca los pies a la anchura de los hombros con los brazos extendidos hacia adelante. Después, dobla las rodillas para bajar el tronco hacia el suelo como si estuvieras sentándote en una silla invisible. Finalmente, vuelve a la posición inicial.</li>
+        <li><strong>Abdominales: 20 repeticiones con 30 segundos de descanso.</strong><br>Acuéstate boca arriba con los pies flexionados y los brazos extendidos a los lados. Después, levanta el tronco hacia el techo mientras inspiras y mantén la posición durante unos segundos. Finalmente, vuelve a la posición inicial mientras expiras.</li>
+        <li><strong>Estocadas: 10 repeticiones con 30 segundos de descanso.</strong><br>Colócate de pie con los pies separados a la anchura de los hombros. Después, flexiona una rodilla y baja el tronco hacia el suelo. Finalmente, vuelve a la posición inicial.</li>
+        <li><strong>Flexiones: 15 repeticiones con 30 segundos de descanso.</strong><br>Colócate boca abajo con los brazos extendidos hacia adelante. Después, flexiona los codos y baja el tronco hacia el suelo. Finalmente, vuelve a la posición inicial.</li>
+        <li><strong>Step ups: 10 repeticiones con 30 segundos de descanso.</strong><br>Necesitas una silla o un escalón. Colócate de pie enfrente de la silla con los pies separados a la anchura de los hombros. Después, sube una pierna sobre la silla y luego la otra. Finalmente, regresa a la posición inicial.</li>
+        <li><strong>Flexiones laterales: 10 repeticiones con 30 segundos de descanso.</strong><br>Colócate de pie con los pies separados a la anchura de los hombros. Después, flexiona los codos y baja el tronco hacia el lado. Finalmente, vuelve a la posición inicial.</li>
+        <li><strong>Plancha frontal: 20 segundos con 30 segundos de descanso.</strong><br>Colócate boca abajo con los brazos extendidos hacia adelante. Después, levanta el tronco y los brazos hacia el techo y mantén la posición durante unos segundos. Finalmente, vuelve a la posición inicial.</li>
+        <li><strong>Burpees: 10 repeticiones con 30 segundos de descanso.</strong><br>Colócate de pie con los pies separados a la anchura de los hombros. Después, flexiona los codos para bajar el tronco hacia el suelo. Luego salta hacia arriba y extiende los brazos hacia arriba. Finalmente, vuelve a la posición inicial.</li>
+        <li><strong>Remo: 10 repeticiones con 30 segundos de descanso.</strong><br>Colócate de pie con los pies separados a la anchura de los hombros. Después, flexiona los codos y baja el tronco hacia un lado. Finalmente, vuelve a la posición inicial.</li>
+        <li><strong>Sentadillas con salto: 10 repeticiones con 30 segundos de descanso.</strong><br>Colócate de pie con los pies separados a la anchura de los hombros. Después, dobla las rodillas para bajar el tronco hacia el suelo como si estuvieras sentándote en una silla invisible. Finalmente, salta hacia arriba y vuelve a la posición inicial.</li>
+      </ol>`
+  },
+  {
+    id: 'hidratacion', cat: 'Bienestar', fecha: '2019-07-03',
+    titulo: '11 factores por los que debes hidratarte',
+    img: 'https://kenpochile.cl/wp-content/uploads/2019/07/agua-400x250.png',
+    imgFull: 'https://kenpochile.cl/wp-content/uploads/2019/07/agua-1080x628.png',
+    url: 'https://kenpochile.cl/11-factores-por-los-que-debes-hidratarte/',
+    excerpt: 'Once razones por las que beber suficiente agua mejora tu salud, tu energía y tu rendimiento en el entrenamiento.',
+    contenido: `
+      <p>¿Sabías que hidratarte es una de las cosas más importantes que puedes hacer por tu salud? Beber suficiente agua es una forma simple pero eficaz de mejorar tu salud y bienestar, y aquí te mostramos 11 razones por las que debes hidratarte.</p>
+      <ol>
+        <li><strong>Reduce el riesgo de enfermedades cardíacas:</strong> beber suficiente agua ayuda a mantener un corazón saludable al regular la presión arterial y reducir la retención de líquidos.</li>
+        <li><strong>Ayuda a regular tu temperatura corporal:</strong> el agua es una parte fundamental de nuestro cuerpo y ayuda a mantener una temperatura corporal normal a través de la transpiración.</li>
+        <li><strong>Te mantiene hidratado:</strong> el agua contribuye a que tus tejidos y órganos funcionen correctamente y ayuda a prevenir la deshidratación.</li>
+        <li><strong>Ayuda a eliminar las toxinas:</strong> el agua transporta las toxinas a los riñones, donde son eliminadas del cuerpo a través de la orina.</li>
+        <li><strong>Ayuda a prevenir la fatiga:</strong> el agua mantiene la energía del cuerpo al regular el flujo de sangre. Esto es especialmente importante cuando haces ejercicio, ya que ayuda a evitar la fatiga muscular.</li>
+        <li><strong>Ayuda a mantener la piel saludable:</strong> el agua nutre y humecta la piel, lo que la ayuda a mantener su elasticidad y a mantenerse libre de arrugas.</li>
+        <li><strong>Ayuda a prevenir la sequedad de boca:</strong> beber agua ayuda a producir una cantidad adecuada de saliva.</li>
+        <li><strong>Ayuda a tu digestión:</strong> el agua transporta los nutrientes a través del tracto digestivo, lo que ayuda a prevenir la constipación y otros problemas digestivos.</li>
+        <li><strong>Ayuda a prevenir el aumento de peso:</strong> beber agua antes de las comidas puede ayudarte a sentirte lleno más rápido, comer menos y prevenir el aumento de peso.</li>
+        <li><strong>Ayuda a tu sistema inmunológico:</strong> el agua ayuda a eliminar las toxinas de tu cuerpo, lo que facilita la lucha contra las enfermedades y los virus.</li>
+        <li><strong>Reduce el estrés:</strong> beber un vaso de agua fría puede ayudar a calmar los nervios y reducir el estrés.</li>
+      </ol>
+      <p>Esperamos que estos 11 factores te hayan ayudado a ver la importancia de hidratarte y el bienestar que te puede aportar. ¡No olvides beber suficiente agua para mejorar tu salud y bienestar!</p>`
+  },
+  {
+    id: 'elongacion', cat: 'Bienestar', fecha: '2019-07-02',
+    titulo: 'La importancia de la elongación',
+    img: 'https://kenpochile.cl/wp-content/uploads/2019/07/elongacion-400x250.jpg',
+    imgFull: 'https://kenpochile.cl/wp-content/uploads/2019/07/elongacion-1080x600.jpg',
+    url: 'https://kenpochile.cl/la-importancia-de-la-elongacion/',
+    excerpt: 'El estiramiento mejora la postura, la flexibilidad y el rendimiento deportivo, y también ayuda a la salud mental.',
+    contenido: `
+      <p>Como todos sabemos, el estiramiento es una parte integral de cualquier programa de ejercicios. Estirarse es una forma segura y eficaz de mejorar la postura y la flexibilidad, al tiempo que alivia el dolor muscular y mejora la movilidad. Pero, ¿sabías que el estiramiento también puede ayudar a mejorar la salud mental y física? ¡Es cierto!</p>
+      <p>La elongación es una forma natural de relajar el cuerpo y la mente. El estiramiento ayuda a reducir el estrés y la ansiedad al relajar los músculos tensos y aliviar la tensión mental. También ayuda a aliviar el dolor muscular y a mejorar la postura y la movilidad. Estirarse puede además mejorar la circulación y la flexibilidad, lo que significa que puedes hacer más ejercicios con menos dolor muscular.</p>
+      <p>La elongación también ayuda a mejorar el rendimiento deportivo. Cuando los músculos están más relajados y flexibles, el riesgo de lesiones y el tiempo de recuperación se reducen, lo que significa que puedes entrenar más duro y por más tiempo. Estirarse también puede ayudar a aumentar la fuerza y la resistencia, mejorando tu rendimiento general.</p>
+      <p>En resumen, estirarse es una forma segura y eficaz de mejorar la salud mental y física. El estiramiento ayuda a reducir el estrés y la ansiedad, alivia el dolor muscular, mejora la postura y la movilidad, mejora el rendimiento deportivo y aumenta la fuerza y la resistencia. Si aún no lo has incorporado a tu rutina de ejercicios, ¡ahora es el momento perfecto para comenzar!</p>`
+  },
+  {
+    id: 'cuerpo-saludable', cat: 'Bienestar', fecha: '2019-07-01',
+    titulo: 'Claves para lograr un cuerpo saludable y activo',
+    img: 'https://kenpochile.cl/wp-content/uploads/2019/07/ejercicio-400x250.jpg',
+    imgFull: 'https://kenpochile.cl/wp-content/uploads/2019/07/ejercicio.jpg',
+    url: 'https://kenpochile.cl/claves-para-lograr-un-cuerpo-saludable-y-activo/',
+    excerpt: 'Los tres niveles de actividad física — básica, moderada e intensa — y el rol fundamental de la alimentación para lograr un bienestar completo.',
+    contenido: `
+      <p>Uno de los aspectos fundamentales para lograr un bienestar completo es el ejercicio. A nivel físico, nos permite obtener fuerza, resistencia y equilibrio, entre muchos otros beneficios. Según la cantidad de actividad física que realices a la semana, se puede categorizar en 3 niveles:</p>
+      <ol>
+        <li>Actividad básica.</li>
+        <li>Actividad moderada.</li>
+        <li>Actividad intensa.</li>
+      </ol>
+      <h4>Actividad básica</h4>
+      <p>En este nivel, tu entrenamiento es tener una rutina de corta duración un par de veces a la semana; por ejemplo, trotar o practicar yoga. Si aún no tienes el hábito de hacer ejercicios y quieres comenzar, esta es una excelente forma de hacerlo, ya que al ser principiante te permite ir conociendo tu cuerpo y sus capacidades. Los entrenamientos que efectuamos a personas que están comenzando a entrenar artes marciales son una excelente forma de comenzar, ya que son personalizados al grado que tengas: un grado inicial blanco o amarillo tendrá un entrenamiento acorde a sus capacidades y a su edad.</p>
+      <h4>Actividad moderada</h4>
+      <p>Una vez que te vas acostumbrando a hacer ejercicios, los entrenamientos se vuelven más dinámicos, comienzas a exigirte más y a dar más. Eso te motivará, ya que verás cómo avanzas: tu cuerpo se irá adaptando y descubrirás que estarás alcanzando nuevas capacidades. En esa etapa estarás entrenando entre 3 a 4 veces por semana con ejercicios de mediana intensidad. Tendrás la capacidad de entrenar Kenpo Karate al menos 2 veces a la semana y, además, te encontrarás realizando ejercicios en tu casa o en el gimnasio.</p>
+      <h4>Actividad intensa</h4>
+      <p>Una persona de grado café o negro ya es capaz de entrenar de forma intensa varias veces a la semana. Su nivel de actividad física estará acompañado de una correcta alimentación y tendrá un objetivo claro que alcanzar; por ejemplo, bajar grasa corporal, tonificar o simplemente mejorar su rendimiento. Comúnmente se convierten en entrenadores, ya que de forma natural irán compartiendo sus conocimientos y ayudarán a sus grados de menor nivel; incluso pueden ser elegidos para ser instructores de nuestra federación y así tener la oportunidad de abrir sus propias escuelas.</p>
+      <p>Independiente del nivel en el que te encuentres, la actividad física es tan solo el 20% de tu resultado personal. El otro 80% lo da la alimentación, la que juega un rol fundamental en tu rendimiento deportivo en general. Si te encuentras en un peso adecuado, lograrás moverte mejor, tener mayor equilibrio, aumentarás tu agilidad y tu velocidad en los combates será mucho mejor.</p>
+      <p>Te invitamos a participar de nuestras actividades para que seas parte de nuestra comunidad deportiva y participes activamente en cualquiera de nuestras escuelas, tanto en Chile como en el extranjero. Si deseas bajar de peso, tonificar tu masa muscular o aumentar tu energía, tenemos el asesoramiento adecuado para ti. ¡Escríbenos y te explicamos cómo!</p>`
+  }
+];
+
+// Ícono de respaldo de la portada según la categoría (visible solo si la imagen no carga).
+const BLOG_CAT_ICON = { Noticias: 'icon-newspaper', Historia: 'icon-landmark', Bienestar: 'icon-leaf' };
+
+// Escuela asociada a una actividad (por slug). ESCUELAS se define más abajo en el script,
+// pero estas funciones solo se ejecutan después de esa definición (el render inicial del
+// blog corre junto a la inicialización de Escuelas).
+function escuelaPorId(id) {
+  return ESCUELAS.find(e => e.id === id);
+}
+function actividadesDeEscuela(id) {
+  return BLOG_POSTS.filter(p => p.cat === 'Noticias' && (p.escuelas || []).includes(id));
+}
+// Entradas de una categoría, ordenadas de más reciente a más antigua; en Noticias aplica
+// además el filtro por escuela activo.
+let blogEscuelaFiltro = 'Todas';
+function getBlogPosts(cat) {
+  let posts = BLOG_POSTS.filter(p => p.cat === cat);
+  if (cat === 'Noticias' && blogEscuelaFiltro !== 'Todas') {
+    posts = posts.filter(p => (p.escuelas || []).includes(blogEscuelaFiltro));
+  }
+  return posts.slice().sort((a, b) => (b.fecha || '').localeCompare(a.fecha || ''));
+}
+
+function blogCardHTML(post, i) {
+  const delay = i > 0 ? ` reveal-delay-${Math.min(i, 2)}` : '';
+  return `
+    <div class="blog-card reveal${delay}" role="button" tabindex="0" aria-label="Leer artículo: ${post.titulo}" onclick="openBlogModal('${post.id}')">
+      <div class="blog-img">
+        <svg class="icon"><use href="#${BLOG_CAT_ICON[post.cat]}"/></svg>
+        <img src="${post.img}" alt="${post.titulo}" loading="lazy" decoding="async" onerror="this.remove()">
+      </div>
+      <div class="blog-body">
+        <div class="blog-meta"><span class="blog-cat">${post.cat}</span></div>
+        <div class="blog-title">${post.titulo}</div>
+        <div class="blog-excerpt">${post.excerpt}</div>
+        <button class="blog-link" onclick="event.stopPropagation(); openBlogModal('${post.id}')">Leer Más →</button>
+      </div>
+    </div>`;
+}
+
+// Filtro por escuela de la pestaña Noticias: selector desplegable que lista con nombre
+// completo solo las escuelas que tienen actividades publicadas (más "Todas las escuelas"),
+// cada una con su contador. Permite ver las entradas de una escuela sin pasar por la
+// sección Escuelas.
+function renderBlogEscuelaFiltro() {
+  const wrap = document.getElementById('blogEscuelaSelect');
+  const ids = [...new Set(BLOG_POSTS.filter(p => p.cat === 'Noticias').flatMap(p => p.escuelas || []))];
+  const escuelas = ids.map(escuelaPorId).filter(Boolean).sort((a, b) => a.nombre.localeCompare(b.nombre));
+  wrap.dataset.hay = escuelas.length ? '1' : '0';
+  actualizarVisibilidadFiltroEscuela();
+  if (!escuelas.length) return;
+  const activa = blogEscuelaFiltro !== 'Todas' ? escuelaPorId(blogEscuelaFiltro) : null;
+  document.getElementById('blogEscuelaDdText').textContent = activa ? activa.nombre : 'Todas las escuelas';
+  const menu = document.getElementById('blogEscuelaDdMenu');
+  let html = `<button type="button" class="blog-escuela-dd-option${!activa ? ' active' : ''}" role="option" aria-selected="${!activa}" data-escuela="Todas">Todas las escuelas</button>`;
+  escuelas.forEach(e => {
+    const esActiva = blogEscuelaFiltro === e.id;
+    html += `<button type="button" class="blog-escuela-dd-option${esActiva ? ' active' : ''}" role="option" aria-selected="${esActiva}" data-escuela="${e.id}">${e.nombre}</button>`;
+  });
+  menu.innerHTML = html;
+  menu.querySelectorAll('[data-escuela]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      cerrarBlogEscuelaDd();
+      filtrarBlogEscuela(btn.dataset.escuela);
+    });
+  });
+}
+// El filtro vive junto a las pestañas de sección, pero solo aplica a Noticias: se muestra
+// únicamente cuando esa pestaña está activa (y hay escuelas con actividades).
+function actualizarVisibilidadFiltroEscuela() {
+  const wrap = document.getElementById('blogEscuelaSelect');
+  const noticiasActiva = document.getElementById('tab-noticias')?.classList.contains('active');
+  const visible = wrap.dataset.hay === '1' && noticiasActiva;
+  wrap.style.display = visible ? '' : 'none';
+  if (!visible) cerrarBlogEscuelaDd();
+}
+function cerrarBlogEscuelaDd() {
+  const dd = document.getElementById('blogEscuelaDd');
+  if (!dd || !dd.classList.contains('open')) return;
+  dd.classList.remove('open');
+  document.getElementById('blogEscuelaDdBtn').setAttribute('aria-expanded', 'false');
+}
+document.getElementById('blogEscuelaDdBtn').addEventListener('click', () => {
+  const dd = document.getElementById('blogEscuelaDd');
+  const abierto = dd.classList.toggle('open');
+  document.getElementById('blogEscuelaDdBtn').setAttribute('aria-expanded', String(abierto));
+});
+// Click fuera del desplegable: se cierra sin cambiar la selección.
+document.addEventListener('click', e => {
+  if (!e.composedPath().includes(document.getElementById('blogEscuelaDd'))) cerrarBlogEscuelaDd();
+});
+function filtrarBlogEscuela(id) {
+  blogEscuelaFiltro = id;
+  blogPage.Noticias = 1;
+  switchTabById('tab-noticias');
+  renderBlogEscuelaFiltro();
+  renderBlogCategory('Noticias');
+  // Refleja el filtro en la URL (sin mover el scroll) para poder compartir el enlace:
+  // #blogs?escuela=<slug> abre el sitio ya filtrado por esa escuela.
+  history.replaceState(null, '', id === 'Todas' ? '#blogs' : `#blogs?escuela=${id}`);
+}
+// Salto desde la tarjeta de una escuela (sección Escuelas) a sus actividades en el blog.
+function verActividadesEscuela(id) {
+  filtrarBlogEscuela(id);
+  document.getElementById('blogs').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+// Paginación por categoría: cuando una categoría supera BLOG_PAGE_SIZE tarjetas, aparece
+// un paginador (mismo estilo que Escuelas/Instructores) bajo su grilla. Cada categoría
+// recuerda su propia página.
+const BLOG_PAGE_SIZE = 3;
+const blogPage = { Noticias: 1, Historia: 1, Bienestar: 1 };
+const BLOG_TAB_BY_CAT = { Noticias: 'tab-noticias', Historia: 'tab-historia', Bienestar: 'tab-bienestar' };
+function renderBlogCategory(cat) {
+  const gridEl = document.querySelector(`#blogs .blog-grid[data-cat="${cat}"]`);
+  const pagerEl = document.querySelector(`#blogs .blog-pager[data-cat="${cat}"]`);
+  const posts = getBlogPosts(cat);
+  const totalPages = Math.max(1, Math.ceil(posts.length / BLOG_PAGE_SIZE));
+  blogPage[cat] = Math.min(blogPage[cat], totalPages);
+  const start = (blogPage[cat] - 1) * BLOG_PAGE_SIZE;
+  gridEl.innerHTML = posts.slice(start, start + BLOG_PAGE_SIZE).map(blogCardHTML).join('');
+  // Las tarjetas se generan después de que el observer de scroll-reveal ya registró los
+  // .reveal estáticos, así que se registran aquí explícitamente.
+  gridEl.querySelectorAll('.blog-card.reveal').forEach(c => observer.observe(c));
+
+  if (totalPages <= 1) { pagerEl.innerHTML = ''; return; }
+  let html = `<button type="button" class="pager-btn" data-page="${blogPage[cat] - 1}" ${blogPage[cat] === 1 ? 'disabled' : ''} aria-label="Página anterior">‹</button>`;
+  for (let p = 1; p <= totalPages; p++) {
+    html += `<button type="button" class="pager-btn${p === blogPage[cat] ? ' active' : ''}" data-page="${p}">${p}</button>`;
+  }
+  html += `<button type="button" class="pager-btn" data-page="${blogPage[cat] + 1}" ${blogPage[cat] === totalPages ? 'disabled' : ''} aria-label="Página siguiente">›</button>`;
+  pagerEl.innerHTML = html;
+  pagerEl.querySelectorAll('.pager-btn[data-page]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const p = Number(btn.dataset.page);
+      if (p < 1 || p > totalPages || p === blogPage[cat]) return;
+      blogPage[cat] = p;
+      renderBlogCategory(cat);
+    });
+  });
+}
+// Continúa la lectura hacia la página siguiente/anterior cuando el cursor de teclado sale
+// por el borde de la página: al avanzar enfoca la primera tarjeta de la página nueva; al
+// retroceder, la última. Devuelve false si no hay más páginas en esa dirección (para que
+// el cursor pueda continuar hacia la categoría vecina).
+function goBlogPage(cat, direction) {
+  const totalPages = Math.max(1, Math.ceil(getBlogPosts(cat).length / BLOG_PAGE_SIZE));
+  const newPage = blogPage[cat] + direction;
+  if (newPage < 1 || newPage > totalPages) return false;
+  blogPage[cat] = newPage;
+  renderBlogCategory(cat);
+  const cards = document.querySelectorAll(`#blogs .blog-grid[data-cat="${cat}"] .blog-card`);
+  (direction === 1 ? cards[0] : cards[cards.length - 1])?.focus();
+  return true;
+}
+// Cuando ya no quedan páginas en la dirección pedida, la lectura continúa hacia la
+// categoría vecina: activa su pestaña (cambia también la etiqueta marcada) y enfoca su
+// primera tarjeta al avanzar, o la última de su última página al retroceder. En los
+// extremos (antes de la primera categoría / después de la última) el cursor se detiene.
+function goBlogCategory(cat, direction) {
+  const cats = Array.from(document.querySelectorAll('#blogs .blog-grid[data-cat]')).map(g => g.dataset.cat);
+  const nextCat = cats[cats.indexOf(cat) + direction];
+  if (!nextCat) return;
+  const totalPages = Math.max(1, Math.ceil(getBlogPosts(nextCat).length / BLOG_PAGE_SIZE));
+  blogPage[nextCat] = direction === 1 ? 1 : totalPages;
+  renderBlogCategory(nextCat);
+  switchTabById(BLOG_TAB_BY_CAT[nextCat]);
+  const cards = document.querySelectorAll(`#blogs .blog-grid[data-cat="${nextCat}"] .blog-card`);
+  (direction === 1 ? cards[0] : cards[cards.length - 1])?.focus();
+}
+// El render inicial del blog corre más abajo (tras definirse ESCUELAS), porque las
+// tarjetas de Noticias muestran chips con la escuela asociada a cada actividad.
+
+// ── MODAL ENTRADA DE BLOG ──
+let blogModalTrigger = null;
+function openBlogModal(id) {
+  const post = BLOG_POSTS.find(p => p.id === id);
+  if (!post) return;
+  blogModalTrigger = document.activeElement;
+  const img = document.getElementById('blogModalImg');
+  img.src = post.imgFull || post.img;
+  img.alt = post.titulo;
+  document.getElementById('blogModalCat').textContent = post.cat;
+  document.getElementById('blogModalTitle').textContent = post.titulo;
+  document.getElementById('blogModalArticle').innerHTML = post.contenido;
+  // Si la entrada es una actividad de escuela, ofrece saltar a todas sus actividades.
+  document.getElementById('blogModalEscuelas').innerHTML = (post.escuelas || []).map(id => {
+    const e = escuelaPorId(id);
+    return e ? `<button type="button" class="blog-link" onclick="closeBlogModal(); verActividadesEscuela('${e.id}')">Ver más actividades de ${e.corto} →</button>` : '';
+  }).join('');
+  const modal = document.getElementById('blogModal');
+  modal.querySelector('.blog-modal-body').scrollTop = 0;
+  modal.classList.add('open');
+  requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add('is-open')));
+  modal.querySelector('.seminario-modal-close').focus();
+}
+function closeBlogModal() {
+  const modal = document.getElementById('blogModal');
+  if (!modal.classList.contains('open')) return;
+  modal.classList.remove('is-open');
+  setTimeout(() => modal.classList.remove('open'), 220);
+  if (blogModalTrigger) { blogModalTrigger.focus(); blogModalTrigger = null; }
+}
+document.getElementById('blogModal').addEventListener('click', function(e) {
+  if (e.target === this) closeBlogModal();
+});
+
+// Flechas del teclado en Noticias y Blogs: activas mientras la sección está a la vista
+// (igual que Nuestras Escuelas / Nuestros Instructores y el atajo "B" de buscar), sin
+// necesidad de enfocar antes ninguna etiqueta. En las etiquetas de categoría, → ←
+// seleccionan la contigua, y ↓ baja el foco a la primera tarjeta de la categoría activa.
+// Sobre las tarjetas, ← → recorren tarjeta por tarjeta en orden de lectura y, al salir
+// por el borde, continúan hacia la página siguiente/anterior o, si no hay más páginas,
+// hacia la categoría vecina (activándola); ↓ ↑ cambian de fila (↑ desde la primera fila
+// vuelve a la etiqueta activa) y Enter/Espacio abren el modal del artículo (las tarjetas
+// son role="button", lo cubre el manejador global). Esc solo quita el foco, sin resets.
 (function() {
   let sectionInView = false;
   const section = document.getElementById('blogs');
@@ -4153,20 +5316,93 @@ function switchTabById(id) {
     const tag = (el.tagName || '').toLowerCase();
     return tag === 'input' || tag === 'textarea' || el.isContentEditable;
   }
+  // Filas visuales de las tarjetas visibles del panel activo (el buscador puede ocultar
+  // tarjetas con display:none). Se agrupa contando las columnas resueltas de la grilla,
+  // no por getBoundingClientRect(), porque las tarjetas entran con animación (reveal).
+  function getBlogCardRows() {
+    const grid = document.querySelector('#blogs .blog-panel.active .blog-grid');
+    if (!grid) return [];
+    const cards = Array.from(grid.querySelectorAll('.blog-card')).filter(c => c.style.display !== 'none');
+    if (!cards.length) return [];
+    const colCount = getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length || 1;
+    const rows = [];
+    for (let i = 0; i < cards.length; i += colCount) rows.push(cards.slice(i, i + colCount));
+    return rows;
+  }
   document.addEventListener('keydown', e => {
-    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    if (!['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp', 'Escape'].includes(e.key)) return;
     if (!sectionInView || isTypingTarget(e.target)) return;
     if (document.getElementById('lightbox')?.classList.contains('open')) return;
+    if (document.getElementById('maestroModal')?.classList.contains('open')) return;
     if (document.getElementById('instructorModal')?.classList.contains('open')) return;
+    if (document.getElementById('blogModal')?.classList.contains('open')) return;
     const rowEl = document.querySelector('.blogs-tabs');
     if (!rowEl || !rowEl.children.length) return;
+
+    // Esc: cierra el desplegable de escuelas, vuelve el filtro a "Todas las escuelas"
+    // y quita el foco (sin scroll), tanto en las etiquetas como en las tarjetas.
+    if (e.key === 'Escape') {
+      cerrarBlogEscuelaDd();
+      if (blogEscuelaFiltro !== 'Todas') {
+        blogEscuelaFiltro = 'Todas';
+        blogPage.Noticias = 1;
+        renderBlogEscuelaFiltro();
+        renderBlogCategory('Noticias');
+        history.replaceState(null, '', '#blogs');
+      }
+      e.target.closest?.('#blogs .blog-card, #blogs .blog-tab')?.blur();
+      return;
+    }
+
+    // ── Cursor sobre una tarjeta de la categoría activa ──
+    const focusedCard = e.target.closest?.('#blogs .blog-card');
+    if (focusedCard) {
+      const rows = getBlogCardRows();
+      const rowIdx = rows.findIndex(r => r.includes(focusedCard));
+      if (rowIdx === -1) return;
+      const colIdx = rows[rowIdx].indexOf(focusedCard);
+      e.preventDefault();
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        // Tarjeta por tarjeta en orden de lectura; al salir por el borde de la página
+        // continúa hacia la página siguiente/anterior y, si la categoría no tiene más
+        // páginas en esa dirección, hacia la categoría vecina.
+        const cards = rows.flat();
+        const dir = e.key === 'ArrowRight' ? 1 : -1;
+        const next = cards[cards.indexOf(focusedCard) + dir];
+        const cat = focusedCard.closest('.blog-grid').dataset.cat;
+        if (next) next.focus();
+        else if (!goBlogPage(cat, dir)) goBlogCategory(cat, dir);
+      } else if (e.key === 'ArrowDown') {
+        const nextRow = rows[rowIdx + 1];
+        nextRow?.[Math.min(colIdx, nextRow.length - 1)].focus();
+      } else if (e.key === 'ArrowUp') {
+        if (rowIdx === 0) {
+          // Vuelve a la etiqueta de la categoría activa.
+          rowEl.querySelector('button.active')?.focus();
+        } else {
+          const prevRow = rows[rowIdx - 1];
+          prevRow[Math.min(colIdx, prevRow.length - 1)].focus();
+        }
+      }
+      return;
+    }
+
+    // ── Cursor sobre las etiquetas de categoría ──
     e.preventDefault();
-    const buttons = Array.from(rowEl.querySelectorAll(':scope > button'));
-    const active = rowEl.querySelector('button.active') || buttons[0];
-    const idx = buttons.indexOf(active);
-    const dir = e.key === 'ArrowRight' ? 1 : -1;
-    const next = buttons[(idx + dir + buttons.length) % buttons.length];
-    next.click();
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+      const buttons = Array.from(rowEl.querySelectorAll(':scope > button'));
+      const active = rowEl.querySelector('button.active') || buttons[0];
+      const idx = buttons.indexOf(active);
+      const dir = e.key === 'ArrowRight' ? 1 : -1;
+      const next = buttons[(idx + dir + buttons.length) % buttons.length];
+      next.click();
+      // Las etiquetas no se re-renderizan al hacer click, así que el foco va directo al
+      // botón recién activado: el anillo de foco muestra dónde quedó el cursor.
+      next.focus();
+    } else if (e.key === 'ArrowDown') {
+      // Baja el cursor a la primera tarjeta de la categoría activa.
+      getBlogCardRows()[0]?.[0]?.focus();
+    }
   });
 })();
 
@@ -4194,31 +5430,50 @@ function shuffleArray(arr) {
 // Comuna especial (no geográfica) para agrupar convenios institucionales de la Región
 // Metropolitana que no son "escuelas de barrio" propiamente tales.
 const ESCUELA_COMUNA_MUNICIPAL = 'Municipalidades, gimnasios e institutos';
+// "id" es el slug estable con el que las entradas de blog (BLOG_POSTS.escuelas) se asocian
+// a la escuela; "corto" es el nombre breve que se muestra en chips y filtros del blog.
 const ESCUELAS = [
-  { nombre: 'International Chilean Kenpo Orellana Studio', director: 'Felipe Orellana', region: 'Región de Coquimbo', comuna: null, lugar: 'Vicuña, Provincia de Elqui', insignia: 'Insignia-International-Orellana-Kenpo-Studio.webp' },
-  { nombre: 'Escuela Kenpo Karate Illapel', director: 'Alejandro Luna', region: 'Región de Coquimbo', comuna: null, lugar: 'Illapel, Provincia de Choapa', insignia: 'Insignia-Illapel.webp' },
-  { nombre: 'International Véliz Kenpo Studio', director: 'Edgardo Véliz', region: 'Región de Valparaíso', comuna: null, lugar: 'Concón', insignia: 'Insignia-Edgardo-Concon.webp' },
-  { nombre: 'International Zumaeta Kenpo Studio', director: 'Rodrigo Zumaeta', region: 'Región Metropolitana', comuna: 'Las Condes', lugar: 'Las Condes', insignia: 'Insignia-Rodrigo-Zumaeta-transp.webp' },
-  { nombre: 'International Rising Dragons Kenpo Studio', director: 'María Elena Araya', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'International-Rising-Dragons-Kenpo-Studio.webp' },
-  { nombre: 'International Fighter Dragons Kenpo Studio', director: 'Karina Gatica', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'Insignia-Karina-Gatica.webp' },
-  { nombre: 'International Caliga Kenpo Studio', director: 'Aaron Torres', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'Torres_lineaje.webp' },
-  { nombre: 'International Cornejo Kenpo Studio', director: 'Daniel Cornejo', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'INTERNATIONAL-CORNEJO-v2.webp' },
-  { nombre: 'International Manríquez Kenpo Studio', director: 'Miguel Ángel Manríquez', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'International-Manriquez-Kenpo-Studio.webp' },
-  { nombre: 'International Pérez Kenpo Studio', director: 'Francisco Pérez y Marcelo Pérez', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'Insignia-Hermanos-Perez.png' },
-  { nombre: 'International Lorca Kenpo Studio', director: 'Roberto Lorca Pacheco', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'Insignia-Roberto-Lorca.png' },
-  { nombre: 'Taller de Kenpo Karate del departamento de deportes de la Ilustre Municipalidad de Maipú', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: ESCUELA_COMUNA_MUNICIPAL, lugar: 'Maipú · Depto. de Deportes', insignia: 'maipu_2021.png' },
-  { nombre: 'Instituto Nacional de Deportes', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: ESCUELA_COMUNA_MUNICIPAL, lugar: 'Maipú', insignia: 'IND.webp' },
-  { nombre: 'Gimnasio Alemán', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: ESCUELA_COMUNA_MUNICIPAL, lugar: 'Región Metropolitana', insignia: 'Gym-Aleman.webp' },
-  { nombre: 'DuocUC', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: ESCUELA_COMUNA_MUNICIPAL, lugar: 'Sedes Alameda, Maipú y Plaza Oeste', insignia: 'Insignia-Duoc-v2-1.webp' },
-  { nombre: 'International UZ Kenpo Studio', director: 'Felipe Urra', region: 'Región Metropolitana', comuna: 'San Ramón', lugar: 'San Ramón', insignia: 'Insignia-Felipe-Urra-v2.webp' },
-  { nombre: 'International Lagos Kenpo Karate Studio', director: 'Carlos Lagos', region: 'Región Metropolitana', comuna: 'Huechuraba', lugar: 'Huechuraba', insignia: 'Insignia-Carlos-Lagos.webp' },
-  { nombre: 'Internacional Lions Warriors Kenpo Studio', director: 'Christian Vidal', region: 'Región de Ñuble', comuna: null, lugar: 'San Nicolás, Provincia de Punilla', insignia: 'INTERNATIONAL-LIONS-WARRIORS.webp' },
-  { nombre: 'Internacional GTF Kenpo Studio', director: 'Gisela Torres', region: 'Región del Biobío', comuna: null, lugar: 'San Pedro de la Paz, Provincia de Concepción', insignia: 'Insignia-Gisela-Torres-03.webp' },
-  { nombre: 'Internacional Kenpo Karate Calbuco', director: 'Ramón Morales', region: 'Región de Los Lagos', comuna: null, lugar: 'Calbuco, Provincia de Llanquihue', insignia: 'Insignia-Calbuco.webp' },
-  { nombre: 'International Pinto Kenpo Studio', director: 'Matías Raúl Pinto', region: 'Argentina', comuna: 'Córdoba', lugar: 'Córdoba, Provincia de Córdoba', insignia: 'International-Pinto-Kenpo-Studio.webp' },
+  { id: 'orellana', corto: 'Orellana', nombre: 'International Chilean Kenpo Orellana Studio', director: 'Felipe Orellana', region: 'Región de Coquimbo', comuna: null, lugar: 'Vicuña, Provincia de Elqui', insignia: 'Insignia-International-Orellana-Kenpo-Studio.webp' },
+  { id: 'illapel', corto: 'Illapel', nombre: 'Escuela Kenpo Karate Illapel', director: 'Alejandro Luna', region: 'Región de Coquimbo', comuna: null, lugar: 'Illapel, Provincia de Choapa', insignia: 'Insignia-Illapel.webp' },
+  { id: 'veliz', corto: 'Véliz', nombre: 'International Véliz Kenpo Studio', director: 'Edgardo Véliz', region: 'Región de Valparaíso', comuna: null, lugar: 'Concón', insignia: 'Insignia-Edgardo-Concon.webp' },
+  { id: 'zumaeta', corto: 'Zumaeta', nombre: 'International Zumaeta Kenpo Studio', director: 'Rodrigo Zumaeta', region: 'Región Metropolitana', comuna: 'Las Condes', lugar: 'Las Condes', insignia: 'Insignia-Rodrigo-Zumaeta-transp.webp' },
+  { id: 'rising-dragons', corto: 'Rising Dragons', nombre: 'International Rising Dragons Kenpo Studio', director: 'María Elena Araya', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'International-Rising-Dragons-Kenpo-Studio.webp' },
+  { id: 'fighter-dragons', corto: 'Fighter Dragons', nombre: 'International Fighter Dragons Kenpo Studio', director: 'Karina Gatica', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'Insignia-Karina-Gatica.webp' },
+  { id: 'caliga', corto: 'Caliga', nombre: 'International Caliga Kenpo Studio', director: 'Aaron Torres', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'Torres_lineaje.webp' },
+  { id: 'cornejo', corto: 'Cornejo', nombre: 'International Cornejo Kenpo Studio', director: 'Daniel Cornejo', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'INTERNATIONAL-CORNEJO-v2.webp' },
+  { id: 'manriquez', corto: 'Manríquez', nombre: 'International Manríquez Kenpo Studio', director: 'Miguel Ángel Manríquez', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'International-Manriquez-Kenpo-Studio.webp' },
+  { id: 'perez', corto: 'Pérez', nombre: 'International Pérez Kenpo Studio', director: 'Francisco Pérez y Marcelo Pérez', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'Insignia-Hermanos-Perez.png' },
+  { id: 'lorca', corto: 'Lorca', nombre: 'International Lorca Kenpo Studio', director: 'Roberto Lorca Pacheco', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'Insignia-Roberto-Lorca.png' },
+  { id: 'taller-maipu', corto: 'Taller Maipú', nombre: 'Taller de Kenpo Karate del departamento de deportes de la Ilustre Municipalidad de Maipú', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: ESCUELA_COMUNA_MUNICIPAL, lugar: 'Maipú · Depto. de Deportes', insignia: 'maipu_2021.png' },
+  { id: 'ind', corto: 'IND', nombre: 'Instituto Nacional de Deportes', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: ESCUELA_COMUNA_MUNICIPAL, lugar: 'Maipú', insignia: 'IND.webp' },
+  { id: 'gym-aleman', corto: 'Gimnasio Alemán', nombre: 'Gimnasio Alemán', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: ESCUELA_COMUNA_MUNICIPAL, lugar: 'Región Metropolitana', insignia: 'Gym-Aleman.webp' },
+  { id: 'duoc', corto: 'DuocUC', nombre: 'DuocUC', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: ESCUELA_COMUNA_MUNICIPAL, lugar: 'Sedes Alameda, Maipú y Plaza Oeste', insignia: 'Insignia-Duoc-v2-1.webp' },
+  { id: 'uz', corto: 'UZ', nombre: 'International UZ Kenpo Studio', director: 'Felipe Urra', region: 'Región Metropolitana', comuna: 'San Ramón', lugar: 'San Ramón', insignia: 'Insignia-Felipe-Urra-v2.webp' },
+  { id: 'lagos', corto: 'Lagos', nombre: 'International Lagos Kenpo Karate Studio', director: 'Carlos Lagos', region: 'Región Metropolitana', comuna: 'Huechuraba', lugar: 'Huechuraba', insignia: 'Insignia-Carlos-Lagos.webp' },
+  { id: 'lions-warriors', corto: 'Lions Warriors', nombre: 'Internacional Lions Warriors Kenpo Studio', director: 'Christian Vidal', region: 'Región de Ñuble', comuna: null, lugar: 'San Nicolás, Provincia de Punilla', insignia: 'INTERNATIONAL-LIONS-WARRIORS.webp' },
+  { id: 'gtf', corto: 'GTF', nombre: 'Internacional GTF Kenpo Studio', director: 'Gisela Torres', region: 'Región del Biobío', comuna: null, lugar: 'San Pedro de la Paz, Provincia de Concepción', insignia: 'Insignia-Gisela-Torres-03.webp' },
+  { id: 'calbuco', corto: 'Calbuco', nombre: 'Internacional Kenpo Karate Calbuco', director: 'Ramón Morales', region: 'Región de Los Lagos', comuna: null, lugar: 'Calbuco, Provincia de Llanquihue', insignia: 'Insignia-Calbuco.webp' },
+  { id: 'pinto', corto: 'Pinto', nombre: 'International Pinto Kenpo Studio', director: 'Matías Raúl Pinto', region: 'Argentina', comuna: 'Córdoba', lugar: 'Córdoba, Provincia de Córdoba', insignia: 'International-Pinto-Kenpo-Studio.webp' },
 ];
 // Orden aleatorio fijo para esta carga de página, usado solo cuando la etiqueta "Todas" está activa.
 const ESCUELAS_SHUFFLED = shuffleArray(ESCUELAS);
+
+// Render inicial del blog: corre aquí (y no junto a su definición) porque las tarjetas
+// de Noticias y sus filtros muestran la escuela asociada, que requiere ESCUELAS definido.
+renderBlogEscuelaFiltro();
+Object.keys(blogPage).forEach(renderBlogCategory);
+
+// Deep-link compartible: #blogs?escuela=<slug> (ej. https://kenpochile.cl/#blogs?escuela=lorca)
+// abre el sitio con la pestaña Noticias filtrada por esa escuela y lleva la vista al blog.
+// También reacciona si el hash cambia con la página ya abierta.
+function aplicarHashBlogEscuela() {
+  const m = location.hash.match(/^#blogs\?escuela=([a-z0-9-]+)$/);
+  if (!m || !escuelaPorId(m[1])) return;
+  filtrarBlogEscuela(m[1]);
+  document.getElementById('blogs').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+window.addEventListener('hashchange', aplicarHashBlogEscuela);
+aplicarHashBlogEscuela();
 const ESCUELAS_PAISES = ['Todas', 'Chile', 'Argentina'];
 const ESCUELAS_REGIONES_CHILE = ['Región de Coquimbo', 'Región de Valparaíso', 'Región Metropolitana', 'Región de Ñuble', 'Región del Biobío', 'Región de Los Lagos'];
 const ESCUELAS_PAGE_SIZE = 8;
@@ -4407,14 +5662,18 @@ function renderEscuelasGridAndPager() {
     empty.style.display = 'block';
   } else {
     empty.style.display = 'none';
-    grid.innerHTML = pageItems.map((e, i) => `
+    grid.innerHTML = pageItems.map((e, i) => {
+      const nActividades = e.id ? actividadesDeEscuela(e.id).length : 0;
+      return `
       <div class="escuela-card" tabindex="0" style="animation-delay:${i * 50}ms">
         <div class="escuela-icon"><img src="img/escuelas-insignias/${e.insignia}" alt="Insignia ${e.nombre}" loading="lazy" decoding="async"></div>
         <div class="escuela-nombre">${e.nombre}</div>
         <div class="escuela-director">Dir. ${e.director}</div>
         <div class="escuela-ciudad"><svg class="icon"><use href="#icon-map-pin"/></svg> ${e.lugar}, ${e.region}</div>
+        ${nActividades ? `<button type="button" class="btn-escuela escuela-actividades" onclick="verActividadesEscuela('${e.id}')" title="Ver las actividades de esta escuela en el blog">Ver Blog</button>` : ''}
         <a href="#contacto" class="btn-escuela" data-escuela="${escuelaLabel(e)}">Inscribirme</a>
-      </div>`).join('');
+      </div>`;
+    }).join('');
     grid.querySelectorAll('.btn-escuela[data-escuela]').forEach(bindEscuelaCta);
   }
   renderEscuelasPager(totalPages);
@@ -4517,6 +5776,7 @@ renderEscuelasSection();
     if (!['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp', 'Enter', 'Escape'].includes(e.key)) return;
     if (!sectionInView || isTypingTarget(e.target)) return;
     if (document.getElementById('lightbox')?.classList.contains('open')) return;
+    if (document.getElementById('maestroModal')?.classList.contains('open')) return;
     if (document.getElementById('instructorModal')?.classList.contains('open')) return;
 
     const focusedCard = e.target.closest('#escuelasGrid .escuela-card');
@@ -4545,7 +5805,9 @@ renderEscuelasSection();
     if (e.key === 'Enter') {
       if (!focusedCard) return;
       e.preventDefault();
-      focusedCard.querySelector('.btn-escuela')?.click();
+      // [data-escuela] apunta al CTA "Inscribirme" (el botón "Actividades" comparte la
+      // clase btn-escuela solo por estilo).
+      focusedCard.querySelector('.btn-escuela[data-escuela]')?.click();
       return;
     }
 
@@ -4748,6 +6010,7 @@ renderVideosGridAndPager();
     if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
     if (!sectionInView || isTypingTarget(e.target)) return;
     if (document.getElementById('lightbox')?.classList.contains('open')) return;
+    if (document.getElementById('maestroModal')?.classList.contains('open')) return;
     if (document.getElementById('instructorModal')?.classList.contains('open')) return;
     const pager = document.getElementById('videosPager');
     if (!pager || !pager.children.length) return;
@@ -4869,6 +6132,7 @@ renderSeminariosGridAndPager();
     if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
     if (!sectionInView || isTypingTarget(e.target)) return;
     if (document.getElementById('lightbox')?.classList.contains('open')) return;
+    if (document.getElementById('maestroModal')?.classList.contains('open')) return;
     if (document.getElementById('instructorModal')?.classList.contains('open')) return;
     if (document.getElementById('seminarioModal')?.classList.contains('open')) return;
     e.preventDefault();
@@ -5447,6 +6711,7 @@ document.addEventListener('click', e => {
     if (!['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp', 'Enter', ' ', 'Escape'].includes(e.key)) return;
     if (!sectionInView || isTypingTarget(e.target)) return;
     if (document.getElementById('lightbox')?.classList.contains('open')) return;
+    if (document.getElementById('maestroModal')?.classList.contains('open')) return;
     if (document.getElementById('instructorModal')?.classList.contains('open')) return;
     const tabsEl = document.getElementById('instructorTabs');
     if (!tabsEl || !tabsEl.children.length) return;
@@ -5829,17 +7094,35 @@ initCardSearch({
     renderVideosGridAndPager();
   }
 });
+// Con paginación por categoría, las tarjetas fuera de la página actual no están en el
+// DOM: el buscador trabaja sobre BLOG_POSTS y, al seleccionar, activa la categoría y la
+// página donde vive el artículo antes de destacar su tarjeta.
 initCardSearch({
   sectionId: 'blogs', inputId: 'blogSearch', toggleId: 'blogSearchToggle',
   boxId: 'blogSearchBox', suggestionsId: 'blogSuggestions', resultsId: 'blogsContent',
-  cardSelector: '.blog-card', nameSelector: '.blog-title', metaSelector: '.blog-cat',
+  // "search" agrega la escuela asociada al índice: escribir "Lorca" sugiere sus actividades.
+  getItems: () => BLOG_POSTS.map(p => ({
+    nombre: p.titulo, meta: p.cat, post: p,
+    search: (p.escuelas || []).map(id => { const e = escuelaPorId(id); return e ? `${e.nombre} ${e.corto}` : ''; }).join(' ')
+  })),
   onSelect: item => {
-    const el = item.el;
-    const panel = el.closest('.blog-panel');
-    if (panel) switchTabById(panel.id);
-    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    el.classList.add('search-found');
-    setTimeout(() => el.classList.remove('search-found'), 1900);
+    const post = item.post;
+    switchTabById(BLOG_TAB_BY_CAT[post.cat]);
+    // Si el filtro de escuela activo dejaría fuera la entrada elegida, se limpia.
+    if (post.cat === 'Noticias' && blogEscuelaFiltro !== 'Todas' && !(post.escuelas || []).includes(blogEscuelaFiltro)) {
+      blogEscuelaFiltro = 'Todas';
+      renderBlogEscuelaFiltro();
+    }
+    const posts = getBlogPosts(post.cat);
+    blogPage[post.cat] = Math.floor(posts.indexOf(post) / BLOG_PAGE_SIZE) + 1;
+    renderBlogCategory(post.cat);
+    const card = Array.from(document.querySelectorAll(`#blogs .blog-grid[data-cat="${post.cat}"] .blog-card`))
+      .find(c => c.querySelector('.blog-title')?.textContent.trim() === post.titulo);
+    if (card) {
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      card.classList.add('search-found');
+      setTimeout(() => card.classList.remove('search-found'), 1900);
+    }
   }
 });
 
