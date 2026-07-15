@@ -854,12 +854,12 @@ section { padding: 6rem 2rem; }
   background: var(--bg-card);
   border: 1px solid rgba(228,87,46,0.15);
   border-radius: 8px;
-  padding: 2rem;
   transition: transform 0.4s, border-color 0.4s, box-shadow 0.4s;
   position: relative; overflow: hidden;
   display: flex;
   flex-direction: column;
   height: 100%;
+  cursor: pointer;
 }
 .escuela-card::before {
   content: '';
@@ -868,6 +868,7 @@ section { padding: 6rem 2rem; }
   background: linear-gradient(to right, var(--primary), var(--accent));
   transform: scaleX(0);
   transition: transform 0.4s;
+  z-index: 1;
 }
 .escuela-card:hover::before { transform: scaleX(1); }
 .escuela-card:hover {
@@ -875,73 +876,138 @@ section { padding: 6rem 2rem; }
   border-color: rgba(228,87,46,0.4);
   box-shadow: 0 15px 50px rgba(0,0,0,0.4);
 }
+/* Cabecera a sangre completa: franja con la trama tatami de la sección donde la insignia
+   (izquierda) y la foto del director (derecha) protagonizan en el mismo marco, unidas por
+   un hilo de luz. La insignia amplía en el lightbox y la foto abre el modal del instructor,
+   por eso ambos marcos son <button>. */
+.escuela-card-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 0.8rem;
+  padding: 1.2rem 1.4rem;
+  background:
+    repeating-linear-gradient(45deg, rgba(245,166,35,0.04) 0px, rgba(245,166,35,0.04) 1px, transparent 1px, transparent 12px),
+    radial-gradient(ellipse 90% 120% at 50% -30%, rgba(228,87,46,0.14), transparent 70%),
+    rgba(0,0,0,0.25);
+  border-bottom: 1px solid rgba(228,87,46,0.18);
+}
+.escuela-head-divider {
+  flex: 1; height: 1px; min-width: 10px;
+  background: linear-gradient(to right, transparent, rgba(228,87,46,0.35), transparent);
+}
+.escuela-card-head-insts { display: flex; gap: 0.6rem; }
 .escuela-icon {
-  width: 52px; height: 52px;
+  width: 88px; height: 88px;
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(228,87,46,0.3);
-  border-radius: 10px;
+  border-radius: 12px;
   display: flex; align-items: center; justify-content: center;
   color: var(--accent);
-  margin-bottom: 1.2rem;
   overflow: hidden;
-  padding: 3px;
+  padding: 5px;
   flex-shrink: 0;
 }
+/* Con dos directores, los tres marcos se achican y el hilo de luz se omite para que
+   quepan incluso en la tarjeta más angosta de la grilla (280px). */
+.escuela-card-head.duo .escuela-icon { width: 68px; height: 68px; }
+.escuela-card-head.duo .escuela-head-divider { display: none; }
 .escuela-icon img {
   width: 100%; height: 100%;
   object-fit: contain;
-  border-radius: 6px;
+  border-radius: 8px;
+}
+button.escuela-icon {
+  cursor: pointer;
+  transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+}
+button.escuela-icon:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 14px var(--glow-primary);
+  transform: scale(1.05);
+}
+/* La foto del director llena su marco (retrato), a diferencia de la insignia (contain). */
+.escuela-icon-inst img {
+  object-fit: cover;
+  object-position: center top;
+}
+.escuela-card-body {
+  padding: 1.2rem 1.4rem 1.4rem;
+  display: flex; flex-direction: column;
+  flex: 1;
 }
 .escuela-nombre {
   font-family: 'Cinzel', serif;
   font-size: 1rem; font-weight: 700;
   color: var(--text-main);
-  margin-bottom: 0.4rem;
+  line-height: 1.3;
+  text-wrap: balance;
+  margin-bottom: 0.5rem;
 }
 .escuela-director {
   font-family: 'Rajdhani', sans-serif;
-  font-size: 0.85rem; font-weight: 500;
+  font-size: 0.9rem; font-weight: 500;
   color: var(--secondary);
-  margin-bottom: 0.3rem;
+  margin-bottom: 1rem;
 }
-/* Director con tarjeta en Nuestros Instructores: mini-foto + nombre clickeables que
-   abren su modal de foto (el mismo de esa sección) sin salir de Escuelas. */
+/* Director con tarjeta en Nuestros Instructores: nombre clickeable que abre su modal de
+   foto (el mismo de esa sección) sin salir de Escuelas. */
 .escuela-director-link {
   display: inline-flex; align-items: center; gap: 0.4rem;
   vertical-align: middle;
   background: none; border: none; padding: 0;
   font: inherit; color: inherit;
   cursor: pointer;
-  transition: color 0.3s;
+  border-bottom: 1px solid transparent;
+  transition: color 0.3s, border-color 0.3s;
 }
-.escuela-director-link:hover { color: var(--accent); }
-.escuela-director-link img {
-  width: 1.6rem; height: 1.6rem;
-  border-radius: 50%;
-  object-fit: cover;
-  object-position: center top;
-  border: 1px solid rgba(228,87,46,0.45);
-}
+.escuela-director-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
+/* Ubicación como etiqueta dorada: comuna y región en versalitas con tracking. */
 .escuela-ciudad {
   display: flex; align-items: center; gap: 0.4rem;
   font-family: 'Rajdhani', sans-serif;
-  font-size: 0.8rem; color: var(--text-muted);
-  margin-bottom: 1.5rem;
+  font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.55rem;
 }
+.escuela-ciudad .icon { width: 13px; height: 13px; }
+/* Enlace discreto a la ficha de la escuela; toda la superficie vacía de la tarjeta
+   (y Enter con el teclado) también la abren. */
+.escuela-ficha-link {
+  background: none; border: none; padding: 0;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.8rem; font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  cursor: pointer;
+  margin-bottom: 1.2rem;
+  align-self: flex-start;
+  transition: color 0.3s;
+}
+.escuela-ficha-link::after { content: '→'; transition: transform 0.3s; }
+.escuela-ficha-link:hover { color: var(--accent); }
+.escuela-ficha-link:hover::after { transform: translateX(3px); }
+/* Pie de la tarjeta: "Ver Blog" e "Inscribirme" en la misma fila cuando la escuela tiene
+   blog; "Inscribirme" a ancho completo cuando no (.solo). */
+.escuela-card-actions {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  margin-top: auto;
+}
+.escuela-card-actions.solo { grid-template-columns: 1fr; }
 .btn-escuela {
   display: inline-flex; align-items: center; gap: 0.5rem;
   background: rgba(228,87,46,0.15);
   border: 1px solid rgba(228,87,46,0.4);
   border-radius: 4px;
-  padding: 0.5rem 1.2rem;
+  padding: 0.55rem 0.6rem;
   font-family: 'Rajdhani', sans-serif;
-  font-size: 0.8rem; font-weight: 700;
+  font-size: 0.78rem; font-weight: 700;
   letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--accent);
   text-decoration: none; cursor: pointer;
   transition: background 0.3s, box-shadow 0.3s;
   width: 100%; justify-content: center;
-  margin-top: auto;
 }
 .btn-escuela:hover {
   background: rgba(228,87,46,0.3);
@@ -1940,7 +2006,7 @@ section { padding: 6rem 2rem; }
 }
 .blog-escuela-dd-option:hover { background: rgba(228,87,46,0.12); color: var(--text-main); }
 .blog-escuela-dd-option.active { color: var(--accent); }
-/* Botón "Actividades (N)" en la tarjeta de escuela: salta al blog filtrado por ella.
+/* Botón "Ver Blog" en la tarjeta y la ficha de escuela: salta al blog filtrado por ella.
    Comparte la forma del botón "Inscribirme" (clase btn-escuela) pero en tono dorado,
    para que el CTA principal siga destacando. Solo existe si la escuela tiene entradas. */
 .escuela-actividades {
@@ -1952,9 +2018,187 @@ section { padding: 6rem 2rem; }
   background: rgba(245,166,35,0.28);
   box-shadow: 0 0 20px var(--glow-gold);
 }
-/* Con ambos botones presentes, "Actividades" absorbe el empuje hacia el pie de la
-   tarjeta (margin-top:auto de btn-escuela) e "Inscribirme" queda pegado debajo. */
-.escuela-actividades + .btn-escuela { margin-top: 0.5rem; }
+
+/* ── FICHA DE ESCUELA ──
+   Modal con toda la escuela adentro: cabecera (insignia + nombre + ubicación + director),
+   dos columnas (historia/horarios | mapa/galería/actividades) y CTAs al pie. Cada bloque
+   es opcional: si la escuela no tiene ese dato, no se renderiza. z-index bajo el resto de
+   los modales (10000) para que el lightbox, el modal de instructor o un artículo del blog
+   se abran ENCIMA de la ficha sin cerrarla. */
+.escuela-modal {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.88);
+  z-index: 9990;
+  align-items: flex-start; justify-content: center;
+  backdrop-filter: blur(6px);
+  padding: 3rem 1rem;
+  overflow-y: auto;
+  opacity: 0;
+  transition: opacity 220ms var(--ease-out);
+}
+.escuela-modal.open { display: flex; }
+.escuela-modal.is-open { opacity: 1; }
+.escuela-modal-content {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid rgba(228,87,46,0.3);
+  border-radius: 12px;
+  width: min(860px, 100%);
+  overflow: hidden;
+  transform: translateY(14px) scale(0.98);
+  transition: transform 0.3s var(--ease-out);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+}
+.escuela-modal.is-open .escuela-modal-content { transform: none; }
+.escuela-modal .lightbox-close { z-index: 2; }
+.escuela-modal-hero {
+  position: relative;
+  display: flex; align-items: center; gap: 1.4rem; flex-wrap: wrap;
+  padding: 2rem 2.2rem 1.6rem;
+  background:
+    repeating-linear-gradient(45deg, rgba(245,166,35,0.045) 0px, rgba(245,166,35,0.045) 1px, transparent 1px, transparent 13px),
+    radial-gradient(ellipse 80% 140% at 20% -40%, rgba(228,87,46,0.22), transparent 70%),
+    rgba(0,0,0,0.3);
+  border-bottom: 1px solid rgba(228,87,46,0.25);
+}
+.escuela-modal-hero .escuela-icon { width: 104px; height: 104px; }
+.escuela-modal-nombre {
+  font-family: 'Cinzel', serif;
+  font-size: 1.35rem; font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: 0.03em; line-height: 1.25;
+  text-wrap: balance;
+  margin-bottom: 0.4rem;
+}
+.escuela-modal-chips { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.escuela-modal-chip {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  border: 1px solid rgba(245,166,35,0.4); color: var(--accent);
+  padding: 0.18rem 0.65rem; border-radius: 50px;
+}
+/* Píldora del director: abre su modal de instructor (el que ya existe) sobre la ficha. */
+.escuela-modal-dirs { display: flex; gap: 0.6rem; margin-left: auto; flex-wrap: wrap; }
+.escuela-modal-dir {
+  display: flex; align-items: center; gap: 0.7rem;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(228,87,46,0.25);
+  border-radius: 60px;
+  padding: 0.4rem 1.1rem 0.4rem 0.4rem;
+  font: inherit; color: inherit; text-align: left;
+  cursor: pointer;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.escuela-modal-dir:hover { border-color: var(--accent); box-shadow: 0 0 14px var(--glow-primary); }
+.escuela-modal-dir img {
+  width: 44px; height: 44px; border-radius: 50%;
+  object-fit: cover; object-position: center top;
+  border: 1px solid rgba(228,87,46,0.45);
+}
+.escuela-modal-dir .dir-rol {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.62rem; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--text-muted); display: block;
+}
+.escuela-modal-dir .dir-nombre {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.92rem; font-weight: 600; color: var(--text-main);
+}
+.escuela-modal-cols {
+  display: grid; grid-template-columns: 1.15fr 1fr; gap: 2rem;
+  padding: 1.8rem 2.2rem;
+}
+@media (max-width: 720px) {
+  .escuela-modal-cols { grid-template-columns: 1fr; }
+  .escuela-modal-dirs { margin-left: 0; }
+}
+.escuela-modal-block { margin-bottom: 1.8rem; }
+.escuela-modal-block:last-child { margin-bottom: 0; }
+.escuela-modal-block h4 {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--accent);
+  display: flex; align-items: center; gap: 0.6rem;
+  margin-bottom: 0.8rem;
+}
+.escuela-modal-block h4::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(to right, rgba(228,87,46,0.35), transparent);
+}
+.escuela-modal-historia p {
+  color: var(--text-muted); font-size: 0.95rem;
+  max-width: 58ch;
+}
+.escuela-modal-historia p + p { margin-top: 0.6rem; }
+.escuela-modal-horarios { display: flex; flex-direction: column; gap: 0.45rem; }
+.escuela-horario-row {
+  display: grid; grid-template-columns: 90px 1fr auto; gap: 0.8rem; align-items: baseline;
+  background: rgba(0,0,0,0.25);
+  border: 1px solid rgba(228,87,46,0.14);
+  border-radius: 6px;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.9rem;
+}
+.escuela-horario-row .dia {
+  font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  font-size: 0.75rem; color: var(--text-main);
+}
+.escuela-horario-row .nivel { color: var(--text-muted); }
+.escuela-horario-row .hora { font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+.escuela-modal-mapa {
+  border: 1px solid rgba(228,87,46,0.25);
+  border-radius: 8px;
+  overflow: hidden;
+  height: 210px;
+  background: #1A130E;
+}
+.escuela-modal-mapa iframe { width: 100%; height: 100%; border: 0; display: block; filter: grayscale(0.25) contrast(1.02); }
+.escuela-modal-mapa-dir {
+  margin-top: 0.6rem; font-size: 0.88rem; color: var(--text-muted);
+  display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; flex-wrap: wrap;
+}
+.escuela-modal-mapa-dir a {
+  color: var(--accent); text-decoration: none;
+  font-weight: 700; font-size: 0.78rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+.escuela-modal-galeria { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+.escuela-modal-galeria button {
+  aspect-ratio: 4 / 3;
+  border-radius: 6px;
+  border: 1px solid rgba(228,87,46,0.18);
+  overflow: hidden; padding: 0;
+  background: #1C130C;
+  cursor: pointer;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.escuela-modal-galeria button:hover { border-color: var(--accent); transform: scale(1.03); }
+.escuela-modal-galeria img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.escuela-modal-acts { display: flex; flex-direction: column; gap: 0.45rem; }
+.escuela-modal-act {
+  display: flex; gap: 0.7rem; align-items: baseline;
+  font: inherit; font-size: 0.92rem; color: var(--text-muted); text-align: left;
+  background: rgba(0,0,0,0.22);
+  border: 1px solid rgba(228,87,46,0.12);
+  border-radius: 6px; padding: 0.55rem 0.9rem;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+.escuela-modal-act:hover { border-color: rgba(245,166,35,0.5); }
+.escuela-modal-act .act-fecha {
+  font-size: 0.72rem; font-weight: 700; color: var(--accent);
+  letter-spacing: 0.06em; flex-shrink: 0;
+  font-variant-numeric: tabular-nums; text-transform: uppercase;
+}
+.escuela-modal-cta {
+  display: flex; gap: 0.8rem; justify-content: flex-end; flex-wrap: wrap;
+  padding: 1.4rem 2.2rem 2rem;
+  border-top: 1px solid rgba(228,87,46,0.18);
+}
+.escuela-modal-cta .btn-escuela { width: auto; padding: 0.65rem 1.6rem; }
 
 /* ── MODAL ENTRADA DE BLOG ── */
 .blog-modal {
@@ -2160,7 +2404,7 @@ section { padding: 6rem 2rem; }
 /* Con cualquier modal abierto, la página de fondo queda bloqueada: el scroll no se
    "encadena" al llegar al inicio/fin del contenido del modal. Los cuerpos con scroll
    propio llevan además overscroll-behavior: contain como refuerzo. */
-body:has(#lightbox.open, .instructor-modal.open, .programa-modal.open, .seminario-modal.open, .blog-modal.open, .empresa-preview-modal.open) {
+body:has(#lightbox.open, .instructor-modal.open, .programa-modal.open, .seminario-modal.open, .blog-modal.open, .empresa-preview-modal.open, .escuela-modal.open) {
   overflow: hidden;
 }
 .programa-modal-content, .seminario-modal-body, .empresa-preview-content {
@@ -3584,6 +3828,28 @@ footer {
   <button type="button" class="lightbox-nav lightbox-next" onclick="navInstructorModal(1)" aria-label="Siguiente instructor"><svg class="icon"><use href="#icon-chevron-right"/></svg></button>
 </div>
 
+<!-- Ficha de Escuela: el contenido se arma en openEscuelaFicha según los datos que la
+     escuela tenga (historia, horarios, galería, actividades... todos opcionales). -->
+<div id="escuelaModal" class="escuela-modal" role="dialog" aria-modal="true" aria-labelledby="escModalNombre">
+  <div class="escuela-modal-content">
+    <button type="button" class="lightbox-close" onclick="closeEscuelaFicha()" aria-label="Cerrar"><svg class="icon"><use href="#icon-x"/></svg></button>
+    <div class="escuela-modal-hero">
+      <span class="escuela-icon"><img id="escModalInsignia" src="" alt=""></span>
+      <div>
+        <div class="escuela-modal-nombre" id="escModalNombre"></div>
+        <div class="escuela-ciudad"><svg class="icon"><use href="#icon-map-pin"/></svg> <span id="escModalLugar"></span></div>
+        <div class="escuela-modal-chips" id="escModalChips"></div>
+      </div>
+      <div id="escModalDirs" class="escuela-modal-dirs"></div>
+    </div>
+    <div class="escuela-modal-cols">
+      <div id="escModalColIzq"></div>
+      <div id="escModalColDer"></div>
+    </div>
+    <div class="escuela-modal-cta" id="escModalCta"></div>
+  </div>
+</div>
+
 <!-- Modal Programa Técnico -->
 <div id="programaModal" class="programa-modal" role="dialog" aria-modal="true" aria-labelledby="progModalName">
   <div class="programa-modal-content" id="progModalContent">
@@ -4291,6 +4557,7 @@ reveals.forEach(r => observer.observe(r));
     if (document.getElementById('lightbox')?.classList.contains('open')) return;
     if (document.getElementById('maestroModal')?.classList.contains('open')) return;
     if (document.getElementById('instructorModal')?.classList.contains('open')) return;
+    if (document.getElementById('escuelaModal')?.classList.contains('open')) return;
     e.preventDefault();
     if (e.key === 'ArrowLeft') goPrev(); else goNext();
   });
@@ -4326,6 +4593,15 @@ document.addEventListener('keydown', e => {
     // El visor de imagen de galería está sobre el modal de biografía: si está abierto,
     // Esc cierra solo el visor y el modal del maestro permanece abierto debajo.
     if (closeMaestroImgModal()) return;
+    // Capas sobre la ficha de escuela: el lightbox, el modal de instructor o un artículo
+    // del blog abiertos encima se cierran solos y la ficha permanece abierta debajo.
+    if (document.getElementById('escuelaModal').classList.contains('open') &&
+        ['lightbox', 'instructorModal', 'blogModal'].some(id => document.getElementById(id).classList.contains('open'))) {
+      closeLightbox();
+      closeInstructorModal();
+      closeBlogModal();
+      return;
+    }
     closeLightbox();
     closeInstructorModal();
     closeProgramaModal();
@@ -4333,6 +4609,7 @@ document.addEventListener('keydown', e => {
     closeSeminarioModal();
     closeBlogModal();
     closeMaestroModal();
+    closeEscuelaFicha();
     closeMobile();
   }
   if (document.getElementById('lightbox').classList.contains('lightbox-gallery')) {
@@ -5353,6 +5630,7 @@ document.getElementById('blogModal').addEventListener('click', function(e) {
     if (document.getElementById('lightbox')?.classList.contains('open')) return;
     if (document.getElementById('maestroModal')?.classList.contains('open')) return;
     if (document.getElementById('instructorModal')?.classList.contains('open')) return;
+    if (document.getElementById('escuelaModal')?.classList.contains('open')) return;
     if (document.getElementById('blogModal')?.classList.contains('open')) return;
     const rowEl = document.querySelector('.blogs-tabs');
     if (!rowEl || !rowEl.children.length) return;
@@ -5450,6 +5728,8 @@ function shuffleArray(arr) {
 const ESCUELA_COMUNA_MUNICIPAL = 'Municipalidades, gimnasios e institutos';
 // "id" es el slug estable con el que las entradas de blog (BLOG_POSTS.escuelas) se asocian
 // a la escuela; "corto" es el nombre breve que se muestra en chips y filtros del blog.
+// Campos opcionales para la ficha de escuela (ver openEscuelaFicha): "direccion", "fundada",
+// "historia", "horarios" y "galeria" — cada bloque de la ficha aparece solo si existe el dato.
 const ESCUELAS = [
   { id: 'orellana', corto: 'Orellana', nombre: 'International Chilean Kenpo Orellana Studio', director: 'Felipe Orellana', region: 'Región de Coquimbo', comuna: null, lugar: 'Vicuña, Provincia de Elqui', insignia: 'Insignia-International-Orellana-Kenpo-Studio.webp' },
   { id: 'illapel', corto: 'Illapel', nombre: 'Escuela Kenpo Karate Illapel', director: 'Alejandro Luna', region: 'Región de Coquimbo', comuna: null, lugar: 'Illapel, Provincia de Choapa', insignia: 'Insignia-Illapel.webp' },
@@ -5465,7 +5745,7 @@ const ESCUELAS = [
   { id: 'taller-maipu', corto: 'Taller Maipú', nombre: 'Taller de Kenpo Karate del departamento de deportes de la Ilustre Municipalidad de Maipú', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: ESCUELA_COMUNA_MUNICIPAL, lugar: 'Maipú · Depto. de Deportes', insignia: 'maipu_2021.png' },
   { id: 'ind', corto: 'IND', nombre: 'Instituto Nacional de Deportes', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: ESCUELA_COMUNA_MUNICIPAL, lugar: 'Maipú', insignia: 'IND.webp' },
   { id: 'gym-aleman', corto: 'Gimnasio Alemán', nombre: 'Gimnasio Alemán', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: ESCUELA_COMUNA_MUNICIPAL, lugar: 'Región Metropolitana', insignia: 'Gym-Aleman.webp' },
-  { id: 'duoc', corto: 'DuocUC', nombre: 'DuocUC', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: ESCUELA_COMUNA_MUNICIPAL, lugar: 'Sedes Alameda, Maipú y Plaza Oeste', insignia: 'Insignia-Duoc-v2-1.webp' },
+  { id: 'duoc', corto: 'DuocUC', nombre: 'DuocUC', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: ESCUELA_COMUNA_MUNICIPAL, lugar: 'Sedes Alameda, Maipú y Plaza Oeste', ubicacion: 'Región Metropolitana', insignia: 'Insignia-Duoc-v2-1.webp' },
   { id: 'uz', corto: 'UZ', nombre: 'International UZ Kenpo Studio', director: 'Felipe Urra', region: 'Región Metropolitana', comuna: 'San Ramón', lugar: 'San Ramón', insignia: 'Insignia-Felipe-Urra-v2.webp' },
   { id: 'lagos', corto: 'Lagos', nombre: 'International Lagos Kenpo Karate Studio', director: 'Carlos Lagos', region: 'Región Metropolitana', comuna: 'Huechuraba', lugar: 'Huechuraba', insignia: 'Insignia-Carlos-Lagos.webp' },
   { id: 'lions-warriors', corto: 'Lions Warriors', nombre: 'Internacional Lions Warriors Kenpo Studio', director: 'Christian Vidal', region: 'Región de Ñuble', comuna: null, lugar: 'San Nicolás, Provincia de Punilla', insignia: 'INTERNATIONAL-LIONS-WARRIORS.webp' },
@@ -5666,6 +5946,160 @@ function bindEscuelaCta(btn) {
   });
 }
 
+// Línea de ubicación de la tarjeta: comuna geográfica + región, nada más. Las escuelas del
+// grupo institucional (comuna no geográfica) derivan la comuna del primer tramo de "lugar";
+// si comuna y región coinciden se muestra solo la región, y "ubicacion" (opcional, ej.
+// DuocUC con sedes en varias comunas) reemplaza todo el texto derivado.
+function escuelaUbicacion(e) {
+  if (e.ubicacion) return e.ubicacion;
+  const comuna = (e.comuna && e.comuna !== ESCUELA_COMUNA_MUNICIPAL) ? e.comuna : e.lugar.split(/\s*[·,]\s*/)[0];
+  return comuna === e.region ? e.region : `${comuna}, ${e.region}`;
+}
+
+// ── FICHA DE ESCUELA ──
+// Campos opcionales de ESCUELAS que alimentan la ficha: "direccion" (calle y número: mapa
+// exacto y "Cómo llegar"), "fundada" (año, chip de la cabecera), "historia" (párrafos <p>),
+// "horarios" ([{dias, nivel, hora}]) y "galeria" (rutas de fotos). Cada bloque solo se
+// renderiza si la escuela tiene el dato; sin ninguno, la ficha muestra lo que ya existe:
+// identidad, director(es), mapa referencial de la comuna, actividades del blog y CTAs.
+const MESES_CORTOS = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
+function fechaCorta(iso) {
+  if (!iso) return '';
+  const [anio, mes] = iso.split('-');
+  return `${MESES_CORTOS[(Number(mes) || 1) - 1]} ${anio}`;
+}
+let escuelaFichaTrigger = null;
+function openEscuelaFicha(id, trigger) {
+  const e = escuelaPorId(id);
+  if (!e) return;
+  const modal = document.getElementById('escuelaModal');
+
+  const insignia = document.getElementById('escModalInsignia');
+  insignia.src = `img/escuelas-insignias/${e.insignia}`;
+  insignia.alt = `Insignia ${e.nombre}`;
+  document.getElementById('escModalNombre').textContent = e.nombre;
+  document.getElementById('escModalLugar').textContent = escuelaUbicacion(e);
+  document.getElementById('escModalChips').innerHTML =
+    (e.fundada ? `<span class="escuela-modal-chip">Fundada ${e.fundada}</span>` : '') +
+    '<span class="escuela-modal-chip">IVKS / CKF</span>';
+
+  // Director(es): píldora con foto que abre su modal de instructor sobre la ficha; sin
+  // tarjeta en Nuestros Instructores queda como píldora estática.
+  document.getElementById('escModalDirs').innerHTML = e.director.split(/\s+y\s+/i).map(nombre => {
+    const inst = instructorPorNombreDirector(nombre.trim());
+    const foto = inst ? instructorFotoSrc(inst.nombre) : '';
+    const contenido = `${foto ? `<img src="${foto}" alt="${nombre.trim()}">` : ''}<span><span class="dir-rol">Director</span><span class="dir-nombre">${nombre.trim()}</span></span>`;
+    return inst
+      ? `<button type="button" class="escuela-modal-dir" data-instructor="${inst.nombre}" title="Conocer a ${inst.nombre}">${contenido}</button>`
+      : `<span class="escuela-modal-dir" style="cursor:default">${contenido}</span>`;
+  }).join('');
+
+  // Columna izquierda: historia y horarios (si existen).
+  const izq = [];
+  if (e.historia) izq.push(`<div class="escuela-modal-block escuela-modal-historia"><h4>Historia</h4>${e.historia}</div>`);
+  if (e.horarios && e.horarios.length) {
+    izq.push(`<div class="escuela-modal-block"><h4>Horarios</h4><div class="escuela-modal-horarios">${
+      e.horarios.map(h => `<div class="escuela-horario-row"><span class="dia">${h.dias}</span><span class="nivel">${h.nivel || ''}</span><span class="hora">${h.hora}</span></div>`).join('')
+    }</div></div>`);
+  }
+  const colIzq = document.getElementById('escModalColIzq');
+  colIzq.innerHTML = izq.join('');
+  colIzq.style.display = izq.length ? '' : 'none';
+  modal.querySelector('.escuela-modal-cols').style.gridTemplateColumns = izq.length ? '' : '1fr';
+
+  // Columna derecha: mapa (siempre: exacto con "direccion", referencial de la comuna sin
+  // ella), galería y actividades del blog (si existen).
+  const consultaMapa = e.direccion || `${escuelaUbicacion(e)}${e.region === 'Argentina' ? '' : ', Chile'}`;
+  const der = [`<div class="escuela-modal-block"><h4>Ubicación</h4>
+    <div class="escuela-modal-mapa"><iframe src="https://www.google.com/maps?q=${encodeURIComponent(consultaMapa)}&amp;output=embed&amp;hl=es" title="Mapa de ${e.nombre}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+    <div class="escuela-modal-mapa-dir"><span>${e.direccion || `Ubicación referencial: ${escuelaUbicacion(e)}`}</span>${e.direccion ? `<a href="https://www.google.com/maps/dir/?api=1&amp;destination=${encodeURIComponent(consultaMapa)}" target="_blank" rel="noopener">Cómo llegar →</a>` : ''}</div>
+  </div>`];
+  if (e.galeria && e.galeria.length) {
+    der.push(`<div class="escuela-modal-block"><h4>Galería</h4><div class="escuela-modal-galeria">${
+      e.galeria.map((src, i) => `<button type="button" data-galeria="${src}" title="Ampliar foto"><img src="${src}" alt="Foto ${i + 1} de ${e.nombre}" loading="lazy" decoding="async"></button>`).join('')
+    }</div></div>`);
+  }
+  const acts = e.id ? actividadesDeEscuela(e.id).slice().sort((a, b) => (b.fecha || '').localeCompare(a.fecha || '')) : [];
+  if (acts.length) {
+    der.push(`<div class="escuela-modal-block"><h4>Actividades</h4><div class="escuela-modal-acts">${
+      acts.map(p => `<button type="button" class="escuela-modal-act" data-post="${p.id}" title="Leer artículo">${p.fecha ? `<span class="act-fecha">${fechaCorta(p.fecha)}</span>` : ''}<span>${p.titulo}</span></button>`).join('')
+    }</div></div>`);
+  }
+  document.getElementById('escModalColDer').innerHTML = der.join('');
+
+  document.getElementById('escModalCta').innerHTML =
+    (acts.length ? `<button type="button" class="btn-escuela escuela-actividades" data-blog="${e.id}" title="Ver las actividades de esta escuela en el blog">Ver Blog</button>` : '') +
+    `<a href="#contacto" class="btn-escuela" data-escuela="${escuelaLabel(e)}">Inscribirme</a>`;
+
+  modal.querySelectorAll('.escuela-modal-dir[data-instructor]').forEach(btn => {
+    btn.addEventListener('click', () => openInstructorPorNombre(btn.dataset.instructor));
+  });
+  modal.querySelectorAll('[data-galeria]').forEach(btn => {
+    btn.addEventListener('click', () => openFichaFoto(btn.dataset.galeria, e.nombre, btn));
+  });
+  modal.querySelectorAll('.escuela-modal-act[data-post]').forEach(btn => {
+    btn.addEventListener('click', () => openBlogModal(btn.dataset.post));
+  });
+  modal.querySelector('[data-blog]')?.addEventListener('click', () => { closeEscuelaFicha(); verActividadesEscuela(e.id); });
+  const cta = modal.querySelector('#escModalCta .btn-escuela[data-escuela]');
+  bindEscuelaCta(cta);
+  cta.addEventListener('click', closeEscuelaFicha);
+
+  escuelaFichaTrigger = trigger || document.activeElement;
+  modal.scrollTop = 0;
+  modal.classList.add('open');
+  requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add('is-open')));
+  modal.querySelector('.lightbox-close').focus();
+}
+function closeEscuelaFicha() {
+  const modal = document.getElementById('escuelaModal');
+  if (!modal.classList.contains('open')) return;
+  modal.classList.remove('is-open');
+  setTimeout(() => modal.classList.remove('open'), 220);
+  if (escuelaFichaTrigger) { escuelaFichaTrigger.focus(); escuelaFichaTrigger = null; }
+}
+document.getElementById('escuelaModal').addEventListener('click', function(ev) {
+  if (ev.target === this) closeEscuelaFicha();
+});
+
+// Foto de la galería de la ficha ampliada en el lightbox compartido, sobre la ficha.
+function openFichaFoto(src, titulo, trigger) {
+  const lb = document.getElementById('lightbox');
+  lb.classList.remove('lightbox-gallery', 'lb-chart');
+  document.getElementById('lbIcon').style.display = 'none';
+  const img = document.getElementById('lbImage');
+  img.src = src;
+  img.alt = titulo;
+  img.style.display = 'block';
+  img.style.maxWidth = '420px';
+  document.getElementById('lbTitle').textContent = titulo;
+  document.getElementById('lbGrade').textContent = '';
+  document.getElementById('lbDesc').textContent = '';
+  document.getElementById('lbCounter').textContent = '';
+  lightboxTrigger = trigger || null;
+  openLightbox();
+}
+
+// Insignia de la tarjeta ampliada en el lightbox compartido (cierra con Esc, click afuera
+// o el botón ✕, igual que la galería de insignias del pie de la sección).
+function openEscuelaInsignia(id, trigger) {
+  const e = escuelaPorId(id);
+  if (!e) return;
+  const lb = document.getElementById('lightbox');
+  lb.classList.remove('lightbox-gallery', 'lb-chart');
+  document.getElementById('lbIcon').style.display = 'none';
+  const img = document.getElementById('lbImage');
+  img.src = `img/escuelas-insignias/${e.insignia}`;
+  img.alt = `Insignia ${e.nombre}`;
+  img.style.display = 'block';
+  document.getElementById('lbTitle').textContent = e.nombre;
+  document.getElementById('lbGrade').textContent = escuelaUbicacion(e);
+  document.getElementById('lbDesc').textContent = '';
+  document.getElementById('lbCounter').textContent = '';
+  lightboxTrigger = trigger || null;
+  openLightbox();
+}
+
 function renderEscuelasGridAndPager() {
   const all = getFilteredEscuelas();
   const totalPages = Math.max(1, Math.ceil(all.length / ESCUELAS_PAGE_SIZE));
@@ -5682,28 +6116,57 @@ function renderEscuelasGridAndPager() {
     empty.style.display = 'none';
     grid.innerHTML = pageItems.map((e, i) => {
       const nActividades = e.id ? actividadesDeEscuela(e.id).length : 0;
-      // Cada director con tarjeta en Nuestros Instructores se vuelve clickeable (mini-foto
-      // + nombre) y abre su modal de foto sin salir de la sección; si no tiene tarjeta,
-      // queda como texto plano. Soporta escuelas con más de un director ("X y Y").
-      const directores = e.director.split(/\s+y\s+/i).map(nombre => {
+      // Cada director con tarjeta en Nuestros Instructores se vuelve clickeable y abre su
+      // modal de foto sin salir de la sección; si no tiene tarjeta, queda como texto plano.
+      // Soporta escuelas con más de un director ("X y Y"): cada uno con su nombre y su
+      // marco de foto en la cabecera (marcos reducidos vía .duo para caber en la franja).
+      const partesDirector = e.director.split(/\s+y\s+/i).map(nombre => {
         const inst = instructorPorNombreDirector(nombre.trim());
-        if (!inst) return nombre.trim();
-        const foto = instructorFotoSrc(inst.nombre);
-        return `<button type="button" class="escuela-director-link" data-instructor="${inst.nombre}" title="Conocer a ${inst.nombre}">${foto ? `<img src="${foto}" alt="${inst.nombre}" loading="lazy" decoding="async" onerror="this.remove()">` : ''}${nombre.trim()}</button>`;
-      }).join(' y ');
+        return { nombre: nombre.trim(), inst, foto: inst ? instructorFotoSrc(inst.nombre) : '' };
+      });
+      const directores = partesDirector.map(({ nombre, inst }) =>
+        inst ? `<button type="button" class="escuela-director-link" data-instructor="${inst.nombre}" title="Conocer a ${inst.nombre}">${nombre}</button>` : nombre
+      ).join(' y ');
+      const conFoto = partesDirector.filter(p => p.inst && p.foto);
+      const fotosDirector = conFoto.map(({ inst, foto }) =>
+        `<button type="button" class="escuela-icon escuela-icon-inst" data-instructor="${inst.nombre}" title="Conocer a ${inst.nombre}" aria-label="Conocer a ${inst.nombre}"><img src="${foto}" alt="${inst.nombre}" loading="lazy" decoding="async" onerror="this.closest('button').remove()"></button>`
+      ).join('');
       return `
-      <div class="escuela-card" tabindex="0" style="animation-delay:${i * 50}ms">
-        <div class="escuela-icon"><img src="img/escuelas-insignias/${e.insignia}" alt="Insignia ${e.nombre}" loading="lazy" decoding="async"></div>
-        <div class="escuela-nombre">${e.nombre}</div>
-        <div class="escuela-director">Dir. ${directores}</div>
-        <div class="escuela-ciudad"><svg class="icon"><use href="#icon-map-pin"/></svg> ${e.lugar}, ${e.region}</div>
-        ${nActividades ? `<button type="button" class="btn-escuela escuela-actividades" onclick="verActividadesEscuela('${e.id}')" title="Ver las actividades de esta escuela en el blog">Ver Blog</button>` : ''}
-        <a href="#contacto" class="btn-escuela" data-escuela="${escuelaLabel(e)}">Inscribirme</a>
+      <div class="escuela-card" tabindex="0" style="animation-delay:${i * 50}ms" data-ficha="${e.id}">
+        <div class="escuela-card-head${conFoto.length > 1 ? ' duo' : ''}">
+          <button type="button" class="escuela-icon" data-insignia="${e.id}" title="Ampliar insignia de ${e.nombre}" aria-label="Ampliar insignia de ${e.nombre}"><img src="img/escuelas-insignias/${e.insignia}" alt="Insignia ${e.nombre}" loading="lazy" decoding="async"></button>
+          <span class="escuela-head-divider"></span>
+          ${fotosDirector ? `<div class="escuela-card-head-insts">${fotosDirector}</div>` : ''}
+        </div>
+        <div class="escuela-card-body">
+          <div class="escuela-nombre">${e.nombre}</div>
+          <div class="escuela-ciudad"><svg class="icon"><use href="#icon-map-pin"/></svg> ${escuelaUbicacion(e)}</div>
+          <div class="escuela-director">${directores}</div>
+          <button type="button" class="escuela-ficha-link" data-ficha="${e.id}" title="Ver la ficha de ${e.nombre}">Ver ficha completa</button>
+          <div class="escuela-card-actions${nActividades ? '' : ' solo'}">
+            ${nActividades ? `<button type="button" class="btn-escuela escuela-actividades" onclick="verActividadesEscuela('${e.id}')" title="Ver las actividades de esta escuela en el blog">Ver Blog</button>` : ''}
+            <a href="#contacto" class="btn-escuela" data-escuela="${escuelaLabel(e)}">Inscribirme</a>
+          </div>
+        </div>
       </div>`;
     }).join('');
     grid.querySelectorAll('.btn-escuela[data-escuela]').forEach(bindEscuelaCta);
-    grid.querySelectorAll('.escuela-director-link[data-instructor]').forEach(btn => {
+    grid.querySelectorAll('.escuela-director-link[data-instructor], .escuela-icon-inst[data-instructor]').forEach(btn => {
       btn.addEventListener('click', () => openInstructorPorNombre(btn.dataset.instructor));
+    });
+    grid.querySelectorAll('.escuela-icon[data-insignia]').forEach(btn => {
+      btn.addEventListener('click', () => openEscuelaInsignia(btn.dataset.insignia, btn));
+    });
+    grid.querySelectorAll('.escuela-ficha-link[data-ficha]').forEach(btn => {
+      btn.addEventListener('click', () => openEscuelaFicha(btn.dataset.ficha, btn));
+    });
+    // Toda la superficie vacía de la tarjeta también abre la ficha; los controles internos
+    // (marcos, director, botones del pie) conservan su acción propia.
+    grid.querySelectorAll('.escuela-card[data-ficha]').forEach(card => {
+      card.addEventListener('click', ev => {
+        if (ev.target.closest('button, a')) return;
+        openEscuelaFicha(card.dataset.ficha, card);
+      });
     });
   }
   renderEscuelasPager(totalPages);
@@ -5744,7 +6207,7 @@ function renderEscuelasSection() {
 // ↓ ↑ mueven ese cursor entre filas visibles. Al bajar desde la última fila de etiquetas,
 // el cursor entra a la grilla de tarjetas de resultados: ahí las flechas recorren las
 // tarjetas (en sus filas reales, ya que la grilla usa columnas fluidas), ↑ desde la primera
-// fila vuelve a las etiquetas, y Enter sobre una tarjeta activa su botón "Inscribirme".
+// fila vuelve a las etiquetas, y Enter sobre una tarjeta abre su ficha de escuela.
 (function() {
   let sectionInView = false;
   const section = document.getElementById('escuelas');
@@ -5809,6 +6272,7 @@ function renderEscuelasSection() {
     if (document.getElementById('lightbox')?.classList.contains('open')) return;
     if (document.getElementById('maestroModal')?.classList.contains('open')) return;
     if (document.getElementById('instructorModal')?.classList.contains('open')) return;
+    if (document.getElementById('escuelaModal')?.classList.contains('open')) return;
 
     const focusedCard = e.target.closest('#escuelasGrid .escuela-card');
 
@@ -5835,10 +6299,12 @@ function renderEscuelasSection() {
 
     if (e.key === 'Enter') {
       if (!focusedCard) return;
+      // Enter sobre un control interno de la tarjeta (insignia, foto o nombre del director,
+      // botones del pie) activa ese control con su comportamiento nativo.
+      if (e.target !== focusedCard && e.target.closest('button, a')) return;
       e.preventDefault();
-      // [data-escuela] apunta al CTA "Inscribirme" (el botón "Actividades" comparte la
-      // clase btn-escuela solo por estilo).
-      focusedCard.querySelector('.btn-escuela[data-escuela]')?.click();
+      // Enter sobre la tarjeta misma abre su ficha (igual que el click en su superficie vacía).
+      openEscuelaFicha(focusedCard.dataset.ficha, focusedCard);
       return;
     }
 
@@ -6043,6 +6509,7 @@ renderVideosGridAndPager();
     if (document.getElementById('lightbox')?.classList.contains('open')) return;
     if (document.getElementById('maestroModal')?.classList.contains('open')) return;
     if (document.getElementById('instructorModal')?.classList.contains('open')) return;
+    if (document.getElementById('escuelaModal')?.classList.contains('open')) return;
     const pager = document.getElementById('videosPager');
     if (!pager || !pager.children.length) return;
     const buttons = Array.from(pager.querySelectorAll('.pager-btn[data-page]'));
@@ -6165,6 +6632,7 @@ renderSeminariosGridAndPager();
     if (document.getElementById('lightbox')?.classList.contains('open')) return;
     if (document.getElementById('maestroModal')?.classList.contains('open')) return;
     if (document.getElementById('instructorModal')?.classList.contains('open')) return;
+    if (document.getElementById('escuelaModal')?.classList.contains('open')) return;
     if (document.getElementById('seminarioModal')?.classList.contains('open')) return;
     e.preventDefault();
     if (e.key === 'ArrowLeft') goPrevSeminarios(); else goNextSeminarios();
@@ -6760,6 +7228,7 @@ document.addEventListener('click', e => {
     if (document.getElementById('lightbox')?.classList.contains('open')) return;
     if (document.getElementById('maestroModal')?.classList.contains('open')) return;
     if (document.getElementById('instructorModal')?.classList.contains('open')) return;
+    if (document.getElementById('escuelaModal')?.classList.contains('open')) return;
     const tabsEl = document.getElementById('instructorTabs');
     if (!tabsEl || !tabsEl.children.length) return;
 
