@@ -904,6 +904,24 @@ section { padding: 6rem 2rem; }
   color: var(--secondary);
   margin-bottom: 0.3rem;
 }
+/* Director con tarjeta en Nuestros Instructores: mini-foto + nombre clickeables que
+   abren su modal de foto (el mismo de esa sección) sin salir de Escuelas. */
+.escuela-director-link {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  vertical-align: middle;
+  background: none; border: none; padding: 0;
+  font: inherit; color: inherit;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+.escuela-director-link:hover { color: var(--accent); }
+.escuela-director-link img {
+  width: 1.6rem; height: 1.6rem;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+  border: 1px solid rgba(228,87,46,0.45);
+}
 .escuela-ciudad {
   display: flex; align-items: center; gap: 0.4rem;
   font-family: 'Rajdhani', sans-serif;
@@ -5664,17 +5682,29 @@ function renderEscuelasGridAndPager() {
     empty.style.display = 'none';
     grid.innerHTML = pageItems.map((e, i) => {
       const nActividades = e.id ? actividadesDeEscuela(e.id).length : 0;
+      // Cada director con tarjeta en Nuestros Instructores se vuelve clickeable (mini-foto
+      // + nombre) y abre su modal de foto sin salir de la sección; si no tiene tarjeta,
+      // queda como texto plano. Soporta escuelas con más de un director ("X y Y").
+      const directores = e.director.split(/\s+y\s+/i).map(nombre => {
+        const inst = instructorPorNombreDirector(nombre.trim());
+        if (!inst) return nombre.trim();
+        const foto = instructorFotoSrc(inst.nombre);
+        return `<button type="button" class="escuela-director-link" data-instructor="${inst.nombre}" title="Conocer a ${inst.nombre}">${foto ? `<img src="${foto}" alt="${inst.nombre}" loading="lazy" decoding="async" onerror="this.remove()">` : ''}${nombre.trim()}</button>`;
+      }).join(' y ');
       return `
       <div class="escuela-card" tabindex="0" style="animation-delay:${i * 50}ms">
         <div class="escuela-icon"><img src="img/escuelas-insignias/${e.insignia}" alt="Insignia ${e.nombre}" loading="lazy" decoding="async"></div>
         <div class="escuela-nombre">${e.nombre}</div>
-        <div class="escuela-director">Dir. ${e.director}</div>
+        <div class="escuela-director">Dir. ${directores}</div>
         <div class="escuela-ciudad"><svg class="icon"><use href="#icon-map-pin"/></svg> ${e.lugar}, ${e.region}</div>
         ${nActividades ? `<button type="button" class="btn-escuela escuela-actividades" onclick="verActividadesEscuela('${e.id}')" title="Ver las actividades de esta escuela en el blog">Ver Blog</button>` : ''}
         <a href="#contacto" class="btn-escuela" data-escuela="${escuelaLabel(e)}">Inscribirme</a>
       </div>`;
     }).join('');
     grid.querySelectorAll('.btn-escuela[data-escuela]').forEach(bindEscuelaCta);
+    grid.querySelectorAll('.escuela-director-link[data-instructor]').forEach(btn => {
+      btn.addEventListener('click', () => openInstructorPorNombre(btn.dataset.instructor));
+    });
   }
   renderEscuelasPager(totalPages);
 }
@@ -5699,13 +5729,14 @@ function renderEscuelasPager(totalPages) {
   });
 }
 
+// El render inicial de esta sección corre junto al de Instructores (más abajo): las
+// tarjetas muestran al director clickeable, lo que requiere INSTRUCTORES ya definido.
 function renderEscuelasSection() {
   renderPaisTabs();
   renderRegionRow();
   renderComunaChips();
   renderEscuelasGridAndPager();
 }
-renderEscuelasSection();
 
 // Flechas del teclado en Nuestras Escuelas: activas mientras la sección está a la vista
 // (igual que el atajo "B" de buscar), sin necesidad de enfocar antes nada. En las etiquetas
@@ -6213,6 +6244,22 @@ function escuelaDeInstructor(nombreInstructor) {
   if (exacto) return exacto[1];
   const parcial = ESCUELA_POR_DIRECTOR.find(([key]) => key.includes(norm) || norm.includes(key));
   return parcial ? parcial[1] : null;
+}
+// Relación inversa: la tarjeta de instructor que corresponde a un nombre de director de
+// escuela (misma comparación por nombre normalizado, admite coincidencia parcial).
+function instructorPorNombreDirector(nombreDirector) {
+  const norm = normalizarTexto(nombreDirector);
+  return INSTRUCTORES.find(i => {
+    const n = normalizarTexto(i.nombre);
+    return n === norm || n.includes(norm) || norm.includes(n);
+  }) || null;
+}
+// Abre el modal de foto de un instructor desde fuera de su sección (p. ej. al hacer click
+// en el director dentro de la tarjeta de su escuela), sin depender de la página visible
+// de la grilla de instructores.
+function openInstructorPorNombre(nombre) {
+  const inst = INSTRUCTORES.find(i => i.nombre === nombre);
+  if (inst) openInstructorModal(0, [inst]);
 }
 // Etiquetas especiales de Instructores (no son un grado): se combinan con la lista de
 // grados en las tabs, pero se filtran por pertenencia en vez de por i.grado.
@@ -6818,8 +6865,11 @@ document.addEventListener('click', e => {
 // ── MODAL FOTO INSTRUCTOR ──
 let instructorModalIndex = -1;
 let instructorModalTrigger = null;
+// Lista sobre la que navega el modal: por defecto la página visible de la grilla de
+// instructores, pero puede ser otra (p. ej. solo el director al abrirlo desde su escuela).
+let instructorModalItems = [];
 function updateInstructorModalContent() {
-  const inst = currentInstructorPageItems[instructorModalIndex];
+  const inst = instructorModalItems[instructorModalIndex];
   const img = document.getElementById('instModalImg');
   img.src = instructorFotoSrc(inst.nombre);
   img.alt = inst.nombre;
@@ -6827,7 +6877,7 @@ function updateInstructorModalContent() {
   document.getElementById('instModalName').textContent = inst.nombre;
   const grupo = INSTRUCTOR_GRUPOS.find(g => g.grado === inst.grado);
   document.getElementById('instModalGrade').textContent = grupo ? grupo.titulo : inst.grado;
-  const total = currentInstructorPageItems.length;
+  const total = instructorModalItems.length;
   document.getElementById('instModalCounter').textContent = total > 1 ? `${instructorModalIndex + 1} / ${total}` : '';
 
   const escuela = escuelaDeInstructor(inst.nombre);
@@ -6860,13 +6910,14 @@ function updateInstructorModalContent() {
   }
   document.getElementById('instModalSocialWrap').innerHTML = instructorSocialItemsHTML(inst.nombre);
 }
-function openInstructorModal(idx) {
-  if (idx < 0 || idx >= currentInstructorPageItems.length) return;
+function openInstructorModal(idx, items) {
+  instructorModalItems = items || currentInstructorPageItems;
+  if (idx < 0 || idx >= instructorModalItems.length) return;
   instructorModalTrigger = document.activeElement;
   instructorModalIndex = idx;
   updateInstructorModalContent();
   const modal = document.getElementById('instructorModal');
-  modal.classList.toggle('is-gallery', currentInstructorPageItems.length > 1);
+  modal.classList.toggle('is-gallery', instructorModalItems.length > 1);
   modal.classList.add('open');
   requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add('is-open')));
   modal.querySelector('.lightbox-close').focus();
@@ -6881,7 +6932,7 @@ function closeInstructorModal() {
 }
 function navInstructorModal(delta) {
   if (instructorModalIndex === -1) return;
-  const total = currentInstructorPageItems.length;
+  const total = instructorModalItems.length;
   instructorModalIndex = (instructorModalIndex + delta + total) % total;
   updateInstructorModalContent();
 }
@@ -6895,6 +6946,9 @@ instructoresGrid.addEventListener('click', e => {
 });
 
 SECTION_SEARCH_OPENERS.instructores = openInstructorSearch;
+// Escuelas se renderiza recién aquí (y no junto a su definición) porque sus tarjetas
+// muestran al director clickeable con su foto, lo que requiere INSTRUCTORES definido.
+renderEscuelasSection();
 renderInstructoresSection();
 
 // Alterna escuela ⇄ cargo (con desvanecido cruzado, sin huecos en blanco) en las tarjetas
