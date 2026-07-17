@@ -6474,7 +6474,28 @@ const ESCUELAS = [
     },
     // Las 2 imágenes de cabecera de la página van primero, luego la galería del artículo.
     galeria: ['img/escuelas/manriquez/header-1.jpg', 'img/escuelas/manriquez/header-2.jpg', ...Array.from({ length: 16 }, (_, i) => `img/escuelas/manriquez/foto-${String(i + 1).padStart(2, '0')}.jpg`)] },
-  { id: 'perez', corto: 'Pérez', nombre: 'International Pérez Kenpo Studio', director: 'Francisco Pérez y Marcelo Pérez', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'Insignia-Hermanos-Perez.png' },
+  // Ficha extraída de kenpochile.cl/international-perez-kenpo-studio/: biografía de los
+  // hermanos, dos sedes con coordenadas reales (resueltas de sus enlaces de Google Maps),
+  // horarios por sede, contacto y Multimedia (2 cabeceras + 5 fotos en img/escuelas/perez/).
+  { id: 'perez', corto: 'Pérez', nombre: 'International Pérez Kenpo Studio', director: 'Francisco Pérez y Marcelo Pérez', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'Insignia-Hermanos-Perez.png',
+    historiaTitulo: 'Biografía',
+    historia: `
+      <p>Los instructores y hermanos Marcelo Pérez y Francisco Pérez formaron esta nueva escuela gracias a su compromiso y entrega hacia la comunidad. Ambos tienen una formación deportiva destacada, lo que, sumado a su propio entrenamiento con el maestro Vidal, ha consolidado sus conocimientos y los han puesto en práctica al formar a nuevos estudiantes.</p>`,
+    direcciones: [
+      { label: 'Central Gonzalo Pérez Llona 60, Maipú', query: '-33.5000948,-70.7567521' },
+      { label: 'Río Rhin 150, La Farfana, Maipú', query: '-33.4868826,-70.7745668' },
+    ],
+    horarios: [
+      { lugar: 'Central Gonzalo Pérez Llona 60', dias: 'Mar · Jue', nivel: 'Todas las edades', hora: '19:00–20:00' },
+      { lugar: 'Río Rhin 150, La Farfana', dias: 'Lun · Mié', nivel: 'Todas las edades', hora: '18:00–19:00' },
+      { lugar: 'Río Rhin 150, La Farfana', dias: 'Sábado', nivel: 'Todas las edades', hora: '11:00–12:00' },
+    ],
+    redes: {
+      whatsapp: 'https://wa.me/56945949293?text=' + encodeURIComponent('Contactado desde KenpoChile.cl'),
+      mail: 'mailto:fjperezc@gmail.com',
+    },
+    // Las 2 imágenes de cabecera de la página van primero, luego la galería del artículo.
+    galeria: ['img/escuelas/perez/header-1.jpg', 'img/escuelas/perez/header-2.jpg', ...Array.from({ length: 5 }, (_, i) => `img/escuelas/perez/foto-${String(i + 1).padStart(2, '0')}.jpg`)] },
   { id: 'lorca', corto: 'Lorca', nombre: 'International Lorca Kenpo Studio', director: 'Roberto Lorca Pacheco', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'Insignia-Roberto-Lorca.png' },
   { id: 'taller-maipu', corto: 'Taller Maipú', nombre: 'Taller de Kenpo Karate del departamento de deportes de la Ilustre Municipalidad de Maipú', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: ESCUELA_COMUNA_MUNICIPAL, lugar: 'Maipú · Depto. de Deportes', insignia: 'maipu_2021.png' },
   { id: 'ind', corto: 'IND', nombre: 'Instituto Nacional de Deportes', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: ESCUELA_COMUNA_MUNICIPAL, lugar: 'Maipú', insignia: 'IND.webp' },
@@ -7809,6 +7830,14 @@ const INSTRUCTOR_REDES = {
     instagram: 'https://www.instagram.com/pt.miguel_manriquez/',
     facebook: 'https://www.facebook.com/miguel.a.manriquez.12',
     whatsapp: 'https://wa.me/56987038283?text=' + encodeURIComponent('Contactado desde KenpoChile.cl'),
+  },
+  // WhatsApp de la escuela publicado en kenpochile.cl/international-perez-kenpo-studio/
+  // (compartido por ambos hermanos; la página no publica otras redes).
+  'Francisco Pérez': {
+    whatsapp: 'https://wa.me/56945949293?text=' + encodeURIComponent('Contactado desde KenpoChile.cl'),
+  },
+  'Marcelo Pérez': {
+    whatsapp: 'https://wa.me/56945949293?text=' + encodeURIComponent('Contactado desde KenpoChile.cl'),
   },
 };
 const INSTRUCTOR_SOCIAL_PLATFORMS = [
