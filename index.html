@@ -6520,7 +6520,29 @@ const ESCUELAS = [
   { id: 'ind', corto: 'IND', nombre: 'Instituto Nacional de Deportes', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: ESCUELA_COMUNA_MUNICIPAL, lugar: 'Maipú', insignia: 'IND.webp' },
   { id: 'gym-aleman', corto: 'Gimnasio Alemán', nombre: 'Gimnasio Alemán', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: ESCUELA_COMUNA_MUNICIPAL, lugar: 'Región Metropolitana', insignia: 'Gym-Aleman.webp' },
   { id: 'duoc', corto: 'DuocUC', nombre: 'DuocUC', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: ESCUELA_COMUNA_MUNICIPAL, lugar: 'Sedes Alameda, Maipú y Plaza Oeste', ubicacion: 'Región Metropolitana', insignia: 'Insignia-Duoc-v2-1.webp' },
-  { id: 'uz', corto: 'UZ', nombre: 'International UZ Kenpo Studio', director: 'Felipe Urra', region: 'Región Metropolitana', comuna: 'San Ramón', lugar: 'San Ramón', insignia: 'Insignia-Felipe-Urra-v2.webp' },
+  // Ficha extraída de kenpochile.cl/international-uz-kenpo-studio/: biografía, sede con
+  // coordenadas reales (resueltas de su enlace de Google Maps), horarios, contacto y
+  // Multimedia (2 cabeceras + diploma como foto-01, convertido de PNG a JPEG).
+  // Se omite el QR de WhatsApp de la página (equivale al número publicado).
+  { id: 'uz', corto: 'UZ', nombre: 'International UZ Kenpo Studio', director: 'Felipe Urra', region: 'Región Metropolitana', comuna: 'San Ramón', lugar: 'San Ramón', insignia: 'Insignia-Felipe-Urra-v2.webp',
+    historiaTitulo: 'Biografía',
+    historia: `
+      <p>Felipe Urra Zenteno es un destacado artista marcial y profesional chileno. Comienza sus estudios de Kenpo el año 2001 obteniendo su cinturón negro de 1er grado en 2023 y ha logrado importantes éxitos en su carrera deportiva, incluyendo ser campeón en categoría al punto en el torneo de Viña del Mar en 2002 y campeón en la categoría light contact en el torneo gimnasio Entretiempo de Santiago en 2004. Ha competido en diversos torneos en ciudades como Antofagasta, Valparaíso, Viña del Mar y Santiago, destacándose en cada uno de ellos.</p>
+      <p>Durante su etapa universitaria, fue representante de la sede Alameda de DuocUC entre 2001 y 2006, siendo reconocido como deportista destacado de esta sede en los años 2002 y 2003. Su dedicación y habilidades lo llevaron a formar parte de la Chinese Karate Federation (CKF), donde actualmente continúa su formación bajo la guía de su maestro Roberto Vidal.</p>
+      <p>Además de su carrera en las artes marciales, Felipe es un profesional altamente calificado, con títulos en Ingeniería Civil en Minas e Ingeniería en Construcción además de diplomados en la Universidad Católica de Chile. Su combinación de disciplina, tanto en el deporte como en su vida profesional, lo ha convertido en un ejemplo a seguir para muchos jóvenes deportistas y estudiantes.</p>`,
+    direcciones: [
+      { label: 'Argentina 1633, San Ramón (costado estadio municipal)', query: '-33.5314811,-70.6440322' },
+    ],
+    horarios: [
+      { lugar: 'Argentina 1633 (costado estadio municipal)', dias: 'Miércoles', nivel: 'Todas las edades', hora: '19:00' },
+      { lugar: 'Argentina 1633 (costado estadio municipal)', dias: 'Sábado', nivel: 'Todas las edades', hora: '11:30' },
+    ],
+    redes: {
+      whatsapp: 'https://wa.me/56973062449?text=' + encodeURIComponent('Contactado desde KenpoChile.cl'),
+      mail: 'mailto:ingeniero.furraz@gmail.com',
+    },
+    // Las 2 imágenes de cabecera de la página van primero, luego el diploma del artículo.
+    galeria: ['img/escuelas/uz/header-1.jpg', 'img/escuelas/uz/header-2.jpg', 'img/escuelas/uz/foto-01.jpg'] },
   { id: 'lagos', corto: 'Lagos', nombre: 'International Lagos Kenpo Karate Studio', director: 'Carlos Lagos', region: 'Región Metropolitana', comuna: 'Huechuraba', lugar: 'Huechuraba', insignia: 'Insignia-Carlos-Lagos.webp' },
   { id: 'lions-warriors', corto: 'Lions Warriors', nombre: 'Internacional Lions Warriors Kenpo Studio', director: 'Christian Vidal', region: 'Región de Ñuble', comuna: null, lugar: 'San Nicolás, Provincia de Punilla', insignia: 'INTERNATIONAL-LIONS-WARRIORS.webp' },
   { id: 'gtf', corto: 'GTF', nombre: 'Internacional GTF Kenpo Studio', director: 'Gisela Torres', region: 'Región del Biobío', comuna: null, lugar: 'San Pedro de la Paz, Provincia de Concepción', insignia: 'Insignia-Gisela-Torres-03.webp' },
@@ -7857,6 +7879,10 @@ const INSTRUCTOR_REDES = {
   },
   'Marcelo Pérez': {
     whatsapp: 'https://wa.me/56945949293?text=' + encodeURIComponent('Contactado desde KenpoChile.cl'),
+  },
+  // Contacto publicado en kenpochile.cl/international-uz-kenpo-studio/.
+  'Felipe Urra': {
+    whatsapp: 'https://wa.me/56973062449?text=' + encodeURIComponent('Contactado desde KenpoChile.cl'),
   },
   // Contacto publicado en kenpochile.cl/international-lorca-kenpo-studio/.
   'Roberto Lorca': {
