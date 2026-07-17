@@ -6601,7 +6601,29 @@ const ESCUELAS = [
     },
     // Las 2 imágenes de cabecera de la página van primero, luego la galería del artículo.
     galeria: ['img/escuelas/lions-warriors/header-1.jpg', 'img/escuelas/lions-warriors/header-2.jpg', ...Array.from({ length: 22 }, (_, i) => `img/escuelas/lions-warriors/foto-${String(i + 1).padStart(2, '0')}.jpg`)] },
-  { id: 'gtf', corto: 'GTF', nombre: 'Internacional GTF Kenpo Studio', director: 'Gisela Torres', region: 'Región del Biobío', comuna: null, lugar: 'San Pedro de la Paz, Provincia de Concepción', insignia: 'Insignia-Gisela-Torres-03.webp' },
+  // Ficha extraída de kenpochile.cl/internacional-gtf-kenpo-studio/: biografía, sede con
+  // coordenadas reales (resueltas de su enlace de Google Maps), horarios (los de la sección
+  // Información, más actuales que los de la biografía), contacto y Multimedia (2 cabeceras
+  // + 5 fotos del cuerpo del artículo + 36 de la galería). QR de WhatsApp omitido.
+  // Su entrada de blog ya está en BLOG_POSTS (gtf-san-pedro-de-la-paz).
+  { id: 'gtf', corto: 'GTF', nombre: 'Internacional GTF Kenpo Studio', director: 'Gisela Torres', region: 'Región del Biobío', comuna: null, lugar: 'San Pedro de la Paz, Provincia de Concepción', insignia: 'Insignia-Gisela-Torres-03.webp',
+    historiaTitulo: 'Biografía',
+    historia: `
+      <p>Gisela Torres Flores, de 44 años, es una destacada electricista titulada de la Universidad Técnica Federico Santa María. Su pasión por la educación la ha llevado a impartir clases relacionadas con su carrera y también en matemáticas. Desde inicios de 2017, Gisela inició junto a su hijo Andrew, de 10 años, el camino en el Kenpo, disciplina en la que ambos han alcanzado el grado de Black Belt «Probationary Black Belt», obtenido el 11 de enero 2025. Siempre ligada al deporte, Gisela ha ampliado sus conocimientos certificándose en entrenamiento deportivo para niños y adultos, entrenamiento de fuerza y defensa contra cuchillos.</p>
+      <p>Desde el 20 de agosto, Gisela comenzó oficialmente a funcionar con su escuela de Kenpo, en la que se imparten cuatro horarios diferentes los días lunes, miércoles y viernes, de 18:00 a 22:00 horas, en el Centro de Salud y Rehabilitación «TeCuido», ubicado en San Pedro de la Paz. Además, ofrece clases personalizadas en horarios diferentes, de acuerdo a la disponibilidad, brindando así opciones flexibles para sus alumnos.</p>`,
+    direcciones: [
+      { label: 'Maitén 475 (La Foresta 4), San Pedro de la Paz', query: '-36.8785146,-73.1307175' },
+    ],
+    horarios: [
+      { lugar: 'Maitén 475 (La Foresta 4)', dias: 'Lun a Vie', nivel: 'Todas las edades', hora: '18:00–21:00' },
+    ],
+    redes: {
+      whatsapp: 'https://wa.me/56973871181?text=' + encodeURIComponent('Contactado desde KenpoChile.cl'),
+      mail: 'mailto:gitftorres@hotmail.com',
+      instagram: 'https://www.instagram.com/International.gtf.kenpostudio/',
+    },
+    // Las 2 imágenes de cabecera de la página van primero, luego las fotos del artículo y la galería.
+    galeria: ['img/escuelas/gtf/header-1.jpg', 'img/escuelas/gtf/header-2.jpg', ...Array.from({ length: 41 }, (_, i) => `img/escuelas/gtf/foto-${String(i + 1).padStart(2, '0')}.jpg`)] },
   { id: 'calbuco', corto: 'Calbuco', nombre: 'Internacional Kenpo Karate Calbuco', director: 'Ramón Morales', region: 'Región de Los Lagos', comuna: null, lugar: 'Calbuco, Provincia de Llanquihue', insignia: 'Insignia-Calbuco.webp' },
   { id: 'pinto', corto: 'Pinto', nombre: 'International Pinto Kenpo Studio', director: 'Matías Raúl Pinto', region: 'Argentina', comuna: 'Córdoba', lugar: 'Córdoba, Provincia de Córdoba', insignia: 'International-Pinto-Kenpo-Studio.webp' },
 ];
@@ -7935,6 +7957,11 @@ const INSTRUCTOR_REDES = {
   },
   'Marcelo Pérez': {
     whatsapp: 'https://wa.me/56945949293?text=' + encodeURIComponent('Contactado desde KenpoChile.cl'),
+  },
+  // Contacto publicado en kenpochile.cl/internacional-gtf-kenpo-studio/.
+  'Gisela Torres': {
+    instagram: 'https://www.instagram.com/International.gtf.kenpostudio/',
+    whatsapp: 'https://wa.me/56973871181?text=' + encodeURIComponent('Contactado desde KenpoChile.cl'),
   },
   // Contacto publicado en kenpochile.cl/internacional-lions-warriors-kenpo-studio/.
   'Christian Vidal': {
