@@ -6496,7 +6496,26 @@ const ESCUELAS = [
     },
     // Las 2 imágenes de cabecera de la página van primero, luego la galería del artículo.
     galeria: ['img/escuelas/perez/header-1.jpg', 'img/escuelas/perez/header-2.jpg', ...Array.from({ length: 5 }, (_, i) => `img/escuelas/perez/foto-${String(i + 1).padStart(2, '0')}.jpg`)] },
-  { id: 'lorca', corto: 'Lorca', nombre: 'International Lorca Kenpo Studio', director: 'Roberto Lorca Pacheco', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'Insignia-Roberto-Lorca.png' },
+  // Ficha extraída de kenpochile.cl/international-lorca-kenpo-studio/: biografía, sede
+  // (la página no enlaza mapa, dirección como texto), horarios, contacto y Multimedia
+  // (2 cabeceras en img/escuelas/lorca/; el artículo no tiene galería de fotos).
+  { id: 'lorca', corto: 'Lorca', nombre: 'International Lorca Kenpo Studio', director: 'Roberto Lorca Pacheco', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'Insignia-Roberto-Lorca.png',
+    historiaTitulo: 'Biografía',
+    historia: `
+      <p>Roberto Lorca es instructor de Kenpo Karate y fundador de LKS Lorca Kenpo Studio, ubicado en la Junta de Vecinos Ciudad Jardín N°9, en la Villa Los Héroes de Maipú. Es alumno directo del instructor Aaron Torres, y tanto él como Aaron se encuentran bajo la dirección y supervisión del maestro Roberto Vidal. Actualmente, el instructor Lorca cuenta con el grado de Cinturón Negro y es miembro activo de la CKF/IVKS (Chinese Karate Federation / International Vidal Kenpo Studio).</p>
+      <p>Con una sólida formación técnica y una profunda pasión por el arte marcial, Roberto Lorca se dedica a transmitir los valores del Kenpo, guiado por el lema «Live the way» / «Vive el camino». El principal objetivo de LKS Lorca Kenpo Studio es el desarrollo integral de sus alumnos, promoviendo la disciplina, el respeto y la confianza en sí mismos, tanto dentro como fuera del tatami.</p>`,
+    direcciones: [
+      { label: 'Junta de Vecinos Ciudad Jardín N°9, Villa Los Héroes, Maipú', query: 'Junta de Vecinos Ciudad Jardín N°9, Villa Los Héroes, Maipú, Chile' },
+    ],
+    horarios: [
+      { lugar: 'Junta de Vecinos Ciudad Jardín N°9, Villa Los Héroes', dias: 'Mar · Vie', nivel: 'Todas las edades', hora: '19:30–21:00' },
+    ],
+    redes: {
+      whatsapp: 'https://wa.me/56976684967?text=' + encodeURIComponent('Contactado desde KenpoChile.cl'),
+      instagram: 'https://www.instagram.com/lorcakenpostudio/',
+    },
+    // Las 2 imágenes de cabecera de la página van primero; el artículo no tiene galería.
+    galeria: ['img/escuelas/lorca/header-1.jpg', 'img/escuelas/lorca/header-2.jpg'] },
   { id: 'taller-maipu', corto: 'Taller Maipú', nombre: 'Taller de Kenpo Karate del departamento de deportes de la Ilustre Municipalidad de Maipú', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: ESCUELA_COMUNA_MUNICIPAL, lugar: 'Maipú · Depto. de Deportes', insignia: 'maipu_2021.png' },
   { id: 'ind', corto: 'IND', nombre: 'Instituto Nacional de Deportes', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: ESCUELA_COMUNA_MUNICIPAL, lugar: 'Maipú', insignia: 'IND.webp' },
   { id: 'gym-aleman', corto: 'Gimnasio Alemán', nombre: 'Gimnasio Alemán', director: 'Roberto Vidal C.', region: 'Región Metropolitana', comuna: ESCUELA_COMUNA_MUNICIPAL, lugar: 'Región Metropolitana', insignia: 'Gym-Aleman.webp' },
@@ -7838,6 +7857,11 @@ const INSTRUCTOR_REDES = {
   },
   'Marcelo Pérez': {
     whatsapp: 'https://wa.me/56945949293?text=' + encodeURIComponent('Contactado desde KenpoChile.cl'),
+  },
+  // Contacto publicado en kenpochile.cl/international-lorca-kenpo-studio/.
+  'Roberto Lorca': {
+    instagram: 'https://www.instagram.com/lorcakenpostudio/',
+    whatsapp: 'https://wa.me/56976684967?text=' + encodeURIComponent('Contactado desde KenpoChile.cl'),
   },
 };
 const INSTRUCTOR_SOCIAL_PLATFORMS = [
