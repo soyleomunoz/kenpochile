@@ -6576,7 +6576,31 @@ const ESCUELAS = [
     },
     // Las 2 imágenes de cabecera de la página van primero, luego la galería del artículo.
     galeria: ['img/escuelas/lagos/header-1.jpg', 'img/escuelas/lagos/header-2.jpg', ...Array.from({ length: 11 }, (_, i) => `img/escuelas/lagos/foto-${String(i + 1).padStart(2, '0')}.jpg`)] },
-  { id: 'lions-warriors', corto: 'Lions Warriors', nombre: 'Internacional Lions Warriors Kenpo Studio', director: 'Christian Vidal', region: 'Región de Ñuble', comuna: null, lugar: 'San Nicolás, Provincia de Punilla', insignia: 'INTERNATIONAL-LIONS-WARRIORS.webp' },
+  // Ficha extraída de kenpochile.cl/internacional-lions-warriors-kenpo-studio/: biografía,
+  // sede con coordenadas reales (resueltas de su enlace de Google Maps), horarios, contacto
+  // y Multimedia (2 cabeceras + 22 fotos de la galería). La página publica además el
+  // WhatsApp de la coordinadora María de los Ángeles Godoy (+56 9 7905 2462); la ficha solo
+  // muestra un WhatsApp por escuela, se usa el del instructor. QR de WhatsApp omitido.
+  { id: 'lions-warriors', corto: 'Lions Warriors', nombre: 'Internacional Lions Warriors Kenpo Studio', director: 'Christian Vidal', region: 'Región de Ñuble', comuna: null, lugar: 'San Nicolás, Provincia de Punilla', insignia: 'INTERNATIONAL-LIONS-WARRIORS.webp',
+    historiaTitulo: 'Biografía',
+    historia: `
+      <p>Christian Vidal Espinoza, titulado como Ingeniero Industrial de la Universidad Andrés Bello, Constructor Civil del Instituto Profesional AIEP y Técnico Superior en Construcción del Instituto Profesional Duoc UC, comenzó su interés por las artes marciales en 1994 influenciado por su tío Ángel Vidal, cinturón café en Karate Shotokan. Inició formalmente en la academia Shaolin Chan Kung Fu en 2001. Estudió Kenpo Karate en Duoc UC bajo la guía del Maestro Roberto Vidal, luego continuó su práctica en la municipalidad de Cerrillos, motivado por su esposa María de Los Ángeles Godoy. Participó en talleres deportivos y clases en Maipú y DUOC UC, destacándose como alumno.</p>
+      <p>Actualmente, avanza en Kenpo CKF con el Sr. Aarón Torres, director de la escuela International Cáliga Kenpo Studio y colaborador del Maestro Vidal. Christian es instructor y director de la escuela Lions Warriors en San Nicolás, Ñuble. El proyecto busca promover el Kenpo como sistema de defensa personal entre niños y adolescentes, fortaleciendo autoestima y valores como respeto, disciplina y trabajo en equipo, con el apoyo de la familia Vidal-Godoy.</p>`,
+    direcciones: [
+      { label: 'Sede Vecinal Población Nuevo Amanecer, Ángela Valladares esq. La Quintrala, San Nicolás', query: '-36.4997399,-72.2155477' },
+    ],
+    horarios: [
+      { lugar: 'Sede Vecinal Población Nuevo Amanecer', dias: 'Martes', nivel: 'Todas las edades', hora: '19:00–20:00' },
+      { lugar: 'Sede Vecinal Población Nuevo Amanecer', dias: 'Sábado', nivel: 'Niños', hora: '17:00–18:00' },
+      { lugar: 'Sede Vecinal Población Nuevo Amanecer', dias: 'Sábado', nivel: 'Adultos', hora: '18:00–19:00' },
+    ],
+    redes: {
+      whatsapp: 'https://wa.me/56979054108?text=' + encodeURIComponent('Contactado desde KenpoChile.cl'),
+      mail: 'mailto:lwarriors.kenpo@gmail.com',
+      facebook: 'https://www.facebook.com/christian.vidal.9803',
+    },
+    // Las 2 imágenes de cabecera de la página van primero, luego la galería del artículo.
+    galeria: ['img/escuelas/lions-warriors/header-1.jpg', 'img/escuelas/lions-warriors/header-2.jpg', ...Array.from({ length: 22 }, (_, i) => `img/escuelas/lions-warriors/foto-${String(i + 1).padStart(2, '0')}.jpg`)] },
   { id: 'gtf', corto: 'GTF', nombre: 'Internacional GTF Kenpo Studio', director: 'Gisela Torres', region: 'Región del Biobío', comuna: null, lugar: 'San Pedro de la Paz, Provincia de Concepción', insignia: 'Insignia-Gisela-Torres-03.webp' },
   { id: 'calbuco', corto: 'Calbuco', nombre: 'Internacional Kenpo Karate Calbuco', director: 'Ramón Morales', region: 'Región de Los Lagos', comuna: null, lugar: 'Calbuco, Provincia de Llanquihue', insignia: 'Insignia-Calbuco.webp' },
   { id: 'pinto', corto: 'Pinto', nombre: 'International Pinto Kenpo Studio', director: 'Matías Raúl Pinto', region: 'Argentina', comuna: 'Córdoba', lugar: 'Córdoba, Provincia de Córdoba', insignia: 'International-Pinto-Kenpo-Studio.webp' },
@@ -7911,6 +7935,11 @@ const INSTRUCTOR_REDES = {
   },
   'Marcelo Pérez': {
     whatsapp: 'https://wa.me/56945949293?text=' + encodeURIComponent('Contactado desde KenpoChile.cl'),
+  },
+  // Contacto publicado en kenpochile.cl/internacional-lions-warriors-kenpo-studio/.
+  'Christian Vidal': {
+    facebook: 'https://www.facebook.com/christian.vidal.9803',
+    whatsapp: 'https://wa.me/56979054108?text=' + encodeURIComponent('Contactado desde KenpoChile.cl'),
   },
   // Contacto publicado en kenpochile.cl/international-lagos-kenpo-karate-studio/.
   'Carlos Lagos': {
