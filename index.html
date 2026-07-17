@@ -6543,7 +6543,39 @@ const ESCUELAS = [
     },
     // Las 2 imágenes de cabecera de la página van primero, luego el diploma del artículo.
     galeria: ['img/escuelas/uz/header-1.jpg', 'img/escuelas/uz/header-2.jpg', 'img/escuelas/uz/foto-01.jpg'] },
-  { id: 'lagos', corto: 'Lagos', nombre: 'International Lagos Kenpo Karate Studio', director: 'Carlos Lagos', region: 'Región Metropolitana', comuna: 'Huechuraba', lugar: 'Huechuraba', insignia: 'Insignia-Carlos-Lagos.webp' },
+  // Ficha extraída de kenpochile.cl/international-lagos-kenpo-karate-studio/: biografía
+  // (con sus subtítulos como h4), sede con coordenadas reales (resueltas de su enlace de
+  // Google Maps), horarios, contacto y Multimedia (2 cabeceras + 11 fotos de la galería).
+  // Se omite el QR de WhatsApp de la página (equivale al número publicado).
+  { id: 'lagos', corto: 'Lagos', nombre: 'International Lagos Kenpo Karate Studio', director: 'Carlos Lagos', region: 'Región Metropolitana', comuna: 'Huechuraba', lugar: 'Huechuraba', insignia: 'Insignia-Carlos-Lagos.webp',
+    fundada: 2025,
+    historiaTitulo: 'Biografía',
+    historia: `
+      <p><strong>Instructor Carlos Lagos</strong> · Cinturón Negro 1er Dan – Kenpo Karate · International Lagos Kenpo Karate Studio (ILKKS)</p>
+      <h4>Trayectoria en Kenpo Karate</h4>
+      <p>Mi camino en el arte marcial del Kenpo Karate comenzó en septiembre de 2013, cuando ingresé a la escuela Dojo MASS, en su sede de Independencia. Desde entonces, he mantenido un compromiso constante con la disciplina, el aprendizaje y la superación personal.</p>
+      <p>Con el paso de los años, mi progreso técnico y formativo me llevó a trasladarme en 2021 a la sede Dojo MASS Lo Prado, donde alcancé los tres grados de Cinturón Café y obtuve el Grado de Monitor, reconocimiento que marcó un importante avance en mi trayectoria.</p>
+      <h4>Fundación de Filiales y Desarrollo Profesional</h4>
+      <p>Ese mismo año, impulsado por el deseo de compartir el arte del Kenpo, asumí el desafío de fundar una nueva filial: Dojo MASS Huechuraba. El proyecto comenzó en un parque local y posteriormente se consolidó en la Villa René Escauriza, donde adquirí valiosa experiencia en enseñanza, liderazgo y gestión dentro del ámbito marcial.</p>
+      <p>A comienzos de 2023, decidí enfocar mi desarrollo de manera más personal, continuando mi formación bajo la guía del Maestro René Huaquimil, Director de Dojo MASS. Este proceso culminó con un importante logro: en marzo de 2025 obtuve mi Cinturón Negro 1er Dan, consolidando así más de una década de dedicación al Kenpo Karate.</p>
+      <h4>Transición a International Lagos Kenpo Karate Studio (ILKKS)</h4>
+      <p>En septiembre de 2025, con el objetivo de buscar nuevas oportunidades de crecimiento y perfeccionamiento en mi camino marcial, di un paso significativo. Me integré como miembro a la CKF (Chinese Karate Federation) y a la escuela del Maestro Roberto Vidal (8º Dan).</p>
+      <p>Esta transición culminó con la creación oficial de nuestro nuevo dojo, al que nombramos International Lagos Kenpo Karate Studio (ILKKS).</p>
+      <p>Actualmente, desarrollo mi práctica y labor docente en ILKKS, sede Valle Verde, ubicada en Avenida El Sauce 1850, Huechuraba, donde continúo perfeccionando mis conocimientos y transmitiendo la filosofía del Kenpo a nuevas generaciones de practicantes.</p>`,
+    direcciones: [
+      { label: 'Av. El Sauce 1850, Sede Valle Verde, Huechuraba', query: '-33.35986,-70.6813478' },
+    ],
+    horarios: [
+      { lugar: 'Sede Valle Verde, Av. El Sauce 1850', dias: 'Lun · Mié (excepto festivos)', nivel: 'Todas las edades', hora: '19:30–21:00' },
+    ],
+    redes: {
+      whatsapp: 'https://wa.me/56997459273?text=' + encodeURIComponent('Contactado desde KenpoChile.cl'),
+      mail: 'mailto:carlosalbertolagoscaro69@gmail.com',
+      facebook: 'https://www.facebook.com/profile.php?id=100079896505645',
+      instagram: 'https://www.instagram.com/internationalkenpokarate_lagos',
+    },
+    // Las 2 imágenes de cabecera de la página van primero, luego la galería del artículo.
+    galeria: ['img/escuelas/lagos/header-1.jpg', 'img/escuelas/lagos/header-2.jpg', ...Array.from({ length: 11 }, (_, i) => `img/escuelas/lagos/foto-${String(i + 1).padStart(2, '0')}.jpg`)] },
   { id: 'lions-warriors', corto: 'Lions Warriors', nombre: 'Internacional Lions Warriors Kenpo Studio', director: 'Christian Vidal', region: 'Región de Ñuble', comuna: null, lugar: 'San Nicolás, Provincia de Punilla', insignia: 'INTERNATIONAL-LIONS-WARRIORS.webp' },
   { id: 'gtf', corto: 'GTF', nombre: 'Internacional GTF Kenpo Studio', director: 'Gisela Torres', region: 'Región del Biobío', comuna: null, lugar: 'San Pedro de la Paz, Provincia de Concepción', insignia: 'Insignia-Gisela-Torres-03.webp' },
   { id: 'calbuco', corto: 'Calbuco', nombre: 'Internacional Kenpo Karate Calbuco', director: 'Ramón Morales', region: 'Región de Los Lagos', comuna: null, lugar: 'Calbuco, Provincia de Llanquihue', insignia: 'Insignia-Calbuco.webp' },
@@ -7879,6 +7911,12 @@ const INSTRUCTOR_REDES = {
   },
   'Marcelo Pérez': {
     whatsapp: 'https://wa.me/56945949293?text=' + encodeURIComponent('Contactado desde KenpoChile.cl'),
+  },
+  // Contacto publicado en kenpochile.cl/international-lagos-kenpo-karate-studio/.
+  'Carlos Lagos': {
+    instagram: 'https://www.instagram.com/internationalkenpokarate_lagos',
+    facebook: 'https://www.facebook.com/profile.php?id=100079896505645',
+    whatsapp: 'https://wa.me/56997459273?text=' + encodeURIComponent('Contactado desde KenpoChile.cl'),
   },
   // Contacto publicado en kenpochile.cl/international-uz-kenpo-studio/.
   'Felipe Urra': {
