@@ -5421,6 +5421,51 @@ const BLOG_POSTS = [
       </ul>
       <p>Porque el Kenpo no solo se entrena… <strong>se vive</strong>. ¡Inscríbete y comienza tu camino marcial con nosotros!</p>`
   },
+  // Torneo interno organizado por Manríquez con Cornejo y el apoyo de Véliz: etiquetado a
+  // las tres escuelas para que aparezca en las Actividades de sus fichas.
+  {
+    id: 'hermandad-marcial-2024', cat: 'Noticias', fecha: '2024-09-10', escuelas: ['manriquez', 'cornejo', 'veliz'],
+    titulo: 'Torneo Interno de Formas «Hermandad Marcial»: un éxito en la comunidad de Kenpo',
+    img: 'https://kenpochile.cl/wp-content/uploads/2024/09/portada-400x250.jpg',
+    imgFull: 'https://kenpochile.cl/wp-content/uploads/2024/09/portada.jpg',
+    url: 'https://kenpochile.cl/torneo-interno-de-formas-hermandad-marcial-un-exito-en-la-comunidad-de-kenpo/',
+    excerpt: 'El torneo interno de formas «Hermandad Marcial» reunió en Maipú a las escuelas Manríquez, Cornejo y Véliz, con competidores de las categorías Kids, Junior y Juvenil.',
+    contenido: `
+      <p>El pasado sábado 7 de septiembre, se llevó a cabo el esperado torneo interno de formas <strong>«Hermandad Marcial»</strong>, organizado por la escuela <strong>International Manríquez Kenpo Studio</strong>, liderada por el instructor Miguel Ángel Manríquez, en colaboración con la escuela <strong>International Cornejo Kenpo Studio</strong> del instructor Daniel Cornejo. Este evento también contó con el apoyo del instructor <strong>Edgardo Véliz</strong>, de la escuela International Véliz Kenpo Studio, situada en Concón.</p>
+      <p>El torneo tuvo lugar en la academia Fit Dance Party, ubicada en Primera Transversal 3045, Maipú, donde los estudiantes de distintas escuelas y categorías compitieron demostrando su dedicación, técnica y espíritu marcial.</p>
+      <h4>Categorías y ganadores</h4>
+      <p>El torneo abarcó tres categorías principales: Kids, Junior y Juvenil, con un destacado nivel de competencia entre los participantes.</p>
+      <p><strong>Categoría Kids:</strong></p>
+      <ul>
+        <li>Isidora Aravena Arriagada – Blanco</li>
+        <li>Benjamín Castagnet Muñoz – Blanco</li>
+        <li>Simón Benítez Romero – Blanco</li>
+        <li>Amparo Flores Lara – Blanco</li>
+        <li>Alina Fernández Reyes – Amarillo Tiger</li>
+        <li>Chriss Guerra Toro – Blanco</li>
+      </ul>
+      <p><strong>Categoría Junior:</strong></p>
+      <ul>
+        <li>1er lugar: Alonso Belmar Polanco – Amarillo</li>
+        <li>2do lugar: Trinidad Fernández Reyes – Amarillo</li>
+        <li>3er lugar: María Cornejo Hernández – Naranjo</li>
+      </ul>
+      <p><strong>Categoría Juvenil:</strong></p>
+      <ul>
+        <li>1er lugar: Camila Manríquez Délano – Black Belt</li>
+        <li>2do lugar: Agustín Parodi – Rojo/Verde</li>
+        <li>3er lugar: Pascal Silva Guzmán – Púrpura</li>
+      </ul>
+      <p><strong>Mención honrosa:</strong></p>
+      <ul>
+        <li>Florencia Manríquez Délano – Verde</li>
+        <li>Pedro Molina Reyes – Café, 2do grado</li>
+      </ul>
+      <p>Cada competidor demostró no solo habilidades técnicas, sino también un fuerte sentido de disciplina y camaradería, valores fundamentales en el Kenpo.</p>
+      <h4>Invitación abierta a la comunidad</h4>
+      <p>Este torneo no solo fue una competencia, sino una verdadera celebración de la Hermandad Marcial entre las escuelas de Kenpo. Queremos invitar a todos aquellos interesados en las artes marciales a unirse a cualquiera de nuestras academias para comenzar su camino en el Kenpo: International Manríquez Kenpo Studio (Maipú), International Cornejo Kenpo Studio (Maipú) e International Véliz Kenpo Studio (Concón).</p>
+      <p>¡No pierdas la oportunidad de formar parte de esta gran familia marcial y desarrollar habilidades físicas, mentales y espirituales en un ambiente de respeto y aprendizaje constante! Si te apasiona el Kenpo o estás buscando un nuevo desafío, nuestras puertas están abiertas. ¡Te esperamos!</p>`
+  },
   // Actividades de la escuela Orellana (Kenpo Karate Vicuña), extraídas de los artículos
   // publicados en kenpochile.cl y enlazadas a su ficha vía escuelas: ['orellana'].
   {
@@ -6064,7 +6109,26 @@ const ESCUELAS = [
     },
     galeria: Array.from({ length: 60 }, (_, i) => `img/escuelas/orellana/foto-${String(i + 1).padStart(2, '0')}.jpeg`) },
   { id: 'illapel', corto: 'Illapel', nombre: 'Escuela Kenpo Karate Illapel', director: 'Alejandro Luna', region: 'Región de Coquimbo', comuna: null, lugar: 'Illapel, Provincia de Choapa', insignia: 'Insignia-Illapel.webp' },
-  { id: 'veliz', corto: 'Véliz', nombre: 'International Véliz Kenpo Studio', director: 'Edgardo Véliz', region: 'Región de Valparaíso', comuna: null, lugar: 'Concón', insignia: 'Insignia-Edgardo-Concon.webp' },
+  // Ficha completa extraída de kenpochile.cl/international-veliz-kenpo-studio/: biografía,
+  // sede con coordenadas reales (resueltas de su enlace de Google Maps), horario, redes de
+  // contacto y las 20 fotos de su sección Multimedia (descargadas a img/escuelas/veliz/).
+  { id: 'veliz', corto: 'Véliz', nombre: 'International Véliz Kenpo Studio', director: 'Edgardo Véliz', region: 'Región de Valparaíso', comuna: null, lugar: 'Concón', insignia: 'Insignia-Edgardo-Concon.webp',
+    fundada: 2019,
+    historiaTitulo: 'Biografía',
+    historia: `
+      <p>La escuela International Véliz Kenpo Studio fue creada en octubre de 2019. El instructor Edgardo Véliz, después de haber entrenado por más de 20 años, quiso mostrar a su grupo de amistades este hermoso arte formando su propia escuela, manteniéndose de forma independiente. Desde el año 2022, decide formar parte de la organización internacional CKF bajo la instrucción del maestro Roberto Vidal y así perfeccionar este hermoso arte y aprender todo consejo técnico y experiencia del maestro Vidal.</p>`,
+    direcciones: [
+      { label: 'Av. Alerce 77, Sede Vecinal, Concón, Valparaíso', query: '-32.9359726,-71.5423166' },
+    ],
+    horarios: [
+      { lugar: 'Sede Vecinal, Av. Alerce 77', dias: 'Mar · Jue · Sáb', nivel: 'Todas las edades', hora: '19:00–21:00' },
+    ],
+    redes: {
+      whatsapp: 'https://wa.me/56933244436?text=' + encodeURIComponent('Contactado desde KenpoChile.cl'),
+      mail: 'mailto:raulvial2@gmail.com',
+      facebook: 'https://www.facebook.com/edgardo.veliz.167',
+    },
+    galeria: Array.from({ length: 20 }, (_, i) => `img/escuelas/veliz/foto-${String(i + 1).padStart(2, '0')}.jpeg`) },
   { id: 'zumaeta', corto: 'Zumaeta', nombre: 'International Zumaeta Kenpo Studio', director: 'Rodrigo Zumaeta', region: 'Región Metropolitana', comuna: 'Las Condes', lugar: 'Las Condes', insignia: 'Insignia-Rodrigo-Zumaeta-transp.webp' },
   { id: 'rising-dragons', corto: 'Rising Dragons', nombre: 'International Rising Dragons Kenpo Studio', director: 'María Elena Araya', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'International-Rising-Dragons-Kenpo-Studio.webp' },
   { id: 'fighter-dragons', corto: 'Fighter Dragons', nombre: 'International Fighter Dragons Kenpo Studio', director: 'Karina Gatica', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'Insignia-Karina-Gatica.webp' },
@@ -7371,6 +7435,11 @@ const INSTRUCTOR_REDES = {
     instagram: 'https://www.instagram.com/kenpokaratevicuna/',
     facebook: 'https://www.facebook.com/profile.php?id=100007270937748',
     whatsapp: 'https://wa.me/56954080247?text=' + encodeURIComponent('Contactado desde KenpoChile.cl'),
+  },
+  // Redes publicadas en kenpochile.cl/international-veliz-kenpo-studio/.
+  'Edgardo Véliz': {
+    facebook: 'https://www.facebook.com/edgardo.veliz.167',
+    whatsapp: 'https://wa.me/56933244436?text=' + encodeURIComponent('Contactado desde KenpoChile.cl'),
   },
 };
 const INSTRUCTOR_SOCIAL_PLATFORMS = [
