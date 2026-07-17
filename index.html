@@ -6207,7 +6207,8 @@ const ESCUELAS = [
       facebook: 'https://www.facebook.com/profile.php?id=100007270937748',
       instagram: 'https://www.instagram.com/kenpokaratevicuna/',
     },
-    galeria: Array.from({ length: 60 }, (_, i) => `img/escuelas/orellana/foto-${String(i + 1).padStart(2, '0')}.jpeg`) },
+    // La imagen de cabecera de la página va primero, seguida de la galería del artículo.
+    galeria: ['img/escuelas/orellana/header-1.jpg', ...Array.from({ length: 60 }, (_, i) => `img/escuelas/orellana/foto-${String(i + 1).padStart(2, '0')}.jpeg`)] },
   { id: 'illapel', corto: 'Illapel', nombre: 'Escuela Kenpo Karate Illapel', director: 'Alejandro Luna', region: 'Región de Coquimbo', comuna: null, lugar: 'Illapel, Provincia de Choapa', insignia: 'Insignia-Illapel.webp' },
   // Ficha completa extraída de kenpochile.cl/international-veliz-kenpo-studio/: biografía,
   // sede con coordenadas reales (resueltas de su enlace de Google Maps), horario, redes de
@@ -6252,7 +6253,8 @@ const ESCUELAS = [
       facebook: 'https://www.facebook.com/mariaelena.arayacortes',
       instagram: 'https://www.instagram.com/maria.elena.araya/',
     },
-    galeria: Array.from({ length: 8 }, (_, i) => `img/escuelas/rising-dragons/foto-${String(i + 1).padStart(2, '0')}.jpg`) },
+    // La imagen de cabecera de la página va primero, seguida de la galería del artículo.
+    galeria: ['img/escuelas/rising-dragons/header-1.jpg', ...Array.from({ length: 8 }, (_, i) => `img/escuelas/rising-dragons/foto-${String(i + 1).padStart(2, '0')}.jpg`)] },
   // Ficha extraída de kenpochile.cl/international-fighter-dragons-kenpo-studio/: sede con
   // coordenadas reales, horarios, redes y las 27 fotos de Multimedia (en
   // img/escuelas/fighter-dragons/). La página no publica biografía (solo el placeholder
@@ -6271,8 +6273,22 @@ const ESCUELAS = [
       facebook: 'https://www.facebook.com/profile.php?id=100076207989811',
       instagram: 'https://www.instagram.com/faraonagaticab/',
     },
-    galeria: Array.from({ length: 27 }, (_, i) => `img/escuelas/fighter-dragons/foto-${String(i + 1).padStart(2, '0')}.jpg`) },
-  { id: 'caliga', corto: 'Caliga', nombre: 'International Caliga Kenpo Studio', director: 'Aaron Torres', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'Torres_lineaje.webp' },
+    // La imagen de cabecera de la página va primero, seguida de la galería del artículo.
+    galeria: ['img/escuelas/fighter-dragons/header-1.jpg', ...Array.from({ length: 27 }, (_, i) => `img/escuelas/fighter-dragons/foto-${String(i + 1).padStart(2, '0')}.jpg`)] },
+  // Ficha extraída de kenpochile.cl/international-caliga-kenpo-studio/: biografía y
+  // WhatsApp. La página aún no publica dirección, horarios, correo ni fotos (su sección
+  // Información trae solo los placeholders del editor), por eso esos bloques no van y el
+  // mapa queda referencial de la comuna.
+  { id: 'caliga', corto: 'Caliga', nombre: 'International Caliga Kenpo Studio', director: 'Aaron Torres', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'Torres_lineaje.webp',
+    historiaTitulo: 'Biografía',
+    historia: `
+      <p>Aaron Torres es un apasionado deportista y dedicado instructor de artes marciales. Actualmente ostenta el rango de 2nd Degree Black Belt «Associate Instructor» y es miembro de la Chinese Karate Federation (CKF) bajo la tutela de su maestro, Roberto Vidal. Aaron enseña en su escuela, el International Caliga Kenpo Studio, donde comparte su amor por las artes marciales con sus estudiantes.</p>
+      <p>Con una profunda pasión por el deporte y la enseñanza, Aaron se esfuerza por inspirar y motivar a sus alumnos, ayudándolos a alcanzar sus metas personales y a desarrollar habilidades tanto físicas como mentales. Su dedicación y entusiasmo hacen de él un instructor muy querido y respetado en la comunidad de artes marciales.</p>`,
+    redes: {
+      whatsapp: 'https://wa.me/56998112526?text=' + encodeURIComponent('Contactado desde KenpoChile.cl'),
+    },
+    // Imágenes de cabecera de la página (foto del instructor y afiche de la escuela).
+    galeria: ['img/escuelas/caliga/header-1.jpg', 'img/escuelas/caliga/header-2.jpg'] },
   { id: 'cornejo', corto: 'Cornejo', nombre: 'International Cornejo Kenpo Studio', director: 'Daniel Cornejo', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'INTERNATIONAL-CORNEJO-v2.webp' },
   { id: 'manriquez', corto: 'Manríquez', nombre: 'International Manríquez Kenpo Studio', director: 'Miguel Ángel Manríquez', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'International-Manriquez-Kenpo-Studio.webp' },
   { id: 'perez', corto: 'Pérez', nombre: 'International Pérez Kenpo Studio', director: 'Francisco Pérez y Marcelo Pérez', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'Insignia-Hermanos-Perez.png' },
@@ -7593,6 +7609,11 @@ const INSTRUCTOR_REDES = {
     instagram: 'https://www.instagram.com/faraonagaticab/',
     facebook: 'https://www.facebook.com/profile.php?id=100076207989811',
     whatsapp: 'https://wa.me/56951115866?text=' + encodeURIComponent('Contactado desde KenpoChile.cl'),
+  },
+  // WhatsApp publicado en kenpochile.cl/international-caliga-kenpo-studio/ (la página no
+  // publica más redes).
+  'Aaron Torres': {
+    whatsapp: 'https://wa.me/56998112526?text=' + encodeURIComponent('Contactado desde KenpoChile.cl'),
   },
 };
 const INSTRUCTOR_SOCIAL_PLATFORMS = [
