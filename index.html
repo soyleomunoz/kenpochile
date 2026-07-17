@@ -2177,12 +2177,11 @@ button.escuela-icon:hover {
   border: 1px solid rgba(245,166,35,0.4); color: var(--accent);
   padding: 0.18rem 0.65rem; border-radius: 50px;
 }
+/* Contenido de la ficha en una sola columna a lo ancho del modal: biografía, horarios,
+   contacto, ubicación y, al final, Multimedia y Actividades. */
 .escuela-modal-cols {
-  display: grid; grid-template-columns: 1.15fr 1fr; gap: 2rem;
+  display: grid; grid-template-columns: 1fr; gap: 1.8rem;
   padding: 1.4rem 2.2rem 1.8rem;
-}
-@media (max-width: 720px) {
-  .escuela-modal-cols { grid-template-columns: 1fr; }
 }
 @media (max-width: 480px) {
   .escuela-modal-hero { padding: 1.3rem 1.25rem; }
@@ -2206,7 +2205,7 @@ button.escuela-icon:hover {
 }
 .escuela-modal-historia p {
   color: var(--text-muted); font-size: 0.95rem;
-  max-width: 58ch;
+  text-align: justify;
 }
 .escuela-modal-historia p + p { margin-top: 0.6rem; }
 .escuela-modal-horarios { display: flex; flex-direction: column; gap: 0.45rem; }
@@ -2228,7 +2227,7 @@ button.escuela-icon:hover {
   border: 1px solid rgba(228,87,46,0.25);
   border-radius: 8px;
   overflow: hidden;
-  height: 210px;
+  height: 280px;
   background: #1A130E;
 }
 .escuela-modal-mapa iframe { width: 100%; height: 100%; border: 0; display: block; filter: grayscale(0.25) contrast(1.02); }
@@ -2241,7 +2240,25 @@ button.escuela-icon:hover {
   font-weight: 700; font-size: 0.78rem;
   letter-spacing: 0.08em; text-transform: uppercase;
 }
-.escuela-modal-galeria { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+/* Redes y contacto de la escuela: fila de íconos circulares. */
+.escuela-modal-redes { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.escuela-modal-redes .social-btn-sm { width: 40px; height: 40px; font-size: 1.1rem; }
+/* Etiqueta del lugar que encabeza cada grupo de horarios. */
+.escuela-horario-lugar {
+  display: flex; align-items: center; gap: 0.4rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--accent);
+  margin: 0.7rem 0 0.1rem;
+}
+.escuela-horario-lugar:first-child { margin-top: 0; }
+.escuela-horario-lugar .icon { width: 12px; height: 12px; flex-shrink: 0; }
+.escuela-galeria-pager { margin-top: 0.8rem; }
+.escuela-modal-galeria { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; }
+@media (max-width: 640px) {
+  .escuela-modal-galeria { grid-template-columns: repeat(2, 1fr); }
+}
 .escuela-modal-galeria button {
   aspect-ratio: 4 / 3;
   border-radius: 6px;
@@ -5404,6 +5421,51 @@ const BLOG_POSTS = [
       </ul>
       <p>Porque el Kenpo no solo se entrena… <strong>se vive</strong>. ¡Inscríbete y comienza tu camino marcial con nosotros!</p>`
   },
+  // Actividades de la escuela Orellana (Kenpo Karate Vicuña), extraídas de los artículos
+  // publicados en kenpochile.cl y enlazadas a su ficha vía escuelas: ['orellana'].
+  {
+    id: 'torneo-vicuna-2024', cat: 'Noticias', fecha: '2024-07-25', escuelas: ['orellana'],
+    titulo: '3er Torneo Nacional Abierto Kenpo Karate Vicuña 2024',
+    img: 'https://kenpochile.cl/wp-content/uploads/2024/07/portada-1-400x250.jpg',
+    imgFull: 'https://kenpochile.cl/wp-content/uploads/2024/07/portada-1.jpg',
+    url: 'https://kenpochile.cl/3er-torneo-nacional-abierto-kenpo-karate-vicuna-junio-2024/',
+    excerpt: 'Vicuña fue sede del 3er Torneo Nacional Abierto de Kenpo Karate y de una ceremonia de graduación con la visita del maestro Roberto Vidal, donde 21 alumnos ascendieron de grado.',
+    contenido: `
+      <p>En junio, Vicuña fue sede de dos emocionantes eventos en el mundo de las artes marciales: el <strong>3er Torneo Nacional Abierto Kenpo Karate Vicuña 2024</strong> y una significativa ceremonia de graduación. Estos eventos no solo demostraron la habilidad y el espíritu de nuestros estudiantes y competidores, sino que también reafirmaron la fuerza y la comunidad de nuestro arte marcial.</p>
+      <p>El sábado 29 de junio, el gimnasio polideportivo Carlos Munizaga Miranda se llenó de energía y competencia con la celebración del 3er Torneo Nacional Abierto de Kenpo Karate. Con categorías que incluyeron combate light contact, combate punto tradicional, formas manos vacías, formas con armas y defensas personales, el torneo mostró lo mejor del talento local y regional.</p>
+      <p>Estamos tremendamente agradecidos por el compromiso mostrado tanto por los maestros como por los competidores de todas las escuelas participantes. Fue un espectáculo de habilidad y deportividad que dejó claro por qué el Kenpo Karate es tan respetado y amado.</p>
+      <h4>Logros de nuestros alumnos</h4>
+      <p>Nuestros alumnos se destacaron particularmente, alcanzando logros impresionantes en varias categorías:</p>
+      <ul>
+        <li><strong>Diego Estay</strong> brilló con un 1er lugar en formas con armas, 2do lugar en formas manos vacías y 4to lugar en combate punto.</li>
+        <li><strong>Alonso Olivares</strong> se llevó el 1er lugar en formas manos vacías y el 2do lugar en formas con armas.</li>
+        <li><strong>Ignacio Hidalgo</strong> demostró su consistencia con un 5to lugar en formas manos vacías y un 6to lugar en combate al punto.</li>
+      </ul>
+      <p>Además, nuestros cinturones negros también tuvieron una participación destacada, con <strong>Edgardo Véliz</strong> obteniendo el 1er lugar en formas para cinturones negros avanzados y <strong>Palmiro Neira</strong> asegurando el 4to lugar en la misma categoría.</p>
+      <h4>Ceremonia de graduación</h4>
+      <p>El domingo 30, la visita de nuestro maestro Sr. Roberto Vidal, representante de nuestra federación CKF en Chile y Sudamérica, marcó un hito especial. Se llevó a cabo una ceremonia de graduación donde <strong>21 alumnos ascendieron de grado</strong>, un testimonio del duro trabajo y la dedicación de nuestros estudiantes.</p>
+      <p>Quisiera expresar un profundo agradecimiento al alcalde Sr. Rafael Sebastián Vera, al honorable concejo y especialmente al concejal Sr. Kether Gómez por su apoyo en la gestión y logística. También, un especial agradecimiento a los apoderados, instructores y alumnos que con su máximo compromiso ayudaron en la organización de estos eventos.</p>
+      <p>Ya estamos comprometidos a realizar la 4ta versión del torneo el próximo año y prometemos mejorar aún más la experiencia para todos los participantes. ¡Esperamos que se unan a nosotros para continuar esta tradición de excelencia y pasión por el Kenpo Karate!</p>
+      <p>Agradecemos una vez más a todos los que contribuyeron a hacer de este fin de semana un éxito rotundo. ¡Inscríbete y sé parte de nuestra creciente familia en Kenpo Karate Vicuña!</p>`
+  },
+  {
+    id: 'torneo-vicuna-2023', cat: 'Noticias', fecha: '2023-07-24', escuelas: ['orellana'],
+    titulo: 'Una jornada inolvidable: 2do Torneo Nacional Abierto Kenpo Karate Vicuña 2023',
+    img: 'https://kenpochile.cl/wp-content/uploads/2023/07/01-b-400x250.jpg',
+    imgFull: 'https://kenpochile.cl/wp-content/uploads/2023/07/01-b.jpg',
+    url: 'https://kenpochile.cl/una-jornada-inolvidable-2do-torneo-nacional-abierto-kenpo-karate-vicuna-2023/',
+    excerpt: 'Con 19 escuelas de distintas regiones y más de 400 competidores, el 2do Torneo Nacional Abierto Kenpo Karate Vicuña 2023 se convirtió en una verdadera fiesta de la disciplina.',
+    contenido: `
+      <p>¡Saludos, amantes de las artes marciales y el deporte! El pasado sábado 8 de julio fue un día para recordar en Vicuña, ya que se llevó a cabo con gran éxito el <strong>2do Torneo Nacional Abierto Kenpo Karate Vicuña 2023</strong>. Con la participación de <strong>19 escuelas de diferentes regiones del país</strong>, este evento se convirtió en una verdadera fiesta de la disciplina y el talento.</p>
+      <p>Desde Kenpo Karate Vicuña, queremos expresar nuestra más profunda gratitud a todos los que hicieron posible este acontecimiento memorable. Nuestros apoderados, profesores, alumnos y directiva jugaron un papel fundamental en el desarrollo y éxito de este torneo. Fue un trabajo arduo y coordinado que, sin duda, se reflejó en la masiva asistencia y el entusiasmo de <strong>más de 400 competidores</strong> y un gran público presente.</p>
+      <p>En momentos como este, es imprescindible reconocer y agradecer a quienes fueron parte clave en la realización del torneo. Queremos extender un especial agradecimiento a la Municipalidad de Vicuña, bajo la dirección de su alcalde Sr. Rafael Vera Castillo, por su inestimable apoyo y gestión en el evento. Además, queremos reconocer el esfuerzo y respaldo de los concejales Kether Gómez y Rodrigo Alcayaga, quienes contribuyeron significativamente en la coordinación y logística.</p>
+      <p>No podemos dejar de mencionar la presencia y colaboración del <strong>maestro Roberto Vidal</strong>, representante de la federación «Chinese Karate Federation», quien nos acompañó desde el día jueves hasta la culminación del evento, a altas horas de la noche. Su presencia y experiencia enriquecieron enormemente la competición.</p>
+      <p>El equipo de deportes municipal también merece un reconocimiento especial, liderado por el coordinador Diego Ramos y su dedicado grupo de trabajo, incluyendo a Francisco Torres, Stefanie Orostigue y Amalia Flores. Su profesionalismo y dedicación fueron fundamentales para que todo se desarrollara sin contratiempos. Además, no podemos olvidarnos del guardia de seguridad Francisco Aguirre y de todos aquellos que, de una u otra manera, aportaron para hacer posible esta jornada inolvidable.</p>
+      <p>Como dijo nuestro director, <strong>Felipe Orellana Cofre</strong>: «el trabajo serio y disciplinado siempre tiene buenos resultados». Y sin duda, este torneo fue un claro ejemplo de ello. Los competidores demostraron su destreza y pasión por el Kenpo Karate, brindando emocionantes combates y exhibiciones que dejaron a todos los asistentes impresionados y llenos de admiración.</p>
+      <p>Una vez más, queremos expresar nuestro agradecimiento a todos los involucrados, tanto dentro como fuera del tatami, por hacer posible este exitoso torneo. Y para aquellos que aún no forman parte de la familia Kenpo Karate Vicuña, ¡los invitamos a unirse a nosotros en nuestras próximas actividades y eventos!</p>
+      <p>Fue un día inolvidable, pero sabemos que vendrán muchos más, llenos de energía y compañerismo, en el maravilloso mundo del Kenpo Karate. ¡Hasta la próxima aventura!</p>
+      <p><em>Atentamente, Felipe Orellana Cofre — Director Kenpo Karate Vicuña</em></p>`
+  },
   {
     id: 'torneo-interescuelas-2025', cat: 'Noticias', fecha: '2025-12-13', escuelas: ['lorca', 'perez'],
     titulo: 'Último Torneo Interescuelas IVKS Kenpo Chile 2025: cierre de año marcado por el espíritu marcial',
@@ -5968,7 +6030,39 @@ const ESCUELA_COMUNA_MUNICIPAL = 'Municipalidades, gimnasios e institutos';
 // Campos opcionales para la ficha de escuela (ver openEscuelaFicha): "direccion", "fundada",
 // "historia", "horarios" y "galeria" — cada bloque de la ficha aparece solo si existe el dato.
 const ESCUELAS = [
-  { id: 'orellana', corto: 'Orellana', nombre: 'International Chilean Kenpo Orellana Studio', director: 'Felipe Orellana', region: 'Región de Coquimbo', comuna: null, lugar: 'Vicuña, Provincia de Elqui', insignia: 'Insignia-International-Orellana-Kenpo-Studio.webp' },
+  // Ficha completa extraída de kenpochile.cl/international-chilean-kenpo-orellana-studio/:
+  // biografía del director, dos sedes con coordenadas reales (resueltas de sus enlaces de
+  // Google Maps), horarios, redes de contacto y las 60 fotos de su sección Multimedia
+  // (descargadas a img/escuelas/orellana/).
+  { id: 'orellana', corto: 'Orellana', nombre: 'International Chilean Kenpo Orellana Studio', director: 'Felipe Orellana', region: 'Región de Coquimbo', comuna: null, lugar: 'Vicuña, Provincia de Elqui', insignia: 'Insignia-International-Orellana-Kenpo-Studio.webp',
+    fundada: 2016,
+    historiaTitulo: 'Biografía',
+    historia: `
+      <p>El instructor Felipe Orellana comenzó sus prácticas en el año 1998, en la escuela Keys of Kenpo, de la comuna de La Cisterna, Santiago, dirigida por los instructores Ervins Kerry Wilson y Alex Mesa Garrido, quienes fueron sus primeros guías en el Arte.</p>
+      <p>A sus 16 años, comenzó a impartir sus primeras clases para niños vulnerables y de escasos recursos, en la capilla «Sagrado Corazón de Jesús», en la comuna de Lo Espejo, Santiago.</p>
+      <p>A los 18 años realiza el servicio militar, donde practicó Taekwondo y fue seleccionado para participar como integrante del grupo de combate en su regimiento. En el año 2006, ingresa a Carabineros de Chile donde practicó Judo y defensa personal policial.</p>
+      <p>En el año 2014, junto a su amigo el instructor Christian Vezga, abrieron una escuela de Kenpo en la comuna de Pedro Aguirre Cerda, Santiago, donde conoció a quien hoy sería su maestro, Roberto Vidal Carvajal.</p>
+      <p>En el año 2015, el maestro Vidal convalida sus conocimientos y le otorga el grado de Black Belt (cinturón negro), donde además ingresa como miembro de la federación internacional «Chinese Karate Federation» (CKF). En el año 2016, abre su escuela de Kenpo en la comuna de Vicuña, IV Región de Coquimbo.</p>
+      <p>Hoy en día, el instructor Orellana cuenta con más de 50 alumnos activos, donde dos de ellos han logrado el grado de Black Belt (cinturones negros). Gracias a todas las actividades que ha ido desarrollando, entre clases, talleres, torneos y distintos seminarios en conjunto con su maestro, ha sido constantemente reconocido por la ciudadanía y por la Municipalidad de Vicuña.</p>`,
+    direcciones: [
+      { label: 'Gimnasio techado, calle O’Higgins S/N, a un costado del Terminal de Vicuña', query: '-30.0356195,-70.7126008' },
+      { label: 'Calle Infante S/N, a un costado del Juzgado de Policía Local, Vicuña', query: '-30.0348849,-70.7148763' },
+    ],
+    // Ordenados por sede: primero el gimnasio techado de O’Higgins, luego Calle Infante.
+    horarios: [
+      { lugar: 'Gimnasio techado, calle O’Higgins S/N', dias: 'Lunes', nivel: 'Todas las edades', hora: '19:00–20:30' },
+      { lugar: 'Gimnasio techado, calle O’Higgins S/N', dias: 'Miércoles', nivel: 'Instructores y alumnos avanzados', hora: '19:00–20:30' },
+      { lugar: 'Calle Infante S/N', dias: 'Martes', nivel: 'Grupo de combate', hora: '19:00–20:30' },
+      { lugar: 'Calle Infante S/N', dias: 'Jueves', nivel: 'Niños de 5 a 12 años', hora: '18:30–19:30' },
+      { lugar: 'Calle Infante S/N', dias: 'Jueves', nivel: 'Jóvenes y adultos', hora: '19:40–21:00' },
+    ],
+    redes: {
+      whatsapp: 'https://wa.me/56954080247?text=' + encodeURIComponent('Contactado desde KenpoChile.cl'),
+      mail: 'mailto:Felipeorellanacofre@gmail.com',
+      facebook: 'https://www.facebook.com/profile.php?id=100007270937748',
+      instagram: 'https://www.instagram.com/kenpokaratevicuna/',
+    },
+    galeria: Array.from({ length: 60 }, (_, i) => `img/escuelas/orellana/foto-${String(i + 1).padStart(2, '0')}.jpeg`) },
   { id: 'illapel', corto: 'Illapel', nombre: 'Escuela Kenpo Karate Illapel', director: 'Alejandro Luna', region: 'Región de Coquimbo', comuna: null, lugar: 'Illapel, Provincia de Choapa', insignia: 'Insignia-Illapel.webp' },
   { id: 'veliz', corto: 'Véliz', nombre: 'International Véliz Kenpo Studio', director: 'Edgardo Véliz', region: 'Región de Valparaíso', comuna: null, lugar: 'Concón', insignia: 'Insignia-Edgardo-Concon.webp' },
   { id: 'zumaeta', corto: 'Zumaeta', nombre: 'International Zumaeta Kenpo Studio', director: 'Rodrigo Zumaeta', region: 'Región Metropolitana', comuna: 'Las Condes', lugar: 'Las Condes', insignia: 'Insignia-Rodrigo-Zumaeta-transp.webp' },
@@ -6206,6 +6300,44 @@ function fechaCorta(iso) {
   return `${MESES_CORTOS[(Number(mes) || 1) - 1]} ${anio}`;
 }
 let escuelaFichaTrigger = null;
+// Multimedia de la ficha: grilla paginada (12 por página, 3 filas de 4) para que las
+// escuelas con muchas fotos (Orellana trae 60) no alarguen el modal; cada foto abre el
+// visor compartido de imágenes (flechas laterales y ← → del teclado sobre la galería
+// completa, sin texto), el mismo de maestros y seminarios.
+let escuelaGaleriaPage = 1;
+const ESCUELA_GALERIA_PAGE_SIZE = 12;
+function renderEscuelaGaleria(e) {
+  const cont = document.getElementById('escModalGaleria');
+  if (!cont) return;
+  const totalPages = Math.ceil(e.galeria.length / ESCUELA_GALERIA_PAGE_SIZE);
+  escuelaGaleriaPage = Math.min(Math.max(1, escuelaGaleriaPage), totalPages);
+  const start = (escuelaGaleriaPage - 1) * ESCUELA_GALERIA_PAGE_SIZE;
+  let html = `<div class="escuela-modal-galeria">`
+    + e.galeria.slice(start, start + ESCUELA_GALERIA_PAGE_SIZE).map((src, i) =>
+      `<button type="button" data-galeria="${src}" title="Ampliar foto"><img src="${src}" alt="Foto ${start + i + 1} de ${e.nombre}" loading="lazy" decoding="async"></button>`).join('')
+    + `</div>`;
+  if (totalPages > 1) {
+    html += `<div class="escuelas-pager escuela-galeria-pager">`
+      + `<button type="button" class="pager-btn" data-page="${escuelaGaleriaPage - 1}" ${escuelaGaleriaPage === 1 ? 'disabled' : ''} aria-label="Página anterior de multimedia">‹</button>`;
+    for (let p = 1; p <= totalPages; p++) {
+      html += `<button type="button" class="pager-btn${p === escuelaGaleriaPage ? ' active' : ''}" data-page="${p}">${p}</button>`;
+    }
+    html += `<button type="button" class="pager-btn" data-page="${escuelaGaleriaPage + 1}" ${escuelaGaleriaPage === totalPages ? 'disabled' : ''} aria-label="Página siguiente de multimedia">›</button></div>`;
+  }
+  cont.innerHTML = html;
+  cont.querySelectorAll('[data-galeria]').forEach((btn, i) => {
+    btn.addEventListener('click', () => openImgViewer(e.galeria, start + i));
+  });
+  cont.querySelectorAll('.pager-btn[data-page]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const p = Number(btn.dataset.page);
+      if (p < 1 || p > totalPages || p === escuelaGaleriaPage) return;
+      escuelaGaleriaPage = p;
+      renderEscuelaGaleria(e);
+    });
+  });
+}
+
 function openEscuelaFicha(id, trigger) {
   const e = escuelaPorId(id);
   if (!e) return;
@@ -6239,30 +6371,53 @@ function openEscuelaFicha(id, trigger) {
       inst ? `<button type="button" class="escuela-director-link" data-instructor="${inst.nombre}" title="Conocer a ${inst.nombre}">${nombre}</button>` : nombre
     ).join(' y ');
 
-  // Columna izquierda: historia y horarios (si existen).
+  // Columna izquierda: historia/biografía, horarios y contacto (si existen).
   const izq = [];
-  if (e.historia) izq.push(`<div class="escuela-modal-block escuela-modal-historia"><h4>Historia</h4>${e.historia}</div>`);
+  if (e.historia) izq.push(`<div class="escuela-modal-block escuela-modal-historia"><h4>${e.historiaTitulo || 'Historia'}</h4>${e.historia}</div>`);
   if (e.horarios && e.horarios.length) {
+    // Los horarios van agrupados por lugar (campo opcional "lugar", filas ya ordenadas
+    // por sede en los datos): cada cambio de lugar imprime su etiqueta antes del grupo.
+    let lugarPrev = null;
     izq.push(`<div class="escuela-modal-block"><h4>Horarios</h4><div class="escuela-modal-horarios">${
-      e.horarios.map(h => `<div class="escuela-horario-row"><span class="dia">${h.dias}</span><span class="nivel">${h.nivel || ''}</span><span class="hora">${h.hora}</span></div>`).join('')
+      e.horarios.map(h => {
+        const etiqueta = h.lugar && h.lugar !== lugarPrev
+          ? `<div class="escuela-horario-lugar"><svg class="icon"><use href="#icon-map-pin"/></svg> ${h.lugar}</div>` : '';
+        if (h.lugar) lugarPrev = h.lugar;
+        return etiqueta + `<div class="escuela-horario-row"><span class="dia">${h.dias}</span><span class="nivel">${h.nivel || ''}</span><span class="hora">${h.hora}</span></div>`;
+      }).join('')
     }</div></div>`);
+  }
+  // Redes y contacto de la escuela como fila de íconos (solo los que la escuela tenga).
+  if (e.redes) {
+    const iconos = [
+      { key: 'whatsapp', label: 'WhatsApp', icon: 'icon-whatsapp' },
+      { key: 'mail', label: 'Correo', icon: 'icon-mail' },
+      { key: 'facebook', label: 'Facebook', icon: 'icon-facebook' },
+      { key: 'instagram', label: 'Instagram', icon: 'icon-instagram' },
+    ].filter(r => e.redes[r.key]).map(r =>
+      `<a class="social-btn-sm" href="${e.redes[r.key]}" target="_blank" rel="noopener" title="${r.label}" aria-label="${r.label} de ${e.nombre}"><svg class="icon"><use href="#${r.icon}"/></svg></a>`
+    ).join('');
+    if (iconos) izq.push(`<div class="escuela-modal-block"><h4>Contacto y Redes</h4><div class="escuela-modal-redes">${iconos}</div></div>`);
   }
   const colIzq = document.getElementById('escModalColIzq');
   colIzq.innerHTML = izq.join('');
   colIzq.style.display = izq.length ? '' : 'none';
-  modal.querySelector('.escuela-modal-cols').style.gridTemplateColumns = izq.length ? '' : '1fr';
 
-  // Columna derecha: mapa (siempre: exacto con "direccion", referencial de la comuna sin
-  // ella), galería y actividades del blog (si existen).
-  const consultaMapa = e.direccion || `${escuelaUbicacion(e)}${e.region === 'Argentina' ? '' : ', Chile'}`;
+  // Después vienen la ubicación, la galería Multimedia paginada y las actividades del
+  // blog. Un único mapa: con una sede marca su pin; con dos o más usa el embed de ruta,
+  // que deja marcadas todas las sedes (A, B, ...) en el mismo mapa. Sin dirección, mapa
+  // referencial de la comuna. Bajo el mapa, cada sede lista su dirección y "Cómo llegar".
+  const sedes = e.direcciones
+    || (e.direccion ? [{ label: e.direccion, query: e.direccion }] : [{ label: `Ubicación referencial: ${escuelaUbicacion(e)}`, query: `${escuelaUbicacion(e)}${e.region === 'Argentina' ? '' : ', Chile'}`, referencial: true }]);
+  const mapaSrc = sedes.length > 1
+    ? `https://www.google.com/maps?saddr=${encodeURIComponent(sedes[0].query)}&amp;daddr=${encodeURIComponent(sedes.slice(1).map(s => s.query).join(' to:'))}&amp;output=embed&amp;hl=es`
+    : `https://www.google.com/maps?q=${encodeURIComponent(sedes[0].query)}&amp;output=embed&amp;hl=es`;
   const der = [`<div class="escuela-modal-block"><h4>Ubicación</h4>
-    <div class="escuela-modal-mapa"><iframe src="https://www.google.com/maps?q=${encodeURIComponent(consultaMapa)}&amp;output=embed&amp;hl=es" title="Mapa de ${e.nombre}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
-    <div class="escuela-modal-mapa-dir"><span>${e.direccion || `Ubicación referencial: ${escuelaUbicacion(e)}`}</span>${e.direccion ? `<a href="https://www.google.com/maps/dir/?api=1&amp;destination=${encodeURIComponent(consultaMapa)}" target="_blank" rel="noopener">Cómo llegar →</a>` : ''}</div>
+    <div class="escuela-modal-mapa"><iframe src="${mapaSrc}" title="Mapa de ${e.nombre}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+    ${sedes.map(s => `<div class="escuela-modal-mapa-dir"><span>${s.label}</span>${s.referencial ? '' : `<a href="https://www.google.com/maps/dir/?api=1&amp;destination=${encodeURIComponent(s.query)}" target="_blank" rel="noopener">Cómo llegar →</a>`}</div>`).join('')}
   </div>`];
   if (e.galeria && e.galeria.length) {
-    der.push(`<div class="escuela-modal-block"><h4>Galería</h4><div class="escuela-modal-galeria">${
-      e.galeria.map((src, i) => `<button type="button" data-galeria="${src}" title="Ampliar foto"><img src="${src}" alt="Foto ${i + 1} de ${e.nombre}" loading="lazy" decoding="async"></button>`).join('')
-    }</div></div>`);
+    der.push(`<div class="escuela-modal-block"><h4>Multimedia</h4><div id="escModalGaleria"></div></div>`);
   }
   const acts = e.id ? actividadesDeEscuela(e.id).slice().sort((a, b) => (b.fecha || '').localeCompare(a.fecha || '')) : [];
   if (acts.length) {
@@ -6271,6 +6426,8 @@ function openEscuelaFicha(id, trigger) {
     }</div></div>`);
   }
   document.getElementById('escModalColDer').innerHTML = der.join('');
+  escuelaGaleriaPage = 1;
+  if (e.galeria && e.galeria.length) renderEscuelaGaleria(e);
 
   document.getElementById('escModalCta').innerHTML =
     (acts.length ? `<button type="button" class="btn-escuela escuela-actividades" data-blog="${e.id}" title="Ver las actividades de esta escuela en el blog">Ver Blog</button>` : '') +
@@ -6278,9 +6435,6 @@ function openEscuelaFicha(id, trigger) {
 
   modal.querySelectorAll('.escuela-icon-inst[data-instructor], .escuela-director-link[data-instructor]').forEach(btn => {
     btn.addEventListener('click', () => openInstructorPorNombre(btn.dataset.instructor));
-  });
-  modal.querySelectorAll('[data-galeria]').forEach(btn => {
-    btn.addEventListener('click', () => openFichaFoto(btn.dataset.galeria, e.nombre, btn));
   });
   modal.querySelectorAll('.escuela-modal-act[data-post]').forEach(btn => {
     btn.addEventListener('click', () => openBlogModal(btn.dataset.post));
@@ -6306,24 +6460,6 @@ function closeEscuelaFicha() {
 document.getElementById('escuelaModal').addEventListener('click', function(ev) {
   if (ev.target === this) closeEscuelaFicha();
 });
-
-// Foto de la galería de la ficha ampliada en el lightbox compartido, sobre la ficha.
-function openFichaFoto(src, titulo, trigger) {
-  const lb = document.getElementById('lightbox');
-  lb.classList.remove('lightbox-gallery', 'lb-chart');
-  document.getElementById('lbIcon').style.display = 'none';
-  const img = document.getElementById('lbImage');
-  img.src = src;
-  img.alt = titulo;
-  img.style.display = 'block';
-  img.style.maxWidth = '420px';
-  document.getElementById('lbTitle').textContent = titulo;
-  document.getElementById('lbGrade').textContent = '';
-  document.getElementById('lbDesc').textContent = '';
-  document.getElementById('lbCounter').textContent = '';
-  lightboxTrigger = trigger || null;
-  openLightbox();
-}
 
 // Insignia de la tarjeta ampliada en el lightbox compartido (cierra con Esc, click afuera
 // o el botón ✕, igual que la galería de insignias del pie de la sección).
@@ -7229,6 +7365,12 @@ const INSTRUCTOR_REDES = {
     instagram: 'https://www.instagram.com/soyleomunoz/',
     facebook: 'https://web.facebook.com/soyleomunoz/',
     whatsapp: 'https://wa.me/56975233425?text=' + encodeURIComponent('Contactado desde KenpoChile.cl'),
+  },
+  // Redes publicadas en kenpochile.cl/international-chilean-kenpo-orellana-studio/.
+  'Felipe Orellana': {
+    instagram: 'https://www.instagram.com/kenpokaratevicuna/',
+    facebook: 'https://www.facebook.com/profile.php?id=100007270937748',
+    whatsapp: 'https://wa.me/56954080247?text=' + encodeURIComponent('Contactado desde KenpoChile.cl'),
   },
 };
 const INSTRUCTOR_SOCIAL_PLATFORMS = [
