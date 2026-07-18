@@ -1129,7 +1129,6 @@ button.escuela-icon:hover {
 }
 @media (max-width: 700px) {
   .escuelas-filter-row { grid-template-columns: repeat(auto-fit, minmax(110px,1fr)) !important; }
-  .escuelas-filter-row.instructor-tabs { grid-template-columns: repeat(auto-fill, minmax(110px,1fr)) !important; }
 }
 .escuelas-empty {
   margin-top: 3rem; text-align: center;
@@ -2737,6 +2736,44 @@ body:has(#lightbox.open, .instructor-modal.open, .programa-modal.open, .seminari
 }
 .instructor-tab .count { opacity: 0.6; font-weight: 600; flex: 0 0 auto; }
 .instructor-tab:hover { color: var(--accent); border-color: rgba(228,87,46,0.4); }
+/* En móvil las etiquetas van en una sola línea desplazable: con el dedo (overflow-x)
+   o con las flechas laterales. En escritorio las flechas quedan ocultas y la fila
+   conserva su grilla de varias filas. */
+.instructor-tabs-scroller { position: relative; }
+.instructor-tabs-arrow {
+  display: none;
+  position: absolute; top: 50%; translate: 0 -50%;
+  width: 34px; height: 34px;
+  align-items: center; justify-content: center;
+  background: rgba(36,26,20,0.92);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--text-main);
+  cursor: pointer;
+  z-index: 2;
+  transition: background 0.3s, border-color 0.3s, opacity 0.3s;
+}
+.instructor-tabs-arrow .icon { width: 1rem; height: 1rem; }
+.instructor-tabs-arrow:hover:not(:disabled) {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+.instructor-tabs-arrow:disabled { opacity: 0.25; cursor: default; }
+.instructor-tabs-arrow-prev { left: -4px; }
+.instructor-tabs-arrow-next { right: -4px; }
+@media (max-width: 700px) {
+  .escuelas-filter-row.instructor-tabs {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    padding: 0.15rem 2.4rem;
+  }
+  .escuelas-filter-row.instructor-tabs::-webkit-scrollbar { display: none; }
+  .escuelas-filter-row.instructor-tabs .instructor-tab { flex: 0 0 auto; }
+  .instructor-tabs-arrow { display: flex; }
+}
 .instructor-grado-subtitle {
   margin-top: 1.3rem;
   font-family: 'Cormorant Garamond', serif;
@@ -3730,7 +3767,11 @@ footer {
     </div>
     <div class="divider"></div>
     <p class="section-subtitle">Cuerpo de instructores activos del International Vidal Kenpo Studio / Chinese Karate Federation, organizado por grado.</p>
-    <div class="escuelas-filter-row instructor-tabs" id="instructorTabs"></div>
+    <div class="instructor-tabs-scroller">
+      <button type="button" class="instructor-tabs-arrow instructor-tabs-arrow-prev" id="instructorTabsPrev" aria-label="Ver etiquetas anteriores"><svg class="icon"><use href="#icon-chevron-left"/></svg></button>
+      <div class="escuelas-filter-row instructor-tabs" id="instructorTabs"></div>
+      <button type="button" class="instructor-tabs-arrow instructor-tabs-arrow-next" id="instructorTabsNext" aria-label="Ver más etiquetas"><svg class="icon"><use href="#icon-chevron-right"/></svg></button>
+    </div>
     <p class="instructor-grado-subtitle" id="instructorGradoSubtitle" style="display:none"></p>
     <div class="instructores-grid" id="instructoresGrid"></div>
     <p class="instructores-empty" id="instructoresEmpty" style="display:none">No se encontraron instructores con ese nombre.</p>
@@ -8204,7 +8245,43 @@ function renderInstructorTabs() {
     });
   });
   setupTabMarquee(wrap);
+  updateInstructorTabsArrows();
+  centerActiveInstructorTab();
 }
+
+// Carrusel móvil de etiquetas de instructores: en pantallas angostas la fila es un scroll
+// horizontal de una sola línea (deslizable con el dedo) con flechas laterales que avanzan
+// ~70% del ancho visible. En escritorio la fila no desborda y las flechas quedan ocultas
+// por CSS, así que nada de esto tiene efecto.
+function updateInstructorTabsArrows() {
+  const row = document.getElementById('instructorTabs');
+  const prev = document.getElementById('instructorTabsPrev');
+  const next = document.getElementById('instructorTabsNext');
+  if (!row || !prev || !next) return;
+  const max = row.scrollWidth - row.clientWidth;
+  prev.disabled = row.scrollLeft <= 2;
+  next.disabled = row.scrollLeft >= max - 2;
+}
+
+// Deja la etiqueta activa centrada en la ventana visible del carrusel, para que al elegir
+// un grado no quede medio oculta bajo una flecha.
+function centerActiveInstructorTab() {
+  const row = document.getElementById('instructorTabs');
+  const active = row?.querySelector('.instructor-tab.active');
+  if (!row || !active || row.scrollWidth <= row.clientWidth) return;
+  row.scrollTo({ left: active.offsetLeft - (row.clientWidth - active.offsetWidth) / 2 });
+}
+
+(function setupInstructorTabsScroller() {
+  const row = document.getElementById('instructorTabs');
+  const prev = document.getElementById('instructorTabsPrev');
+  const next = document.getElementById('instructorTabsNext');
+  if (!row || !prev || !next) return;
+  prev.addEventListener('click', () => row.scrollBy({ left: -row.clientWidth * 0.7, behavior: 'smooth' }));
+  next.addEventListener('click', () => row.scrollBy({ left: row.clientWidth * 0.7, behavior: 'smooth' }));
+  row.addEventListener('scroll', updateInstructorTabsArrows, { passive: true });
+  window.addEventListener('resize', updateInstructorTabsArrows);
+})();
 
 function renderInstructoresGridAndPager() {
   const all = getFilteredInstructores();
