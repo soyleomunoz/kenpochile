@@ -6747,7 +6747,11 @@ window.addEventListener('hashchange', aplicarHashBlogEscuela);
 aplicarHashBlogEscuela();
 const ESCUELAS_PAISES = ['Todas', 'Chile', 'Argentina'];
 const ESCUELAS_REGIONES_CHILE = ['Región de Coquimbo', 'Región de Valparaíso', 'Región Metropolitana', 'Región de Ñuble', 'Región del Biobío', 'Región de Los Lagos'];
-const ESCUELAS_PAGE_SIZE = 8;
+// En móvil la grilla queda en una sola columna y 8 tarjetas se hacen muy largas:
+// se pagina de a 4 en pantallas angostas y de a 8 en escritorio.
+const escuelasMobileMQ = window.matchMedia('(max-width: 640px)');
+function escuelasPageSize() { return escuelasMobileMQ.matches ? 4 : 8; }
+escuelasMobileMQ.addEventListener('change', () => renderEscuelasGridAndPager());
 let escuelaPais = 'Todas';
 let escuelaRegion = 'Todas';
 let escuelaComuna = 'Todas';
@@ -7126,10 +7130,11 @@ function openEscuelaInsignia(id, trigger) {
 
 function renderEscuelasGridAndPager() {
   const all = getFilteredEscuelas();
-  const totalPages = Math.max(1, Math.ceil(all.length / ESCUELAS_PAGE_SIZE));
+  const pageSize = escuelasPageSize();
+  const totalPages = Math.max(1, Math.ceil(all.length / pageSize));
   escuelaPage = Math.min(escuelaPage, totalPages);
-  const start = (escuelaPage - 1) * ESCUELAS_PAGE_SIZE;
-  const pageItems = all.slice(start, start + ESCUELAS_PAGE_SIZE);
+  const start = (escuelaPage - 1) * pageSize;
+  const pageItems = all.slice(start, start + pageSize);
 
   const grid = document.getElementById('escuelasGrid');
   const empty = document.getElementById('escuelasEmpty');
@@ -7277,7 +7282,7 @@ function renderEscuelasSection() {
   // sigue en la fila 2), enfocando su primera tarjeta al avanzar o su última al retroceder.
   // Si la nueva página tiene menos filas, se ajusta a la última fila disponible.
   function goEscuelaPage(direction, rowIdx, edge) {
-    const totalPages = Math.max(1, Math.ceil(getFilteredEscuelas().length / ESCUELAS_PAGE_SIZE));
+    const totalPages = Math.max(1, Math.ceil(getFilteredEscuelas().length / escuelasPageSize()));
     const newPage = escuelaPage + direction;
     if (newPage < 1 || newPage > totalPages) return false;
     escuelaPage = newPage;
