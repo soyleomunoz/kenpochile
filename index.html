@@ -4621,11 +4621,10 @@ footer {
 document.addEventListener('contextmenu', e => e.preventDefault());
 
 // ── CONFIG (fuente única de verdad para datos de contacto) ──
-// TODO: reemplazar "whatsapp" por el número real del estudio (formato 56XXXXXXXXX, sin "+").
 const CONFIG = {
-  whatsapp: '56900000000',
-  whatsappDisplay: '+56 9 0000 0000',
-  defaultMessage: 'Hola, quiero información sobre las escuelas de Kenpo Karate en Chile'
+  whatsapp: '56976734437',
+  whatsappDisplay: '+56 9 7673 4437',
+  defaultMessage: 'Desde KenpoChile.cl, necesito mas información.'
 };
 function buildWhatsAppLink(message) {
   return `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(message || CONFIG.defaultMessage)}`;
