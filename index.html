@@ -1947,6 +1947,8 @@ button.escuela-icon:hover {
   overflow: hidden;
   cursor: pointer;
   transition: transform 0.4s, border-color 0.4s, box-shadow 0.4s;
+  display: flex;
+  flex-direction: column;
 }
 .blog-card:hover {
   transform: translateY(-4px);
@@ -1959,6 +1961,7 @@ button.escuela-icon:hover {
 }
 .blog-img {
   position: relative;
+  flex-shrink: 0;
   aspect-ratio: 16/9;
   background: linear-gradient(135deg, rgba(228,87,46,0.3), rgba(36,26,20,1));
   display: flex; align-items: center; justify-content: center;
@@ -1974,7 +1977,15 @@ button.escuela-icon:hover {
 }
 .blog-card:hover .blog-img img { transform: scale(1.04); }
 .blog-img img { transition: transform 0.4s var(--ease-out); }
-.blog-body { padding: 1.5rem; }
+/* Columna flexible para que "Leer Más" quede pegado al borde inferior de la tarjeta,
+   a la misma altura en toda la fila aunque los resúmenes tengan largos distintos. */
+.blog-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.blog-body .blog-link { margin-top: auto; align-self: flex-start; }
 .blog-meta {
   display: flex; align-items: center; gap: 1rem;
   margin-bottom: 0.8rem;
@@ -5422,7 +5433,32 @@ function switchTabById(id) {
 // más reciente a más antigua. "escuelas" (opcional) asocia una actividad a una o más
 // escuelas por su slug (ESCUELAS[].id): la entrada aparece en el filtro por escuela de
 // la pestaña Noticias y en el enlace "Actividades" de la tarjeta de la escuela.
+// "galeria" (opcional) lista fotos de img/blog/<id>/ que se muestran en la sección
+// "Galería" al final del artículo (grilla paginada de a 8, visor ampliado con
+// navegación por la lista completa). "url" (opcional) solo registra
+// el artículo WordPress de origen; las entradas nuevas ya no lo llevan.
 const BLOG_POSTS = [
+  {
+    id: 'seminario-graduacion-gtf-2026', cat: 'Noticias', fecha: '2026-07-11', escuelas: ['gtf'],
+    titulo: 'Seminario y graduación en International GTF Kenpo Studio',
+    img: 'img/blog/seminario-graduacion-gtf-2026/portada.jpg',
+    imgFull: 'img/blog/seminario-graduacion-gtf-2026/portada.jpg',
+    excerpt: 'La escuela de San Pedro de la Paz vivió el 11 de julio una jornada de seminario y graduación, dictada por el maestro Roberto Vidal y el instructor Edgardo Véliz, con el apoyo de la Ilustre Municipalidad de San Pedro de la Paz.',
+    galeria: Array.from({ length: 36 }, (_, i) => `img/blog/seminario-graduacion-gtf-2026/foto-${String(i + 1).padStart(2, '0')}.jpg`),
+    contenido: `
+      <p>El pasado <strong>11 de julio</strong> vivimos una jornada inolvidable en <strong>International GTF Kenpo Studio</strong>: un seminario y ceremonia de graduación organizados por nuestra escuela en San Pedro de la Paz, que reunió a alumnos, apoderados e invitados en torno al Kenpo Karate.</p>
+      <h4>Un seminario de primer nivel</h4>
+      <p>La actividad fue dictada por el maestro <strong>Roberto Vidal Carvajal</strong>, <strong>8th Degree Black Belt</strong> «Associate Master of the Arts», junto al instructor <strong>Edgardo Véliz</strong>, <strong>4th Degree Black Belt</strong> «Senior Instructor» y director de International Véliz Kenpo Studio. Ambos pertenecen a la <strong>Chinese Karate Federation (CKF)</strong>, y su presencia respaldó una jornada de entrenamiento intensa y llena de aprendizaje.</p>
+      <h4>Graduación: el esfuerzo tiene su recompensa</h4>
+      <p>Tras el seminario llegó el momento más esperado: la <strong>ceremonia de graduación</strong>, donde nuestros alumnos dieron un nuevo paso en su camino marcial. Fue una jornada de mucho trabajo, pero ver la alegría de los alumnos y sus apoderados hizo que cada minuto valiera la pena.</p>
+      <h4>Agradecimientos</h4>
+      <ul>
+        <li>A todo el <strong>equipo GTF</strong>, por el apoyo incondicional en la organización.</li>
+        <li>Al <strong>Departamento de Deportes</strong> y a la <strong>Ilustre Municipalidad de San Pedro de la Paz</strong>, por acompañarnos y hacer posible esta linda actividad.</li>
+        <li>A los <strong>alumnos y apoderados</strong>, protagonistas de esta experiencia maravillosa.</li>
+      </ul>
+      <p>Porque el Kenpo no solo se entrena… <strong>se vive</strong>. ¡Nos vemos en la próxima actividad!</p>`
+  },
   {
     id: 'gtf-san-pedro-de-la-paz', cat: 'Noticias', fecha: '2026-01-30', escuelas: ['gtf'],
     titulo: 'Nueva Escuela International GTF Kenpo Studio en San Pedro de la Paz',
@@ -6265,6 +6301,43 @@ function goBlogCategory(cat, direction) {
 
 // ── MODAL ENTRADA DE BLOG ──
 let blogModalTrigger = null;
+// Sección Galería del artículo: grilla paginada de a 8 fotos con el mismo paginador
+// y visor ampliado que la galería del modal de maestros. El visor navega la lista
+// completa de la entrada (incluidas las fotos de otras páginas del paginador).
+const BLOG_GALERIA_PAGE_SIZE = 8;
+let blogGaleriaPage = 1;
+function renderBlogGaleria(post) {
+  const cont = document.getElementById('blogModalGaleria');
+  if (!cont) return;
+  const galeria = post.galeria || [];
+  const totalPages = Math.ceil(galeria.length / BLOG_GALERIA_PAGE_SIZE);
+  blogGaleriaPage = Math.min(Math.max(1, blogGaleriaPage), totalPages);
+  const start = (blogGaleriaPage - 1) * BLOG_GALERIA_PAGE_SIZE;
+  const items = galeria.slice(start, start + BLOG_GALERIA_PAGE_SIZE);
+  let html = `<div class="maestro-modal-gallery-title">Galería</div><div class="maestro-modal-gallery-grid">`
+    + items.map((src, i) => `<img src="${src}" alt="Foto ${start + i + 1} de ${post.titulo}" loading="lazy" decoding="async" onerror="this.remove()">`).join('')
+    + `</div>`;
+  if (totalPages > 1) {
+    html += `<div class="escuelas-pager maestro-galeria-pager">`
+      + `<button type="button" class="pager-btn" data-page="${blogGaleriaPage - 1}" ${blogGaleriaPage === 1 ? 'disabled' : ''} aria-label="Página anterior de la galería">‹</button>`;
+    for (let p = 1; p <= totalPages; p++) {
+      html += `<button type="button" class="pager-btn${p === blogGaleriaPage ? ' active' : ''}" data-page="${p}">${p}</button>`;
+    }
+    html += `<button type="button" class="pager-btn" data-page="${blogGaleriaPage + 1}" ${blogGaleriaPage === totalPages ? 'disabled' : ''} aria-label="Página siguiente de la galería">›</button></div>`;
+  }
+  cont.innerHTML = html;
+  cont.querySelectorAll('.maestro-modal-gallery-grid img').forEach((im, i) => {
+    im.addEventListener('click', () => openImgViewer(galeria, start + i));
+  });
+  cont.querySelectorAll('.pager-btn[data-page]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const p = Number(btn.dataset.page);
+      if (p < 1 || p > totalPages || p === blogGaleriaPage) return;
+      blogGaleriaPage = p;
+      renderBlogGaleria(post);
+    });
+  });
+}
 function openBlogModal(id) {
   const post = BLOG_POSTS.find(p => p.id === id);
   if (!post) return;
@@ -6274,7 +6347,14 @@ function openBlogModal(id) {
   img.alt = post.titulo;
   document.getElementById('blogModalCat').textContent = post.cat;
   document.getElementById('blogModalTitle').textContent = post.titulo;
-  document.getElementById('blogModalArticle').innerHTML = post.contenido;
+  // Sección "Galería" opcional (post.galeria) al final del artículo: grilla paginada
+  // de a 8 fotos (mismo patrón que la galería del modal de maestros); cada thumbnail
+  // amplía en el visor compartido, que navega la lista completa de la entrada.
+  const article = document.getElementById('blogModalArticle');
+  article.innerHTML = post.contenido
+    + ((post.galeria || []).length ? '<div id="blogModalGaleria"></div>' : '');
+  blogGaleriaPage = 1;
+  renderBlogGaleria(post);
   // Si la entrada es una actividad de escuela, ofrece saltar a todas sus actividades.
   document.getElementById('blogModalEscuelas').innerHTML = (post.escuelas || []).map(id => {
     const e = escuelaPorId(id);
