@@ -4177,7 +4177,7 @@ footer {
       <div class="belt-chart-col">
         <div class="belt-docs-label">Belt Ranking Chart</div>
         <button type="button" class="belt-chart-btn" onclick="openBeltChart()">
-          <img src="https://kenpochile.cl/wp-content/uploads/2023/12/American-Kenpo-Belt-Ranking-Chart.png" alt="American Kenpo – Belt Ranking Chart" loading="lazy" decoding="async">
+          <img src="img/cinturones/american-kenpo-belt-ranking-chart.png" alt="American Kenpo – Belt Ranking Chart" loading="lazy" decoding="async">
           <div class="belt-chart-overlay"><span class="empresa-card-btn empresa-card-btn-open">Ampliar</span></div>
         </button>
       </div>
@@ -5416,7 +5416,8 @@ function switchTabById(id) {
 // ── BLOG (entradas reales de kenpochile.cl/blog) ──
 // Cada entrada replica un artículo publicado en kenpochile.cl: la tarjeta muestra la
 // portada y el resumen; el modal (openBlogModal) muestra el artículo completo. Las
-// imágenes se sirven desde el mismo dominio (wp-content del blog).
+// portadas viven en img/blog/<id>/ ("img" = miniatura portada-thumb, "imgFull" =
+// portada-full para el modal; si el artículo tenía una sola, se llama portada.*).
 // "fecha" va en formato ISO (AAAA-MM-DD): no se muestra, pero ordena cada categoría de
 // más reciente a más antigua. "escuelas" (opcional) asocia una actividad a una o más
 // escuelas por su slug (ESCUELAS[].id): la entrada aparece en el filtro por escuela de
@@ -5425,8 +5426,8 @@ const BLOG_POSTS = [
   {
     id: 'gtf-san-pedro-de-la-paz', cat: 'Noticias', fecha: '2026-01-30', escuelas: ['gtf'],
     titulo: 'Nueva Escuela International GTF Kenpo Studio en San Pedro de la Paz',
-    img: 'https://kenpochile.cl/wp-content/uploads/2026/02/portada-400x250.jpg',
-    imgFull: 'https://kenpochile.cl/wp-content/uploads/2026/02/portada-1080x675.jpg',
+    img: 'img/blog/gtf-san-pedro-de-la-paz/portada-thumb.jpg',
+    imgFull: 'img/blog/gtf-san-pedro-de-la-paz/portada-full.jpg',
     url: 'https://kenpochile.cl/nueva-escuela-international-gtf-kenpo-studio-en-san-pedro-de-la-paz/',
     excerpt: 'El 30 de enero de 2026 abrió sus puertas la International GTF Kenpo Studio en San Pedro de la Paz, dirigida por Gisela Torres y supervisada por el maestro Roberto Vidal.',
     contenido: `
@@ -5459,7 +5460,7 @@ const BLOG_POSTS = [
         <li><strong>Teléfono / WhatsApp:</strong> <a href="https://wa.me/56973871181?text=Contactado desde KenpoChile.cl" target="_blank" rel="noopener">+56 9 7387 1181</a></li>
         <li><strong>Correo:</strong> <a href="mailto:gitftorres@hotmail.com">gitftorres@hotmail.com</a></li>
         <li><strong>Instagram:</strong> @International.gtf.kenpostudio</li>
-        <li><strong>Página de la escuela:</strong> <a href="https://kenpochile.cl/internacional-gtf-kenpo-studio/" target="_blank" rel="noopener">kenpochile.cl/internacional-gtf-kenpo-studio</a></li>
+        <li><strong>Página de la escuela:</strong> <button type="button" class="blog-link" onclick="closeBlogModal(); openEscuelaFicha('gtf')">Ver ficha de la escuela →</button></li>
       </ul>
       <p>Porque el Kenpo no solo se entrena… <strong>se vive</strong>. ¡Inscríbete y comienza tu camino marcial con nosotros!</p>`
   },
@@ -5468,8 +5469,8 @@ const BLOG_POSTS = [
   {
     id: 'graduacion-manriquez-ago-2025', cat: 'Noticias', fecha: '2025-09-04', escuelas: ['manriquez'],
     titulo: 'Ceremonia de graduación en International Manríquez Kenpo Studio',
-    img: 'https://kenpochile.cl/wp-content/uploads/2025/09/portada-400x250.jpg',
-    imgFull: 'https://kenpochile.cl/wp-content/uploads/2025/09/portada.jpg',
+    img: 'img/blog/graduacion-manriquez-ago-2025/portada-thumb.jpg',
+    imgFull: 'img/blog/graduacion-manriquez-ago-2025/portada-full.jpg',
     url: 'https://kenpochile.cl/ceremonia-de-graduacion-en-international-manriquez-kenpo-studio-2/',
     excerpt: 'Trinidad Fernández y Luis Gatica ascendieron a cinturón naranjo, y Simón González obtuvo el amarillo, en una jornada de orgullo para la escuela de Maipú.',
     contenido: `
@@ -5489,8 +5490,8 @@ const BLOG_POSTS = [
   {
     id: 'graduacion-manriquez-ene-2025', cat: 'Noticias', fecha: '2025-01-15', escuelas: ['manriquez'],
     titulo: 'Ceremonia de graduación en International Manríquez Kenpo Studio: enero 2025',
-    img: 'https://kenpochile.cl/wp-content/uploads/2025/01/portada-400x250.jpg',
-    imgFull: 'https://kenpochile.cl/wp-content/uploads/2025/01/portada.jpg',
+    img: 'img/blog/graduacion-manriquez-ene-2025/portada-thumb.jpg',
+    imgFull: 'img/blog/graduacion-manriquez-ene-2025/portada-full.jpg',
     url: 'https://kenpochile.cl/ceremonia-de-graduacion-en-international-manriquez-kenpo-studio/',
     excerpt: 'Con la presencia del maestro Roberto Vidal, los alumnos Maitte Tamayo, Luis Gatica y Amparo Flores recibieron sus nuevos cinturones en Maipú.',
     contenido: `
@@ -5508,8 +5509,8 @@ const BLOG_POSTS = [
   {
     id: 'clase-graduacion-manriquez-2024', cat: 'Noticias', fecha: '2024-08-09', escuelas: ['manriquez'],
     titulo: 'Clase y graduación de Kenpo en Maipú: un paso adelante en el camino del guerrero',
-    img: 'https://kenpochile.cl/wp-content/uploads/2024/08/portada-400x250.jpg',
-    imgFull: 'https://kenpochile.cl/wp-content/uploads/2024/08/portada.jpg',
+    img: 'img/blog/clase-graduacion-manriquez-2024/portada-thumb.jpg',
+    imgFull: 'img/blog/clase-graduacion-manriquez-2024/portada-full.jpg',
     url: 'https://kenpochile.cl/clase-y-graduacion-de-kenpo-en-maipu-un-paso-adelante-en-el-camino-del-guerrero/',
     excerpt: 'Tras una intensa clase en Primera Transversal 3045, los alumnos de Manríquez recibieron sus nuevos grados en el Estadio Bueras de Maipú.',
     contenido: `
@@ -5527,8 +5528,8 @@ const BLOG_POSTS = [
   {
     id: 'hermandad-marcial-2025', cat: 'Noticias', fecha: '2025-09-12', escuelas: ['manriquez', 'cornejo'],
     titulo: '2do Torneo «Hermandad Marcial»: un encuentro de unidad y disciplina',
-    img: 'https://kenpochile.cl/wp-content/uploads/2025/09/portada-1-400x250.jpg',
-    imgFull: 'https://kenpochile.cl/wp-content/uploads/2025/09/portada-1.jpg',
+    img: 'img/blog/hermandad-marcial-2025/portada-thumb.jpg',
+    imgFull: 'img/blog/hermandad-marcial-2025/portada-full.jpg',
     url: 'https://kenpochile.cl/2do-torneo-hermandad-marcial-un-encuentro-de-unidad-y-disciplina/',
     excerpt: 'La segunda versión del torneo Hermandad Marcial, organizada por Manríquez y Cornejo, reunió a siete escuelas IVKS/CKF con exhibiciones de Muay Thai incluidas.',
     contenido: `
@@ -5558,8 +5559,8 @@ const BLOG_POSTS = [
   {
     id: 'clase-nunchaku-2023', cat: 'Noticias', fecha: '2023-12-04', escuelas: ['cornejo'],
     titulo: 'Una jornada inolvidable: clase especial de Nunchaku con el maestro Roberto Vidal',
-    img: 'https://kenpochile.cl/wp-content/uploads/2023/12/portada-400x250.jpg',
-    imgFull: 'https://kenpochile.cl/wp-content/uploads/2023/12/portada.jpg',
+    img: 'img/blog/clase-nunchaku-2023/portada-thumb.jpg',
+    imgFull: 'img/blog/clase-nunchaku-2023/portada-full.jpg',
     url: 'https://kenpochile.cl/una-jornada-inolvidable-clase-especial-de-nunchaku-con-el-maestro-roberto-vidal/',
     excerpt: 'El maestro Roberto Vidal dirigió una clase especial de Nunchaku en la escuela International Cornejo Kenpo Studio, con estudiantes de todas las edades.',
     contenido: `
@@ -5577,8 +5578,8 @@ const BLOG_POSTS = [
   {
     id: 'clase-eskrima-2023', cat: 'Noticias', fecha: '2023-06-06', escuelas: ['cornejo'],
     titulo: 'Clase de Eskrima por el profesor Jaime Ovando Maturana en International Cornejo Kenpo Studio',
-    img: 'https://kenpochile.cl/wp-content/uploads/2023/06/352240988_629877695857695_863816635380901287_n-400x250.jpg',
-    imgFull: 'https://kenpochile.cl/wp-content/uploads/2023/06/352240988_629877695857695_863816635380901287_n.jpg',
+    img: 'img/blog/clase-eskrima-2023/portada-thumb.jpg',
+    imgFull: 'img/blog/clase-eskrima-2023/portada-full.jpg',
     url: 'https://kenpochile.cl/clase-de-eskrima-por-el-profesor-jaime-ovando-maturana-en-international-cornejo-kenpo-studio/',
     excerpt: 'El profesor Jaime Ovando Maturana dictó una clase de Eskrima, el arte marcial filipino, en las instalaciones del International Cornejo Kenpo Studio.',
     contenido: `
@@ -5595,8 +5596,8 @@ const BLOG_POSTS = [
   {
     id: 'torneo-caliga-fighter-2025', cat: 'Noticias', fecha: '2025-04-08', escuelas: ['caliga', 'fighter-dragons'],
     titulo: 'Torneo de Kenpo: un éxito de colaboración y preparación para nuevos desafíos',
-    img: 'https://kenpochile.cl/wp-content/uploads/2025/04/portada-400x250.jpg',
-    imgFull: 'https://kenpochile.cl/wp-content/uploads/2025/04/portada-scaled.jpg',
+    img: 'img/blog/torneo-caliga-fighter-2025/portada-thumb.jpg',
+    imgFull: 'img/blog/torneo-caliga-fighter-2025/portada-full.jpg',
     url: 'https://kenpochile.cl/%f0%9f%a5%8b-torneo-de-kenpo-un-exito-de-colaboracion-y-preparacion-para-nuevos-desafios/',
     excerpt: 'International Caliga y Fighter Dragons organizaron en conjunto un torneo preparatorio con la colaboración de Manríquez y jueces de las escuelas Cornejo y Pérez.',
     contenido: `
@@ -5645,8 +5646,8 @@ const BLOG_POSTS = [
   {
     id: 'karate-kids-2024', cat: 'Noticias', fecha: '2024-12-16', escuelas: ['rising-dragons'],
     titulo: '¡Culmina una nueva generación de Karate Kids!',
-    img: 'https://kenpochile.cl/wp-content/uploads/2024/12/Imagen-de-WhatsApp-2024-12-16-a-las-20.35.47_440d36f8-400x250.jpg',
-    imgFull: 'https://kenpochile.cl/wp-content/uploads/2024/12/Imagen-de-WhatsApp-2024-12-16-a-las-20.35.47_440d36f8.jpg',
+    img: 'img/blog/karate-kids-2024/portada-thumb.jpg',
+    imgFull: 'img/blog/karate-kids-2024/portada-full.jpg',
     url: 'https://kenpochile.cl/%f0%9f%92%9aculmina-una-nueva-generacion-de-karate-kids/',
     excerpt: 'El taller de Kenpo Karate del jardín infantil Bernardo O’Higgins de Maipú cerró una nueva etapa, liderado por el maestro Roberto Vidal y coordinado por la instructora María Elena Araya.',
     contenido: `
@@ -5668,8 +5669,8 @@ const BLOG_POSTS = [
   {
     id: 'libro-siempre-mujer', cat: 'Noticias', fecha: '2022-08-25', escuelas: ['rising-dragons'],
     titulo: 'Relanzamiento del libro «Yo nunca dejé de quererme, siempre mujer»',
-    img: 'https://kenpochile.cl/wp-content/uploads/2022/08/WhatsApp-Image-2022-08-14-at-10.07.54-AM-1-400x250.jpeg',
-    imgFull: 'https://kenpochile.cl/wp-content/uploads/2022/08/WhatsApp-Image-2022-08-14-at-10.07.54-AM-1.jpeg',
+    img: 'img/blog/libro-siempre-mujer/portada-thumb.jpeg',
+    imgFull: 'img/blog/libro-siempre-mujer/portada-full.jpeg',
     url: 'https://kenpochile.cl/relanzamiento-del-libro-yo-nunca-deje-de-quererme-siempre-mujer/',
     excerpt: 'La profesora María Elena Araya forma parte del libro de Fundación Integra que recopila 71 testimonios de sus trabajadoras, lanzado en el Centro Cultural La Moneda.',
     contenido: `
@@ -5679,8 +5680,8 @@ const BLOG_POSTS = [
   {
     id: 'jardines-integra', cat: 'Noticias', fecha: '2019-07-29', escuelas: ['rising-dragons'],
     titulo: 'Jardines infantiles Integra',
-    img: 'https://kenpochile.cl/wp-content/uploads/2019/07/62531235_10219529948299017_4905670989330776064_n-400x250.jpg',
-    imgFull: 'https://kenpochile.cl/wp-content/uploads/2019/07/62531235_10219529948299017_4905670989330776064_n.jpg',
+    img: 'img/blog/jardines-integra/portada-thumb.jpg',
+    imgFull: 'img/blog/jardines-integra/portada-full.jpg',
     url: 'https://kenpochile.cl/jardines-infantiles-integra/',
     excerpt: 'Clases de Kenpo para los más pequeños en la red de jardines infantiles Integra, lideradas por el maestro Roberto Vidal y coordinadas por la instructora María Elena Araya.',
     contenido: `
@@ -5694,8 +5695,8 @@ const BLOG_POSTS = [
   {
     id: 'hermandad-marcial-2024', cat: 'Noticias', fecha: '2024-09-10', escuelas: ['manriquez', 'cornejo', 'veliz'],
     titulo: 'Torneo Interno de Formas «Hermandad Marcial»: un éxito en la comunidad de Kenpo',
-    img: 'https://kenpochile.cl/wp-content/uploads/2024/09/portada-400x250.jpg',
-    imgFull: 'https://kenpochile.cl/wp-content/uploads/2024/09/portada.jpg',
+    img: 'img/blog/hermandad-marcial-2024/portada-thumb.jpg',
+    imgFull: 'img/blog/hermandad-marcial-2024/portada-full.jpg',
     url: 'https://kenpochile.cl/torneo-interno-de-formas-hermandad-marcial-un-exito-en-la-comunidad-de-kenpo/',
     excerpt: 'El torneo interno de formas «Hermandad Marcial» reunió en Maipú a las escuelas Manríquez, Cornejo y Véliz, con competidores de las categorías Kids, Junior y Juvenil.',
     contenido: `
@@ -5739,8 +5740,8 @@ const BLOG_POSTS = [
   {
     id: 'torneo-vicuna-2024', cat: 'Noticias', fecha: '2024-07-25', escuelas: ['orellana'],
     titulo: '3er Torneo Nacional Abierto Kenpo Karate Vicuña 2024',
-    img: 'https://kenpochile.cl/wp-content/uploads/2024/07/portada-1-400x250.jpg',
-    imgFull: 'https://kenpochile.cl/wp-content/uploads/2024/07/portada-1.jpg',
+    img: 'img/blog/torneo-vicuna-2024/portada-thumb.jpg',
+    imgFull: 'img/blog/torneo-vicuna-2024/portada-full.jpg',
     url: 'https://kenpochile.cl/3er-torneo-nacional-abierto-kenpo-karate-vicuna-junio-2024/',
     excerpt: 'Vicuña fue sede del 3er Torneo Nacional Abierto de Kenpo Karate y de una ceremonia de graduación con la visita del maestro Roberto Vidal, donde 21 alumnos ascendieron de grado.',
     contenido: `
@@ -5764,8 +5765,8 @@ const BLOG_POSTS = [
   {
     id: 'torneo-vicuna-2023', cat: 'Noticias', fecha: '2023-07-24', escuelas: ['orellana'],
     titulo: 'Una jornada inolvidable: 2do Torneo Nacional Abierto Kenpo Karate Vicuña 2023',
-    img: 'https://kenpochile.cl/wp-content/uploads/2023/07/01-b-400x250.jpg',
-    imgFull: 'https://kenpochile.cl/wp-content/uploads/2023/07/01-b.jpg',
+    img: 'img/blog/torneo-vicuna-2023/portada-thumb.jpg',
+    imgFull: 'img/blog/torneo-vicuna-2023/portada-full.jpg',
     url: 'https://kenpochile.cl/una-jornada-inolvidable-2do-torneo-nacional-abierto-kenpo-karate-vicuna-2023/',
     excerpt: 'Con 19 escuelas de distintas regiones y más de 400 competidores, el 2do Torneo Nacional Abierto Kenpo Karate Vicuña 2023 se convirtió en una verdadera fiesta de la disciplina.',
     contenido: `
@@ -5782,8 +5783,8 @@ const BLOG_POSTS = [
   {
     id: 'torneo-interescuelas-2025', cat: 'Noticias', fecha: '2025-12-13', escuelas: ['lorca', 'perez'],
     titulo: 'Último Torneo Interescuelas IVKS Kenpo Chile 2025: cierre de año marcado por el espíritu marcial',
-    img: 'https://kenpochile.cl/wp-content/uploads/2025/12/portada-1-400x250.jpg',
-    imgFull: 'https://kenpochile.cl/wp-content/uploads/2025/12/portada-1-1080x675.jpg',
+    img: 'img/blog/torneo-interescuelas-2025/portada-thumb.jpg',
+    imgFull: 'img/blog/torneo-interescuelas-2025/portada-full.jpg',
     url: 'https://kenpochile.cl/ultimo-torneo-interescuelas-ivks-kenpo-chile-2025-cierre-de-ano-marcado-por-el-espiritu-marcial/',
     excerpt: 'Escuelas, instructores, cinturones negros y alumnos se reunieron el 13 de diciembre en el último torneo interescuelas del año, organizado por ILKS e IPKS.',
     contenido: `
@@ -5815,8 +5816,8 @@ const BLOG_POSTS = [
   {
     id: 'graduacion-maipu-2025', cat: 'Noticias', fecha: '2025-12-16', escuelas: ['manriquez'],
     titulo: 'Jornada de Graduación Kenpo Karate en Maipú',
-    img: 'https://kenpochile.cl/wp-content/uploads/2025/12/portada-400x250.jpg',
-    imgFull: 'https://kenpochile.cl/wp-content/uploads/2025/12/portada.jpg',
+    img: 'img/blog/graduacion-maipu-2025/portada-thumb.jpg',
+    imgFull: 'img/blog/graduacion-maipu-2025/portada-full.jpg',
     url: 'https://kenpochile.cl/jornada-de-graduacion-kenpo-karate-en-maipu/',
     excerpt: 'Los alumnos de la International Manríquez Kenpo Studio rindieron su graduación en Maipú, en una jornada que contó con la visita del maestro Roberto Vidal.',
     contenido: `
@@ -5836,8 +5837,8 @@ const BLOG_POSTS = [
   {
     id: 'seminario-cruzat-calbuco-2024', cat: 'Noticias', fecha: '2024-11-29', escuelas: ['calbuco'],
     titulo: 'El Legendario Carlos Cruzat en Calbuco: Participa en el Seminario Técnico de Boxeo del Año',
-    img: 'https://kenpochile.cl/wp-content/uploads/2024/11/IMG-20241110-WA0091-400x250.jpg',
-    imgFull: 'https://kenpochile.cl/wp-content/uploads/2024/11/IMG-20241110-WA0091.jpg',
+    img: 'img/blog/seminario-cruzat-calbuco-2024/portada-thumb.jpg',
+    imgFull: 'img/blog/seminario-cruzat-calbuco-2024/portada-full.jpg',
     url: 'https://kenpochile.cl/el-legendario-carlos-cruzat-en-calbuco-participa-en-el-seminario-tecnico-de-boxeo-del-ano/',
     excerpt: 'El 5 veces campeón mundial de peso crucero Carlos Cruzat dictó un seminario técnico de boxeo en el Salón Colegio Goycolea de Calbuco, el 29 de noviembre de 2024.',
     contenido: `
@@ -5859,8 +5860,8 @@ const BLOG_POSTS = [
   {
     id: 'open-calbuco-2024', cat: 'Noticias', fecha: '2024-11-16', escuelas: ['calbuco'],
     titulo: '17° Torneo Abierto de Artes Marciales – Open Calbuco 2024',
-    img: 'https://kenpochile.cl/wp-content/uploads/2024/11/Imagen-de-WhatsApp-2024-11-10-a-las-13.46.05_8d559c98-400x250.jpg',
-    imgFull: 'https://kenpochile.cl/wp-content/uploads/2024/11/Imagen-de-WhatsApp-2024-11-10-a-las-13.46.05_8d559c98-1080x675.jpg',
+    img: 'img/blog/open-calbuco-2024/portada-thumb.jpg',
+    imgFull: 'img/blog/open-calbuco-2024/portada-full.jpg',
     url: 'https://kenpochile.cl/17-torneo-abierto-de-artes-marciales-open-calbuco-2024/',
     excerpt: 'Cerca de 150 competidores de Santiago a Quellón se reunieron el 16 de noviembre en el Gimnasio Fiscal Municipal de Calbuco, en el torneo organizado por la escuela de Ramón Morales.',
     contenido: `
@@ -5880,8 +5881,8 @@ const BLOG_POSTS = [
   {
     id: 'campeonato-puerto-montt-2024', cat: 'Noticias', fecha: '2024-08-11', escuelas: ['calbuco'],
     titulo: 'Campeonato de Artes Marciales en Puerto Montt: ¡19 Medallas para la Escuela Internacional Kenpo Karate Calbuco!',
-    img: 'https://kenpochile.cl/wp-content/uploads/2024/08/455020080_10233788662278050_3797672315800532896_n-400x250.jpg',
-    imgFull: 'https://kenpochile.cl/wp-content/uploads/2024/08/455020080_10233788662278050_3797672315800532896_n-1080x675.jpg',
+    img: 'img/blog/campeonato-puerto-montt-2024/portada-thumb.jpg',
+    imgFull: 'img/blog/campeonato-puerto-montt-2024/portada-full.jpg',
     url: 'https://kenpochile.cl/campeonato-de-artes-marciales-en-puerto-montt-19-medallas-para-la-escuela-internacional-kenpo-karate-calbuco/',
     excerpt: 'Los alumnos de la escuela de Calbuco obtuvieron 19 medallas en el Campeonato Abierto de Artes Marciales de Puerto Montt.',
     contenido: `
@@ -5894,8 +5895,8 @@ const BLOG_POSTS = [
   {
     id: 'seminario-calbuco-2024', cat: 'Noticias', fecha: '2024-06-22', escuelas: ['calbuco'],
     titulo: 'Un Fin de Semana de Kenpo Karate: Celebración y Aprendizaje en la Escuela Internacional Kenpo Karate Calbuco',
-    img: 'https://kenpochile.cl/wp-content/uploads/2024/07/portada-400x250.jpg',
-    imgFull: 'https://kenpochile.cl/wp-content/uploads/2024/07/portada-1080x675.jpg',
+    img: 'img/blog/seminario-calbuco-2024/portada-thumb.jpg',
+    imgFull: 'img/blog/seminario-calbuco-2024/portada-full.jpg',
     url: 'https://kenpochile.cl/un-fin-de-semana-de-kenpo-karate-celebracion-y-aprendizaje-en-la-escuela-internacional-kenpo-karate-calbuco/',
     excerpt: 'El maestro Roberto Vidal lideró un seminario técnico en el colegio Eulogio Goycolea de Calbuco los días 21 y 22 de junio, jornada que incluyó la celebración de los 74 años de Ramón Morales.',
     contenido: `
@@ -5911,8 +5912,8 @@ const BLOG_POSTS = [
   {
     id: 'expo-aquachile-calbuco-2023', cat: 'Noticias', fecha: '2023-11-20', escuelas: ['calbuco'],
     titulo: 'Expo AquaChile Calbuco',
-    img: 'https://kenpochile.cl/wp-content/uploads/2023/11/Portada-1-400x250.jpg',
-    imgFull: 'https://kenpochile.cl/wp-content/uploads/2023/11/Portada-1.jpg',
+    img: 'img/blog/expo-aquachile-calbuco-2023/portada-thumb.jpg',
+    imgFull: 'img/blog/expo-aquachile-calbuco-2023/portada-full.jpg',
     url: 'https://kenpochile.cl/expo-aquachile-calbuco/',
     excerpt: 'Ramón Morales fue el único invitado del área deportes en la Feria de Emprendedores de AquaChile en Calbuco, representando a su escuela y a la red IVKS/CKF.',
     contenido: `
@@ -5928,8 +5929,8 @@ const BLOG_POSTS = [
   {
     id: 'bruce-lee', cat: 'Historia', fecha: '2024-07-01',
     titulo: 'Bruce Lee: El Ícono Inmortal de las Artes Marciales',
-    img: 'https://kenpochile.cl/wp-content/uploads/2024/07/Portada-blog-Bruce-Lee-400x250.jpg',
-    imgFull: 'https://kenpochile.cl/wp-content/uploads/2024/07/Portada-blog-Bruce-Lee-1080x675.jpg',
+    img: 'img/blog/bruce-lee/portada-thumb.jpg',
+    imgFull: 'img/blog/bruce-lee/portada-full.jpg',
     url: 'https://kenpochile.cl/bruce-lee-el-icono-inmortal-de-las-artes-marciales/',
     excerpt: 'La vida del legendario artista marcial, fundador del Jeet Kune Do, y su conexión con el Kenpo Americano y el gran maestro Ed Parker.',
     contenido: `
@@ -5964,8 +5965,8 @@ const BLOG_POSTS = [
   {
     id: 'fumio-demura', cat: 'Historia', fecha: '2023-04-24',
     titulo: 'En Memoria del Sensei Fumio Demura: Un Legado Inolvidable en las Artes Marciales',
-    img: 'https://kenpochile.cl/wp-content/uploads/2023/04/343103033_629335065776531_1907948198038661671_n-400x250.jpg',
-    imgFull: 'https://kenpochile.cl/wp-content/uploads/2023/04/343103033_629335065776531_1907948198038661671_n.jpg',
+    img: 'img/blog/fumio-demura/portada-thumb.jpg',
+    imgFull: 'img/blog/fumio-demura/portada-full.jpg',
     url: 'https://kenpochile.cl/en-memoria-del-sensei-fumio-demura-un-legado-inolvidable-en-las-artes-marciales/',
     excerpt: 'Homenaje al maestro de Shitō-ryū y kobudō fallecido el 24 de abril de 2023, y su emotivo mensaje sobre el respeto que merece todo Sensei.',
     contenido: `
@@ -5995,8 +5996,8 @@ const BLOG_POSTS = [
   {
     id: 'elvis-presley', cat: 'Historia', fecha: '2022-12-01',
     titulo: 'Elvis Presley y su pasión por el Kenpo Karate',
-    img: 'https://kenpochile.cl/wp-content/uploads/2022/12/descarga.jpeg',
-    imgFull: 'https://kenpochile.cl/wp-content/uploads/2022/12/descarga.jpeg',
+    img: 'img/blog/elvis-presley/portada.jpeg',
+    imgFull: 'img/blog/elvis-presley/portada.jpeg',
     url: 'https://kenpochile.cl/elvis-presley-y-su-pasion-por-el-kenpo-karate/',
     excerpt: 'El Rey del Rock encontró el Kenpo en 1961 durante una visita a Hawai y alcanzó el cinturón negro bajo la tutela de Ed Parker.',
     contenido: `
@@ -6010,8 +6011,8 @@ const BLOG_POSTS = [
   {
     id: 'rutina-principiantes', cat: 'Bienestar', fecha: '2022-12-01',
     titulo: 'Rutina de 10 ejercicios para principiantes',
-    img: 'https://kenpochile.cl/wp-content/uploads/2022/12/rutina-para-principiantes-1-400x250.png',
-    imgFull: 'https://kenpochile.cl/wp-content/uploads/2022/12/rutina-para-principiantes-1.png',
+    img: 'img/blog/rutina-principiantes/portada-thumb.png',
+    imgFull: 'img/blog/rutina-principiantes/portada-full.png',
     url: 'https://kenpochile.cl/rutina-de-10-ejercicios-para-principiantes/',
     excerpt: 'Diez ejercicios simples para comenzar a entrenar: sentadillas, abdominales, estocadas, flexiones, burpees y más, con repeticiones y descansos.',
     contenido: `
@@ -6031,8 +6032,8 @@ const BLOG_POSTS = [
   {
     id: 'hidratacion', cat: 'Bienestar', fecha: '2019-07-03',
     titulo: '11 factores por los que debes hidratarte',
-    img: 'https://kenpochile.cl/wp-content/uploads/2019/07/agua-400x250.png',
-    imgFull: 'https://kenpochile.cl/wp-content/uploads/2019/07/agua-1080x628.png',
+    img: 'img/blog/hidratacion/portada-thumb.png',
+    imgFull: 'img/blog/hidratacion/portada-full.png',
     url: 'https://kenpochile.cl/11-factores-por-los-que-debes-hidratarte/',
     excerpt: 'Once razones por las que beber suficiente agua mejora tu salud, tu energía y tu rendimiento en el entrenamiento.',
     contenido: `
@@ -6055,8 +6056,8 @@ const BLOG_POSTS = [
   {
     id: 'elongacion', cat: 'Bienestar', fecha: '2019-07-02',
     titulo: 'La importancia de la elongación',
-    img: 'https://kenpochile.cl/wp-content/uploads/2019/07/elongacion-400x250.jpg',
-    imgFull: 'https://kenpochile.cl/wp-content/uploads/2019/07/elongacion-1080x600.jpg',
+    img: 'img/blog/elongacion/portada-thumb.jpg',
+    imgFull: 'img/blog/elongacion/portada-full.jpg',
     url: 'https://kenpochile.cl/la-importancia-de-la-elongacion/',
     excerpt: 'El estiramiento mejora la postura, la flexibilidad y el rendimiento deportivo, y también ayuda a la salud mental.',
     contenido: `
@@ -6068,8 +6069,8 @@ const BLOG_POSTS = [
   {
     id: 'cuerpo-saludable', cat: 'Bienestar', fecha: '2019-07-01',
     titulo: 'Claves para lograr un cuerpo saludable y activo',
-    img: 'https://kenpochile.cl/wp-content/uploads/2019/07/ejercicio-400x250.jpg',
-    imgFull: 'https://kenpochile.cl/wp-content/uploads/2019/07/ejercicio.jpg',
+    img: 'img/blog/cuerpo-saludable/portada-thumb.jpg',
+    imgFull: 'img/blog/cuerpo-saludable/portada-full.jpg',
     url: 'https://kenpochile.cl/claves-para-lograr-un-cuerpo-saludable-y-activo/',
     excerpt: 'Los tres niveles de actividad física — básica, moderada e intensa — y el rol fundamental de la alimentación para lograr un bienestar completo.',
     contenido: `
@@ -9400,7 +9401,7 @@ function openBeltChart() {
   lb.classList.add('lb-chart');
   document.getElementById('lbIcon').style.display = 'none';
   const img = document.getElementById('lbImage');
-  img.src = 'https://kenpochile.cl/wp-content/uploads/2023/12/American-Kenpo-Belt-Ranking-Chart.png';
+  img.src = 'img/cinturones/american-kenpo-belt-ranking-chart.png';
   img.alt = 'American Kenpo – Belt Ranking Chart';
   img.style.display = 'block';
   img.style.width = 'auto';

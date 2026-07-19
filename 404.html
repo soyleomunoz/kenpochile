@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KenpoChile.cl</title>
+<!-- GitHub Pages sirve esta página para cualquier ruta inexistente: aquí caen todas las
+     URLs del antiguo WordPress (artículos, /members, /escuelas, /seminarioNN, etc.).
+     GitHub Pages no permite redirecciones 301, así que se redirige al instante con JS,
+     llevando cada ruta vieja a la sección equivalente de la landing. noindex evita que
+     Google indexe esta página puente; el canonical le indica el destino real. -->
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://kenpochile.cl/">
+<meta http-equiv="refresh" content="0; url=/">
+<script>
+(function () {
+  var p = location.pathname.toLowerCase();
+  var hash = '';
+  if (p.indexOf('/blog') === 0) hash = '#blogs';
+  else if (p.indexOf('/members') === 0) hash = '#instructores';
+  else if (p.indexOf('/escuelas') === 0) hash = '#escuelas';
+  else if (p.indexOf('/maestros') === 0) hash = '#maestros';
+  else if (p.indexOf('/programa-tecnico') === 0) hash = '#programa-tecnico';
+  else if (p.indexOf('/seminario') === 0) hash = '#seminarios';
+  // Páginas de escuelas del WordPress (international-*-kenpo-studio, kenpo-karate-*)
+  else if (p.indexOf('kenpo-studio') !== -1 || p.indexOf('kenpo-karate') !== -1) hash = '#escuelas';
+  // Los permalinks de artículos son slugs con guiones: van a la sección de noticias/blogs
+  else if (p.indexOf('-') !== -1) hash = '#blogs';
+  location.replace('/' + hash);
+})();
+</script>
+<style>
+  body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+         background: #14100D; color: #E8E0D8; font-family: sans-serif; }
+  a { color: #F5A623; }
+</style>
+</head>
+<body>
+<p>Redirigiendo a <a href="/">kenpochile.cl</a>…</p>
+</body>
+</html>
