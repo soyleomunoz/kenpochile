@@ -8439,7 +8439,7 @@ function instructorCardHTML(inst, idx) {
       <div class="instructor-card-body">
         <div class="instructor-name">${inst.nombre}</div>
         ${infoLineHTML}
-        ${instructorSocialHTML(inst.nombre)}
+        ${esInstructorHonorario(inst) ? '' : instructorSocialHTML(inst.nombre)}
       </div>
     </div>`;
 }
@@ -8924,7 +8924,7 @@ function updateInstructorModalContent() {
   if (certs) {
     document.getElementById('instModalCertsList').innerHTML = certs.map(c => `<li>${c}</li>`).join('');
   }
-  document.getElementById('instModalSocialWrap').innerHTML = instructorSocialItemsHTML(inst.nombre);
+  document.getElementById('instModalSocialWrap').innerHTML = esInstructorHonorario(inst) ? '' : instructorSocialItemsHTML(inst.nombre);
 }
 function openInstructorModal(idx, items) {
   instructorModalItems = items || currentInstructorPageItems;
