@@ -3285,6 +3285,16 @@ footer {
   transition: color 0.3s;
 }
 .footer-links a:hover { color: var(--accent); }
+.footer-links-category {
+  display: block;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-muted);
+  opacity: 0.65;
+  margin: 1rem 0 0.4rem;
+}
+.footer-links li:first-child .footer-links-category { margin-top: 0; }
 .footer-empresas {
   max-width: 1200px; margin: 0 auto 2rem;
   padding: 2rem 0;
@@ -4161,6 +4171,7 @@ footer {
         <button class="blog-tab active" data-tab="tab-noticias" onclick="switchTab(this,'tab-noticias')">Noticias</button>
         <button class="blog-tab" data-tab="tab-historia" onclick="switchTab(this,'tab-historia')">Historia</button>
         <button class="blog-tab" data-tab="tab-bienestar" onclick="switchTab(this,'tab-bienestar')">Bienestar</button>
+        <button class="blog-tab" data-tab="tab-organizaciones" onclick="switchTab(this,'tab-organizaciones')">Organizaciones</button>
       </div>
       <!-- Filtro por escuela (solo visible con Noticias activa): desplegable con nombres
            completos de las escuelas con actividades publicadas (generado desde BLOG_POSTS) -->
@@ -4186,6 +4197,10 @@ footer {
     <div class="blog-panel" id="tab-bienestar">
       <div class="blog-grid" data-cat="Bienestar"></div>
       <div class="escuelas-pager blog-pager" data-cat="Bienestar"></div>
+    </div>
+    <div class="blog-panel" id="tab-organizaciones">
+      <div class="blog-grid" data-cat="Organizaciones"></div>
+      <div class="escuelas-pager blog-pager" data-cat="Organizaciones"></div>
     </div>
     </div>
   </div>
@@ -4385,9 +4400,9 @@ footer {
       </div>
       <p>International Vidal Kenpo Studio. Enseñanza auténtica del Kenpo Karate en Chile, bajo la línea de la Chinese Karate Federation. Disciplina, respeto y legado marcial.</p>
       <div class="footer-social">
-        <span class="social-btn is-soon" title="Facebook — próximamente" aria-label="Facebook, próximamente disponible"><svg class="icon"><use href="#icon-facebook"/></svg></span>
-        <span class="social-btn is-soon" title="Instagram — próximamente" aria-label="Instagram, próximamente disponible"><svg class="icon"><use href="#icon-instagram"/></svg></span>
-        <a class="social-btn" href="https://www.youtube.com/channel/UCIKuiC7HSqkprvrNfH7EOOg" target="_blank" rel="noopener" aria-label="YouTube"><svg class="icon"><use href="#icon-youtube"/></svg></a>
+        <a class="social-btn" href="https://www.facebook.com/kenpochile" target="_blank" rel="noopener" aria-label="Facebook"><svg class="icon"><use href="#icon-facebook"/></svg></a>
+        <a class="social-btn" href="https://www.instagram.com/robertovidalkenpo/" target="_blank" rel="noopener" aria-label="Instagram"><svg class="icon"><use href="#icon-instagram"/></svg></a>
+        <a class="social-btn" href="http://www.youtube.com/@vidalkenpo" target="_blank" rel="noopener" aria-label="YouTube"><svg class="icon"><use href="#icon-youtube"/></svg></a>
         <a class="social-btn" data-whatsapp-link href="#" target="_blank" rel="noopener" aria-label="WhatsApp"><svg class="icon"><use href="#icon-whatsapp"/></svg></a>
       </div>
     </div>
@@ -4405,21 +4420,27 @@ footer {
       </ul>
     </div>
     <div class="footer-col">
-      <h4>Programa</h4>
+      <h4>Links oficiales</h4>
       <ul class="footer-links">
-        <li><a href="#programa-tecnico">Programa Técnico</a></li>
-        <li><a href="#programa-tecnico">Grados y Cinturones</a></li>
-        <li><span class="is-soon" title="Próximamente">Competencias</span></li>
+        <li><span class="footer-links-category">Oficiales</span></li>
+        <li><a href="http://www.kenpo-karate-willich.de/" target="_blank" rel="noopener">Club President Peter Ritters, Alemania</a></li>
+        <li><span class="footer-links-category">Maestros</span></li>
+        <li><a href="http://www.ukfwcrtc.com/" target="_blank" rel="noopener">Grandmaster Michael Robert Pick</a></li>
+        <li><a href="http://www.seankelley.com/" target="_blank" rel="noopener">Sean P. Kelley</a></li>
+        <li><a href="http://www.kenpo.de/" target="_blank" rel="noopener">Rainer Schulte, Europa</a></li>
+        <li><a href="https://www.superfootsystem.com/" target="_blank" rel="noopener">Bill Wallace</a></li>
+        <li><span class="footer-links-category">Municipalidades</span></li>
+        <li><a href="https://www.municipalidadmaipu.cl/" target="_blank" rel="noopener">Ilustre Municipalidad de Maipú</a></li>
       </ul>
     </div>
     <div class="footer-col">
-      <h4>Contacto</h4>
+      <h4>Comunidad</h4>
       <ul class="footer-links">
-        <li><a href="mailto:contacto@kenpochile.cl">contacto@kenpochile.cl</a></li>
-        <li><a data-whatsapp-link href="#" target="_blank" rel="noopener">WhatsApp</a></li>
-        <li><a href="#escuelas">Escuelas en Chile</a></li>
-        <li><span class="is-soon" title="Próximamente">Chinese Karate Federation</span></li>
-        <li><a href="#contacto">Formulario de Contacto</a></li>
+        <li><a href="http://www.network54.com/Forum/160433/" target="_blank" rel="noopener">KenpoNet Forum</a></li>
+        <li><a href="http://kenpotalk.com/forum/" target="_blank" rel="noopener">KenpoTalk Forum</a></li>
+        <li><a href="https://www.facebook.com/CKFKenpo" target="_blank" rel="noopener">Facebook CKF</a></li>
+        <li><a href="http://kkhof.com/" target="_blank" rel="noopener">Kenpo Karate Hall of Fame</a></li>
+        <li><a href="http://www.stompthebullying.net/" target="_blank" rel="noopener">Stomp the Bullying</a></li>
       </ul>
     </div>
   </div>
@@ -5125,7 +5146,8 @@ const MAESTROS_BIO = [
       <p>En 1973, Wallace — cuya educación incluye una licenciatura (1971) en educación física de la Ball State University y una maestría (1976) en kinesiología (estudio del movimiento humano) de la Universidad Estatal de Memphis — sufrió lo que muchos consideraron una lesión que finalizaría su carrera. Sin embargo, uno de los amigos de Wallace, el difunto Elvis Presley, voló con un acupunturista de Los Ángeles para tratar al campeón de karate en Graceland.</p>
       <p>Un año más tarde, Wallace se convirtió en profesional y consiguió el campeonato PKA de peso medio de karate con un nocaut en la segunda ronda (patada de gancho) al alemán occidental Bernd Grothe en Los Ángeles. Renunció a la corona en 1980, invicto y respetado en todo el mundo.</p>
       <p>A pesar de su retiro, Wallace sigue siendo una de las figuras de artes marciales más populares. Es autor de tres libros: «Karate: Conceptos Básicos y Habilidades», «Dynamic Kicking & Stretching» y «The Ultimate Kick».</p>
-      <p>Ex miembro del Consejo Presidencial sobre la Actividad Física, Wallace también ha participado activamente en la industria del cine. Sus créditos incluyen «A Force of One» con Chuck Norris; «Killpoint» con Cameron Mitchell; «Continental Divide» y «Neighbors» con John Belushi, de quien se desempeñó como entrenador y guardaespaldas; «The Protector» con Jackie Chan; «A Prayer for the Dying» con Mickey Rourke; «Ninja Turf» y «Sword of Heaven».</p>`
+      <p>Ex miembro del Consejo Presidencial sobre la Actividad Física, Wallace también ha participado activamente en la industria del cine. Sus créditos incluyen «A Force of One» con Chuck Norris; «Killpoint» con Cameron Mitchell; «Continental Divide» y «Neighbors» con John Belushi, de quien se desempeñó como entrenador y guardaespaldas; «The Protector» con Jackie Chan; «A Prayer for the Dying» con Mickey Rourke; «Ninja Turf» y «Sword of Heaven».</p>
+      <p><button type="button" class="blog-link" onclick="closeMaestroModal(); openBlogModal('superfoot-system')">Conocer el Superfoot System →</button></p>`
   },
   {
     id: 'petit', nombre: 'Arturo Petit', grado: '8th Degree Black Belt · Fundador del Kenpo en Chile',
@@ -6165,11 +6187,79 @@ const BLOG_POSTS = [
       <p>Una persona de grado café o negro ya es capaz de entrenar de forma intensa varias veces a la semana. Su nivel de actividad física estará acompañado de una correcta alimentación y tendrá un objetivo claro que alcanzar; por ejemplo, bajar grasa corporal, tonificar o simplemente mejorar su rendimiento. Comúnmente se convierten en entrenadores, ya que de forma natural irán compartiendo sus conocimientos y ayudarán a sus grados de menor nivel; incluso pueden ser elegidos para ser instructores de nuestra federación y así tener la oportunidad de abrir sus propias escuelas.</p>
       <p>Independiente del nivel en el que te encuentres, la actividad física es tan solo el 20% de tu resultado personal. El otro 80% lo da la alimentación, la que juega un rol fundamental en tu rendimiento deportivo en general. Si te encuentras en un peso adecuado, lograrás moverte mejor, tener mayor equilibrio, aumentarás tu agilidad y tu velocidad en los combates será mucho mejor.</p>
       <p>Te invitamos a participar de nuestras actividades para que seas parte de nuestra comunidad deportiva y participes activamente en cualquiera de nuestras escuelas, tanto en Chile como en el extranjero. Si deseas bajar de peso, tonificar tu masa muscular o aumentar tu energía, tenemos el asesoramiento adecuado para ti. ¡Escríbenos y te explicamos cómo!</p>`
+  },
+  // Categoría "Organizaciones": entidades aliadas o afines a la federación, explicadas en
+  // su propio artículo. Contenido y fecha (estimada del mes de subida de la imagen
+  // original, ya que kenpochile.cl no muestra fecha de publicación) extraídos íntegros
+  // de kenpochile.cl; portada guardada localmente para no depender del sitio original.
+  {
+    id: 'pka-worldwide', cat: 'Organizaciones', fecha: '2023-04-01',
+    titulo: 'PKA Worldwide',
+    img: 'img/blog/pka-worldwide/portada.webp',
+    imgFull: 'img/blog/pka-worldwide/portada.webp',
+    url: 'https://kenpochile.cl/pka-wordwide/',
+    excerpt: 'La PKA Worldwide (Professional Kickboxing Association), liderada por Joe Corley, reconoció oficialmente al maestro Roberto Vidal por su trayectoria y aporte al fomento de las artes marciales.',
+    contenido: `
+      <p>La PKA Worldwide, o también conocida como «Professional Kickboxing Association», es una liga de lucha profesional que ha sido revitalizada y reinventada por un equipo de leyendas en el deporte de combate y empresarios. Estos líderes son los mismos que ayudaron al kickboxing profesional a alcanzar alturas históricas hace 40 años.</p>
+      <p><strong>Joe Corley</strong>, el CEO de PKA Worldwide, a menudo es referido como el Padre Fundador de las Artes Marciales Mixtas, ya que ayudó a allanar el camino para el auge del deporte a través del éxito de la PKA. Durante más de dos décadas, Corley pasó de ser campeón en el ring a ser un defensor del crecimiento del kickboxing profesional, primero como promotor, luego como cofundador de la Asociación de Karate Profesional (PKA) y, finalmente, como locutor.</p>
+      <p>PKA Worldwide se ha propuesto revitalizar el deporte del kickboxing profesional para crear una liga de lucha emocionante y atractiva para los fans de todo el mundo. La nueva liga ha sido diseñada para ofrecer a los luchadores una plataforma para mostrar su talento y habilidades mientras compiten por títulos y premios en efectivo.</p>
+      <p>Es una liga internacional que ha atraído a algunos de los mejores talentos de todo el mundo. Los eventos se llevan a cabo en algunos de los lugares más grandes y prestigiosos del mundo y se transmiten a una audiencia global a través de los medios de comunicación tradicionales y digitales.</p>
+      <p>Es importante destacar que la PKA Worldwide es una liga que valora y reconoce el trabajo de aquellos que han contribuido al desarrollo del deporte. Como evidencia de ello, con fecha <strong>20 de marzo de 2019</strong>, la PKA Worldwide otorgó oficialmente la membresía a <strong>Roberto Vidal</strong>, a través de su representante Don Willis, en reconocimiento a su trayectoria y su aporte al fomento del deporte a través de las artes marciales. La PKA Worldwide es la primera federación de Full Contact / Kick Boxing que profesionalizó los deportes de contacto en Estados Unidos, por lo que ser reconocido por ellos es un gran honor y muestra el impacto que esta liga tiene en el mundo del kickboxing profesional.</p>`
+  },
+  {
+    id: 'superfoot-system', cat: 'Organizaciones', fecha: '2020-04-01',
+    titulo: 'Superfoot System: el legado de Bill Wallace en las artes marciales',
+    img: 'img/blog/superfoot-system/portada.webp',
+    imgFull: 'img/blog/superfoot-system/portada.webp',
+    url: 'https://kenpochile.cl/superfoot-system/',
+    excerpt: 'El sistema de patadas creado por el Grandmaster Bill «Superfoot» Wallace: su origen, sus principios de velocidad, precisión, economía de movimiento y versatilidad, y los beneficios de su entrenamiento.',
+    contenido: `
+      <p>Las artes marciales han sido durante mucho tiempo una forma popular y respetada de ejercicio y autodefensa, con estilos y sistemas que se originan en diversas culturas de todo el mundo. Uno de estos sistemas, el <strong>Superfoot System</strong>, fue creado por el legendario campeón de karate y experto en artes marciales, <strong>Bill «Superfoot» Wallace</strong>. En este artículo, exploramos el legado de Bill Wallace, las técnicas y principios fundamentales del Superfoot System y cómo puede ayudarte a mejorar tus habilidades en las artes marciales.</p>
+      <h4>El origen de Superfoot System: Bill Wallace</h4>
+      <p>Bill «Superfoot» Wallace nació en 1945 en Indiana, Estados Unidos. Comenzó su entrenamiento en artes marciales estudiando judo, pero un desafortunado accidente lo llevó a cambiar su enfoque al karate. Wallace ganó fama por su habilidad para ejecutar patadas rápidas y precisas, y su apodo «Superfoot» proviene de su dominio en esta área.</p>
+      <p>El Superfoot System es el resultado de la experiencia de Wallace en competiciones y entrenamientos. A lo largo de su carrera, fue campeón en numerosas competiciones, incluyendo el título de campeón mundial de peso medio de karate de contacto completo de la Professional Karate Association (PKA), que mantuvo invicto hasta su retiro en 1980.</p>
+      <h4>Principios del Superfoot System</h4>
+      <p>El Superfoot System se centra en la eficiencia y efectividad de las técnicas de patadas, combinando elementos de diferentes estilos de artes marciales, como el karate, el taekwondo y el kickboxing. Algunos de sus principios clave son:</p>
+      <ol>
+        <li><strong>Velocidad:</strong> Wallace hizo hincapié en la importancia de la velocidad al ejecutar patadas, ya que una patada rápida es más difícil de bloquear o esquivar por parte del oponente.</li>
+        <li><strong>Precisión:</strong> el sistema enseña a los practicantes cómo dirigir sus patadas a áreas específicas del cuerpo del oponente, aprovechando al máximo cada golpe.</li>
+        <li><strong>Economía de movimiento:</strong> fomenta la eliminación de movimientos innecesarios y la optimización de la técnica para aumentar la eficiencia en la ejecución de las patadas.</li>
+        <li><strong>Versatilidad:</strong> integra técnicas de diversos estilos de artes marciales, lo que permite a los practicantes adaptarse a diferentes situaciones y oponentes.</li>
+      </ol>
+      <h4>Beneficios del Superfoot System</h4>
+      <p>El entrenamiento en el Superfoot System puede proporcionar una serie de beneficios, tanto para los principiantes como para los artistas marciales experimentados: mejora la técnica de patadas, aumenta la confianza, desarrolla la flexibilidad y el acondicionamiento físico, amplía el conocimiento de las artes marciales y fomenta la disciplina y el enfoque mental.</p>
+      <h4>Conclusión</h4>
+      <p>El Superfoot System de Bill Wallace ha dejado una impresionante huella en el mundo de las artes marciales. Su enfoque en la velocidad, la precisión y la economía de movimiento ha permitido a innumerables artistas marciales mejorar sus habilidades de patadas y convertirse en luchadores más efectivos.</p>
+      <p><button type="button" class="blog-link" onclick="closeBlogModal(); openMaestroBio('wallace')">Conocer al Grandmaster Bill Wallace →</button></p>`
+  },
+  {
+    id: 'stomp-the-bullying', cat: 'Organizaciones', fecha: '2020-03-01',
+    titulo: '«Stomp the Bullying»: un enfoque activo para combatir el acoso escolar',
+    img: 'img/blog/stomp-the-bullying/portada.webp',
+    imgFull: 'img/blog/stomp-the-bullying/portada.webp',
+    url: 'https://kenpochile.cl/stomp-the-bullying-un-enfoque-activo-para-combatir-el-acoso-escolar/',
+    excerpt: 'El programa de liderazgo anti-acoso creado por Sean P. Kelley: su misión, su plan de acción y la certificación del maestro Roberto Vidal como parte activa de esta iniciativa contra el bullying escolar.',
+    contenido: `
+      <p>«Stomp the Bullying» es un concepto creado por <strong>Sean P. Kelley</strong>, Ángel Guardián con 25 años de experiencia y experto en artes marciales internacionales, con el objetivo de abordar la epidemia de acoso escolar que enfrenta nuestra sociedad. Si tan solo estos niños tuvieran un lugar al que acudir para recibir orientación y educación adecuada, fomentar su autoestima y autoconfianza, y aprender cómo ser menos propensos a ser víctimas de acoso y cómo manejar esas situaciones. Aquí es donde entramos nosotros: hemos creado un programa de liderazgo anti-acoso de 3 meses llamado <strong>Guardian Angels</strong>, como un servicio comunitario para niños desde los 7 años, con una clase semanal para aprender a ser buenos ciudadanos y a solucionar la epidemia de acoso.</p>
+      <h4>La realidad</h4>
+      <p>El acoso escolar es una gran epidemia en nuestra sociedad. Todas sus formas —verbal, no verbal o emocional, físico y ciberacoso— ocurren todos los días y causan daños graves y duraderos a las víctimas, lo que lleva a la depresión severa, la violencia y/o el suicidio. Según las estadísticas, 19.000 niños acosados intentan suicidarse en el transcurso de un año; en promedio mensual, 282.000 estudiantes son atacados físicamente por un acosador; y en promedio diario, 160.000 niños faltan a la escuela porque temen ser acosados. Una encuesta reciente mostró que más de 100.000 niños llevaban armas a la escuela como resultado de ser acosados.</p>
+      <h4>El sueño</h4>
+      <p>Que todos los niños aprendan las lecciones apropiadas en la vida y tengan una autoconfianza y autoestima saludables, valores adecuados y un propósito impulsado por la pasión de convertirse en todo lo que son capaces de ser. Si este sueño se convierte en realidad, no habría necesidad de que un niño acosara a otro niño.</p>
+      <h4>El objetivo, el propósito y el plan</h4>
+      <p>Brindar un enfoque realista y activo para lidiar con el comportamiento de acoso de manera adecuada, educando sobre todos sus aspectos desde el punto de vista de las artes marciales, y lograr que celebridades, instructores, maestros, padres y cualquier persona dispuesta tome una posición activa en la lucha contra el acoso. El propósito es hacer que niños y adultos comprendan los efectos completos del acoso y por qué los acosadores acosan; enseñar a los niños cómo unirse y enfrentarse a los acosadores; inculcar la confianza y las defensas emocionales para proteger a las víctimas del acoso verbal; y empoderarlas con técnicas y principios de autodefensa contra el acoso físico. El plan incluye:</p>
+      <ol>
+        <li>Realizar conferencias, talleres y seminarios sobre acoso escolar en escuelas, estudios de artes marciales o grupos sociales.</li>
+        <li>Involucrar a las escuelas de artes marciales con los Guardian Angels y el concepto «Stomp the Bullying», implementando el programa dentro de esos estudios.</li>
+        <li>Hacer peticiones al Congreso para que aprueben leyes estrictas que conviertan el acoso escolar en un delito penal.</li>
+      </ol>
+      <h4>Conclusión</h4>
+      <p>«Stomp the Bullying» es una iniciativa que busca abordar el problema del acoso escolar de manera activa y efectiva, proporcionando a los niños las herramientas y el apoyo necesario para enfrentar y prevenir el acoso en sus comunidades. A través de la educación, el empoderamiento y la colaboración, podemos cambiar la realidad del acoso escolar y crear un entorno más seguro y saludable para todos los niños.</p>
+      <p>El maestro <strong>Roberto Vidal</strong>, comprometido con la causa, obtuvo su certificación en el programa «Stomp the Bullying», convirtiéndose en parte integral del equipo. Dicha certificación fue otorgada por el maestro Sean Kelley y la coach Jocely González, quienes reconocieron el esfuerzo y dedicación de Vidal en la lucha contra el acoso escolar.</p>`
   }
 ];
 
 // Ícono de respaldo de la portada según la categoría (visible solo si la imagen no carga).
-const BLOG_CAT_ICON = { Noticias: 'icon-newspaper', Historia: 'icon-landmark', Bienestar: 'icon-leaf' };
+const BLOG_CAT_ICON = { Noticias: 'icon-newspaper', Historia: 'icon-landmark', Bienestar: 'icon-leaf', Organizaciones: 'icon-globe' };
 
 // Escuela asociada a una actividad (por slug). ESCUELAS se define más abajo en el script,
 // pero estas funciones solo se ejecutan después de esa definición (el render inicial del
@@ -6278,8 +6368,8 @@ function verActividadesEscuela(id) {
 // un paginador (mismo estilo que Escuelas/Instructores) bajo su grilla. Cada categoría
 // recuerda su propia página.
 const BLOG_PAGE_SIZE = 3;
-const blogPage = { Noticias: 1, Historia: 1, Bienestar: 1 };
-const BLOG_TAB_BY_CAT = { Noticias: 'tab-noticias', Historia: 'tab-historia', Bienestar: 'tab-bienestar' };
+const blogPage = { Noticias: 1, Historia: 1, Bienestar: 1, Organizaciones: 1 };
+const BLOG_TAB_BY_CAT = { Noticias: 'tab-noticias', Historia: 'tab-historia', Bienestar: 'tab-bienestar', Organizaciones: 'tab-organizaciones' };
 function renderBlogCategory(cat) {
   const gridEl = document.querySelector(`#blogs .blog-grid[data-cat="${cat}"]`);
   const pagerEl = document.querySelector(`#blogs .blog-pager[data-cat="${cat}"]`);
@@ -7778,6 +7868,7 @@ const SEMINARIOS = [
     descHtml: `
       <p>Los días 4, 5 y 6 de octubre 2019, se realizó una intensa jornada de artes marciales organizado por nuestro maestro, Roberto Vidal (Representante Chinese Karate Federation CKF para Chile y Sudamérica) en la que participaron diversas escuelas pertenecientes a nuestra Federación Internacional CKF y otras escuelas invitadas.</p>
       <p>Contamos con la presencia de dos importantes maestros, el maestro Sean P. Kelley (Presidente Chinese Karate Federation CKF), quien nos ha acompañado en todos nuestros grandes seminarios y el maestro Marty Zaninovich quien proviene del linaje del maestro Richard «Huk» Planas. Además, tuvimos una invitada muy especial, Jocely Gonzalez, quien es Coach of Life y es embajadora del programa Stomp the Bullying donde nos educó en materia de como abordar el maltrato tanto físico como psicológico, sobre todo el que se genera en niños.</p>
+      <p><button type="button" class="blog-link" onclick="closeSeminarioModal(); openBlogModal('stomp-the-bullying')">Conoce más sobre «Stomp the Bullying» →</button></p>
       <p>De forma muy especial, el día viernes tuvimos una exhibición de niños pertenecientes al proyecto liderado por nuestro maestro Roberto Vidal llamado «Karate Kids», el cual pertenece a jardines infantiles de «Fundación Integra» y «Codeduc / Junji». Además, se efectuó el ascenso de grado de varios de nuestros alumnos, black belts y members CKF.</p>
       <p>Agradecemos el apoyo que nos brindó la alcaldesa de Maipú, Cathy Barriga, quien nos donó colaciones para todos los participantes al seminario.</p>
       <p>A continuación les compartimos algunas imágenes divididas por día.</p>` },
