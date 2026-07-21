@@ -6018,13 +6018,14 @@ const BLOG_POSTS = [
       <p>La Feria de Emprendedores de AquaChile en Calbuco es un claro reflejo del espíritu emprendedor y comunitario de la región. La participación de Ramón Morales y su escuela añade un valor único al evento, demostrando que el deporte y la actividad física son vitales no solo para la salud individual, sino también para el tejido social de nuestras comunidades.</p>`
   },
   {
-    id: 'bruce-lee', cat: 'Historia', fecha: '2024-07-01',
+    id: 'bruce-lee', cat: 'Noticias', cats: ['Noticias', 'Historia'], fecha: '2026-07-20',
     titulo: 'Bruce Lee: El Ícono Inmortal de las Artes Marciales',
     img: 'img/blog/bruce-lee/portada-thumb.jpg',
     imgFull: 'img/blog/bruce-lee/portada-full.jpg',
-    url: 'https://kenpochile.cl/bruce-lee-el-icono-inmortal-de-las-artes-marciales/',
-    excerpt: 'La vida del legendario artista marcial, fundador del Jeet Kune Do, y su conexión con el Kenpo Americano y el gran maestro Ed Parker.',
+    excerpt: 'Hoy, 20 de julio, se cumple el 53° aniversario del fallecimiento de Bruce Lee: gran difusor, maestro, actor, escritor, filósofo y creador del Jeet Kune Do. Recordamos su vida y su conexión con el Kenpo Americano y el gran maestro Ed Parker.',
+    galeria: Array.from({ length: 10 }, (_, i) => `img/blog/bruce-lee/foto-${String(i + 1).padStart(2, '0')}.jpg`),
     contenido: `
+      <p>Hoy, <strong>20 de julio</strong>, se cumple el <strong>53° aniversario</strong> del fallecimiento de Bruce Lee, un gran <strong>difusor, maestro, actor, escritor, filósofo</strong> y creador del <strong>Jeet Kune Do</strong>. Más de cinco décadas después de su partida, su legado sigue vivo en cada practicante de artes marciales que busca la eficiencia, la adaptabilidad y la autoexpresión a través del movimiento.</p>
       <p>Bruce Lee, nacido como Lee Jun-fan el 27 de noviembre de 1940 en San Francisco, California, y fallecido el 20 de julio de 1973 en Hong Kong, es una de las figuras más influyentes en la historia de las artes marciales y el cine de acción. Su impacto se extiende más allá de las fronteras del cine, influenciando la filosofía, la práctica y la percepción de las artes marciales en todo el mundo. Este artículo explora su vida, su carrera y su profunda conexión con el Kenpo Americano y el gran maestro Ed Parker.</p>
       <h4>Infancia y educación</h4>
       <p>Bruce Lee nació en el seno de una familia de actores de la ópera china. Desde temprana edad estuvo expuesto a la actuación y las artes marciales en Hong Kong, donde creció. A los 13 años comenzó su entrenamiento en Wing Chun bajo la tutela del legendario maestro Ip Man. Su interés en el combate no se limitó a un solo estilo; también estudió boxeo y esgrima, demostrando desde joven una mentalidad abierta hacia la fusión de técnicas y filosofías.</p>
@@ -6051,7 +6052,9 @@ const BLOG_POSTS = [
       <p>Bruce Lee estuvo casado con Linda Emery y tuvo dos hijos: Brandon Lee (1965-1993) y Shannon Lee (1969). Brandon también siguió una carrera en la actuación y las artes marciales, pero murió trágicamente durante la filmación de «The Crow». Shannon Lee ha trabajado para preservar y promover el legado de su padre a través de la Fundación Bruce Lee.</p>
       <h4>Conclusión</h4>
       <p>Bruce Lee fue mucho más que un artista marcial y actor; fue un visionario que desafió las normas y rompió barreras culturales y filosóficas. Su conexión con el Kenpo Americano y Ed Parker es solo una parte de su rica y multifacética historia. A través de su vida, Lee demostró que las artes marciales son una vía para la autoexploración y la autoexpresión, un legado que sigue inspirando y guiando a personas de todo el mundo.</p>
-      <p>Bruce Lee sigue siendo una figura icónica y su influencia perdura, recordándonos que, como él mismo dijo, «seamos adaptables, flexibles y siempre en movimiento hacia el autoconocimiento y la mejora continua».</p>`
+      <p>Bruce Lee sigue siendo una figura icónica y su influencia perdura, recordándonos que, como él mismo dijo, «seamos adaptables, flexibles y siempre en movimiento hacia el autoconocimiento y la mejora continua».</p>
+      <h4>53° Aniversario</h4>
+      <p>Desde la familia IVKS/CKF y KenpoChile, rendimos un sencillo pero sentido homenaje a Bruce Lee en este 53° aniversario de su partida. Su filosofía y su espíritu innovador siguen presentes en la forma en que entendemos y enseñamos las artes marciales hoy.</p>`
   },
   {
     id: 'fumio-demura', cat: 'Historia', fecha: '2023-04-24',
@@ -6260,13 +6263,14 @@ function escuelaPorId(id) {
   return ESCUELAS.find(e => e.id === id);
 }
 function actividadesDeEscuela(id) {
-  return BLOG_POSTS.filter(p => p.cat === 'Noticias' && (p.escuelas || []).includes(id));
+  return BLOG_POSTS.filter(p => (p.cats || [p.cat]).includes('Noticias') && (p.escuelas || []).includes(id));
 }
 // Entradas de una categoría, ordenadas de más reciente a más antigua; en Noticias aplica
-// además el filtro por escuela activo.
+// además el filtro por escuela activo. Una entrada puede pertenecer a varias categorías
+// a la vez (campo opcional "cats"; si no está, se usa la categoría única "cat").
 let blogEscuelaFiltro = 'Todas';
 function getBlogPosts(cat) {
-  let posts = BLOG_POSTS.filter(p => p.cat === cat);
+  let posts = BLOG_POSTS.filter(p => (p.cats || [p.cat]).includes(cat));
   if (cat === 'Noticias' && blogEscuelaFiltro !== 'Todas') {
     posts = posts.filter(p => (p.escuelas || []).includes(blogEscuelaFiltro));
   }
@@ -6282,7 +6286,7 @@ function blogCardHTML(post, i) {
         <img src="${post.img}" alt="${post.titulo}" loading="lazy" decoding="async" onerror="this.remove()">
       </div>
       <div class="blog-body">
-        <div class="blog-meta"><span class="blog-cat">${post.cat}</span></div>
+        <div class="blog-meta">${(post.cats || [post.cat]).map(c => `<span class="blog-cat">${c}</span>`).join('')}</div>
         <div class="blog-title">${post.titulo}</div>
         <div class="blog-excerpt">${post.excerpt}</div>
         <button class="blog-link" onclick="event.stopPropagation(); openBlogModal('${post.id}')">Leer Más →</button>
@@ -6296,7 +6300,7 @@ function blogCardHTML(post, i) {
 // sección Escuelas.
 function renderBlogEscuelaFiltro() {
   const wrap = document.getElementById('blogEscuelaSelect');
-  const ids = [...new Set(BLOG_POSTS.filter(p => p.cat === 'Noticias').flatMap(p => p.escuelas || []))];
+  const ids = [...new Set(BLOG_POSTS.filter(p => (p.cats || [p.cat]).includes('Noticias')).flatMap(p => p.escuelas || []))];
   const escuelas = ids.map(escuelaPorId).filter(Boolean).sort((a, b) => a.nombre.localeCompare(b.nombre));
   wrap.dataset.hay = escuelas.length ? '1' : '0';
   actualizarVisibilidadFiltroEscuela();
@@ -6468,7 +6472,7 @@ function openBlogModal(id) {
   const img = document.getElementById('blogModalImg');
   img.src = post.imgFull || post.img;
   img.alt = post.titulo;
-  document.getElementById('blogModalCat').textContent = post.cat;
+  document.getElementById('blogModalCat').textContent = (post.cats || [post.cat]).join(' · ');
   document.getElementById('blogModalTitle').textContent = post.titulo;
   // Sección "Galería" opcional (post.galeria) al final del artículo: grilla paginada
   // de a 8 fotos (mismo patrón que la galería del modal de maestros); cada thumbnail
