@@ -8015,7 +8015,7 @@ renderSeminariosGridAndPager();
 (function populateEscuelaSelect() {
   const select = document.getElementById('f-escuela');
   const cercaOpt = select.querySelector('option[value="La más cercana a mí"]');
-  ESCUELAS.forEach(e => {
+  ESCUELAS.filter(e => !e.sinInscripcion).forEach(e => {
     const opt = document.createElement('option');
     opt.value = escuelaLabel(e);
     opt.textContent = escuelaLabel(e);
