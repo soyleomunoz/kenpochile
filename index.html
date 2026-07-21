@@ -8305,6 +8305,19 @@ function instructorFotoEncuadre(nombre) {
     : `transform:translateY(-${enc.up}) scale(${enc.zoom});transform-origin:top center`;
   return ` style="${css}"`;
 }
+// Zoom por foto para el marco 3/4 de la tarjeta y el modal de Nuestros Instructores (no el
+// marco cuadrado de Escuelas, que usa INSTRUCTOR_FOTO_ENCUADRE). El marco ya tiene el mismo
+// aspect-ratio que la foto original, así que sin esto se ve la escena completa; scale +
+// transform-origin (en % de la foto original) recortan sobre la zona indicada.
+const INSTRUCTOR_FOTO_ZOOM = {
+  // Foto de premiación grupal: acerca el encuadre a los 3 en primer plano para que se
+  // distingan de cuerpo completo del resto de asistentes al fondo.
+  'Alfredo Ruiz': { scale: 1.48, origin: '49% 59%' },
+};
+function instructorFotoZoomStyle(nombre) {
+  const z = INSTRUCTOR_FOTO_ZOOM[nombre];
+  return z ? `transform:scale(${z.scale});transform-origin:${z.origin}` : '';
+}
 // Redes sociales por instructor (a completar). Mientras no haya URL, el ícono se
 // muestra como "próximamente" — el espacio queda reservado para todos por igual.
 const INSTRUCTOR_REDES = {
@@ -8430,7 +8443,7 @@ function instructorCardHTML(inst, idx) {
     <div class="instructor-card" data-idx="${idx}" role="button" tabindex="0" aria-label="Ver foto de ${inst.nombre}${etiquetas ? ', ' + etiquetas : ''}">
       ${escuela ? `<span class="instructor-director-tag"><svg class="icon"><use href="#icon-award"/></svg>Director</span>` : ''}
       <div class="instructor-avatar">
-        ${src ? `<img src="${src}" alt="${inst.nombre}" loading="lazy" decoding="async" onerror="this.remove()">` : ''}
+        ${src ? `<img src="${src}" alt="${inst.nombre}" loading="lazy" decoding="async" onerror="this.remove()"${instructorFotoZoomStyle(inst.nombre) ? ` style="${instructorFotoZoomStyle(inst.nombre)}"` : ''}>` : ''}
         <span class="instructor-initials">${instructorIniciales(inst.nombre)}</span>
         <span class="instructor-belt">${beltBadgeHTML(inst)}</span>
         ${directivoInfo ? `<span class="instructor-directivo-tag"><svg class="icon"><use href="#icon-users"/></svg>Equipo Directivo</span>` : ''}
@@ -8885,6 +8898,7 @@ function updateInstructorModalContent() {
   const img = document.getElementById('instModalImg');
   img.src = instructorFotoSrc(inst.nombre);
   img.alt = inst.nombre;
+  img.style.cssText = instructorFotoZoomStyle(inst.nombre);
   document.getElementById('instModalBeltWrap').innerHTML = beltBadgeHTML(inst, 'lg');
   const velaWrap = document.getElementById('instModalVelaWrap');
   velaWrap.hidden = !esInstructorHonorario(inst);
