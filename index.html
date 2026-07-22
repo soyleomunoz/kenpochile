@@ -8926,7 +8926,7 @@ function updateInstructorModalContent() {
     const url = escuelaWebURL(escuela);
     document.getElementById('instModalSchoolBtnWrap').innerHTML = url
       ? `<a class="instructor-modal-schoolbtn" href="${url}" target="_blank" rel="noopener"><svg class="icon"><use href="#icon-landmark"/></svg> Visitar sitio de la escuela</a>`
-      : `<span class="instructor-modal-schoolbtn is-soon" title="Próximamente: sitio web de la escuela"><svg class="icon"><use href="#icon-landmark"/></svg> Sitio web — próximamente</span>`;
+      : '';
   }
   const directivoInfo = equipoDirectivoInfo(inst.nombre);
   const directivoWrap = document.getElementById('instModalDirectivoWrap');
