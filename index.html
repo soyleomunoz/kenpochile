@@ -1559,6 +1559,12 @@ button.escuela-icon:hover {
 .instructor-modal-certs { margin-top: 1rem; }
 .instructor-modal-school:not([hidden]) + .instructor-modal-certs,
 .instructor-modal-directivo:not([hidden]) + .instructor-modal-certs { margin-top: 1.3rem; }
+/* Separación antes de los íconos de redes: "~" en vez de "+" porque entre el bloque
+   visible (escuela/directivo/certificaciones) y el social puede haber hermanos [hidden]
+   de por medio, que no cuentan como adyacentes pero sí deben activar el espaciado. */
+.instructor-modal-school:not([hidden]) ~ .instructor-modal-social,
+.instructor-modal-directivo:not([hidden]) ~ .instructor-modal-social,
+.instructor-modal-certs:not([hidden]) ~ .instructor-modal-social { margin-top: 1.3rem; }
 .instructor-modal-certs-title {
   font-family: 'Rajdhani', sans-serif;
   font-size: 0.78rem; font-weight: 700;
