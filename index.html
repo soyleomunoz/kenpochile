@@ -4898,6 +4898,11 @@ const totalInsignias = 29;
 // Escuela a la que pertenece cada insignia de la colección, en el orden de los archivos
 // 01..29: "id" enlaza con ESCUELAS (el lightbox muestra nombre, director(es) y el botón
 // a la ficha); las insignias sin tarjeta en la grilla llevan solo "titulo" con el nombre
+// REGLA: si una escuela se oculta o elimina de ESCUELAS, su(s) insignia(s) correspondiente(s)
+// aquí NO se borran ni se reordenan (el índice i-1 debe seguir alineado con el archivo
+// NN.png); en vez de eso se les agrega `hidden: true` para que el loop de abajo las salte.
+// Si la escuela vuelve a estar visible, basta con quitar `hidden: true` y la insignia
+// reaparece en su mismo lugar original dentro de la grilla.
 // leído de la propia insignia. Verificado visualmente contra img/escuelas-insignias/.
 const INSIGNIA_ESCUELAS = [
   // 01 · Insignia del IVKS: su director es el maestro Roberto Vidal y agrupa sus cuatro
@@ -4941,11 +4946,13 @@ const INSIGNIA_ESCUELAS = [
 const grid = document.getElementById('insigniasGrid');
 const insigniaData = [];
 for (let i = 1; i <= totalInsignias; i++) {
+  const entry = INSIGNIA_ESCUELAS[i - 1];
+  if (entry && entry.hidden) continue; // escuela oculta/eliminada: se salta sin desalinear el resto de los archivos NN.png
   const num = String(i).padStart(2, '0');
   const src = `img/insignias/escuelas/${num}.png`;
   const alt = `Insignia Kenpo Nº ${num}`;
   const index = insigniaData.length;
-  insigniaData.push(Object.assign({ src, alt }, INSIGNIA_ESCUELAS[i - 1]));
+  insigniaData.push(Object.assign({ src, alt }, entry));
   const item = document.createElement('div');
   item.className = 'insignia-item';
   item.innerHTML = `<img src="${src}" alt="${alt}" loading="lazy" decoding="async">`;
