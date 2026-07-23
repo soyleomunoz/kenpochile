@@ -5359,6 +5359,10 @@ function openMaestroBio(id, desdeLink) {
     requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add('is-open')));
   }
   modal.querySelector('.seminario-modal-close').focus();
+  // Deep-link compartible: #maestro=<id> (ej. https://kenpochile.cl/#maestro=vidal)
+  // deja abierta esta biografía puntual. Se fija siempre al abrir el modal, para cualquier
+  // maestro existente o futuro, sin que haga falta agregarlo uno por uno.
+  history.replaceState(null, '', `#maestro=${id}`);
 }
 function volverMaestroAnterior() {
   const prev = maestroModalStack.pop();
@@ -5377,10 +5381,20 @@ function closeMaestroModal() {
   maestroActualId = null;
   document.getElementById('maestroModalBack').hidden = true;
   if (maestroModalTrigger) { maestroModalTrigger.focus(); maestroModalTrigger = null; }
+  if (/^#maestro=/.test(location.hash)) history.replaceState(null, '', '#maestros');
 }
 document.getElementById('maestroModal').addEventListener('click', function(e) {
   if (e.target === this) closeMaestroModal();
 });
+// Deep-link compartible: #maestro=<id> abre directamente la biografía de ese maestro.
+function aplicarHashMaestro() {
+  const m = location.hash.match(/^#maestro=([a-z0-9-]+)$/);
+  if (!m || !MAESTROS_BIO.some(x => x.id === m[1])) return;
+  document.getElementById('maestros').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  openMaestroBio(m[1]);
+}
+window.addEventListener('hashchange', aplicarHashMaestro);
+aplicarHashMaestro();
 
 // ── VISOR DE IMAGEN DE GALERÍA (compartido: maestros y multimedia de seminarios) ──
 // Muestra la imagen en su tamaño original (las galerías usan thumbnails; el visor carga
@@ -7431,6 +7445,10 @@ function openEscuelaFicha(id, trigger) {
   modal.classList.add('open');
   requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add('is-open')));
   modal.querySelector('.lightbox-close').focus();
+  // Deep-link compartible: #escuela=<id> (ej. https://kenpochile.cl/#escuela=vidal)
+  // deja abierta esta ficha puntual. Se fija siempre al abrir el modal, para cualquier
+  // escuela existente o futura, sin que haga falta agregarla una por una.
+  history.replaceState(null, '', `#escuela=${id}`);
 }
 function closeEscuelaFicha() {
   const modal = document.getElementById('escuelaModal');
@@ -7438,10 +7456,20 @@ function closeEscuelaFicha() {
   modal.classList.remove('is-open');
   setTimeout(() => modal.classList.remove('open'), 220);
   if (escuelaFichaTrigger) { escuelaFichaTrigger.focus(); escuelaFichaTrigger = null; }
+  if (/^#escuela=/.test(location.hash)) history.replaceState(null, '', '#escuelas');
 }
 document.getElementById('escuelaModal').addEventListener('click', function(ev) {
   if (ev.target === this) closeEscuelaFicha();
 });
+// Deep-link compartible: #escuela=<id> abre directamente la ficha de esa escuela.
+function aplicarHashEscuela() {
+  const m = location.hash.match(/^#escuela=([a-z0-9-]+)$/);
+  if (!m || !escuelaPorId(m[1])) return;
+  document.getElementById('escuelas').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  openEscuelaFicha(m[1]);
+}
+window.addEventListener('hashchange', aplicarHashEscuela);
+aplicarHashEscuela();
 
 // Insignia de la tarjeta ampliada en el lightbox compartido (cierra con Esc, click afuera
 // o el botón ✕, igual que la galería de insignias del pie de la sección).
@@ -9707,6 +9735,10 @@ function openProgramaModal(id) {
   modal.classList.add('open');
   requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add('is-open')));
   modal.querySelector('.lightbox-close').focus();
+  // Deep-link compartible: #cinturon=<id> (ej. https://kenpochile.cl/#cinturon=azul), solo
+  // para los cinturones de color (grado.tipo === 'color'); los grados de cinturón negro
+  // no llevan URL propia.
+  if (grado.tipo === 'color') history.replaceState(null, '', `#cinturon=${id}`);
 }
 function closeProgramaModal() {
   const modal = document.getElementById('programaModal');
@@ -9714,6 +9746,7 @@ function closeProgramaModal() {
   modal.classList.remove('is-open');
   setTimeout(() => modal.classList.remove('open'), 220);
   if (programaModalTrigger) { programaModalTrigger.focus(); programaModalTrigger = null; }
+  if (/^#cinturon=/.test(location.hash)) history.replaceState(null, '', '#programa-tecnico');
 }
 document.getElementById('programaModal').addEventListener('click', function(e) {
   if (e.target === this) closeProgramaModal();
@@ -9723,6 +9756,17 @@ document.getElementById('beltGrid').addEventListener('click', e => {
   if (!card) return;
   openProgramaModal(card.dataset.grado);
 });
+// Deep-link compartible: #cinturon=<id> abre directamente la ficha de ese cinturón de color.
+function aplicarHashCinturon() {
+  const m = location.hash.match(/^#cinturon=([a-z0-9-]+)$/);
+  if (!m) return;
+  const grado = PROGRAMA_TECNICO.find(g => g.id === m[1] && g.tipo === 'color');
+  if (!grado) return;
+  document.getElementById('programa-tecnico').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  openProgramaModal(m[1]);
+}
+window.addEventListener('hashchange', aplicarHashCinturon);
+aplicarHashCinturon();
 
 function openBeltChart() {
   lightboxTrigger = document.activeElement;
