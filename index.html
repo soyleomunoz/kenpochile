@@ -6524,6 +6524,10 @@ function openBlogModal(id) {
   modal.classList.add('open');
   requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add('is-open')));
   modal.querySelector('.seminario-modal-close').focus();
+  // Deep-link compartible: #blog=<id> (ej. https://kenpochile.cl/#blog=open-calbuco-2025)
+  // deja abierta esta entrada puntual. Se fija siempre al abrir el modal, para cualquier
+  // entrada existente o futura, sin que haga falta agregarlo entrada por entrada.
+  history.replaceState(null, '', `#blog=${id}`);
 }
 function closeBlogModal() {
   const modal = document.getElementById('blogModal');
@@ -6531,6 +6535,7 @@ function closeBlogModal() {
   modal.classList.remove('is-open');
   setTimeout(() => modal.classList.remove('open'), 220);
   if (blogModalTrigger) { blogModalTrigger.focus(); blogModalTrigger = null; }
+  if (/^#blog=/.test(location.hash)) history.replaceState(null, '', '#blogs');
 }
 document.getElementById('blogModal').addEventListener('click', function(e) {
   if (e.target === this) closeBlogModal();
@@ -7052,6 +7057,18 @@ function aplicarHashBlogEscuela() {
 }
 window.addEventListener('hashchange', aplicarHashBlogEscuela);
 aplicarHashBlogEscuela();
+
+// Deep-link compartible: #blog=<id> (ej. https://kenpochile.cl/#blog=open-calbuco-2025)
+// abre directamente el modal de esa entrada. Se genera solo (ver openBlogModal) para
+// toda entrada de BLOG_POSTS, actual o futura, sin pasos manuales adicionales.
+function aplicarHashBlogPost() {
+  const m = location.hash.match(/^#blog=([a-z0-9-]+)$/);
+  if (!m || !BLOG_POSTS.some(p => p.id === m[1])) return;
+  document.getElementById('blogs').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  openBlogModal(m[1]);
+}
+window.addEventListener('hashchange', aplicarHashBlogPost);
+aplicarHashBlogPost();
 const ESCUELAS_PAISES = ['Todas', 'Chile', 'Argentina'];
 const ESCUELAS_REGIONES_CHILE = ['Región de Coquimbo', 'Región de Valparaíso', 'Región Metropolitana', 'Región de Ñuble', 'Región del Biobío', 'Región de Los Lagos'];
 // En móvil la grilla queda en una sola columna y 8 tarjetas se hacen muy largas:
