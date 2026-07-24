@@ -294,13 +294,17 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
      no puede resolverse dentro de un contenedor con ancho "auto"-; este margen
      lo pega al borde interno de su columna, igual que el justify-self:end previo. */
   margin-left: auto;
+  /* El halo va en el contenedor (no en cada <img>) para que las 2 insignias
+     solapadas se traten como una sola silueta: si cada imagen llevara su propio
+     drop-shadow, el halo de la insignia de encima (z-index 2) se dibujaría
+     también sobre la insignia de abajo, en la zona donde se superponen. */
+  filter: drop-shadow(0 4px 30px rgba(228,87,46,0.5));
 }
 .hero-crest {
   position: absolute;
   width: auto;
   height: auto;
   display: block;
-  filter: drop-shadow(0 4px 30px rgba(228,87,46,0.5));
 }
 /* Posiciones en % relativas a .hero-crests: reproducen el solapamiento de la
    insignia compuesta original (TCB detrás/izquierda, International Kenpo
