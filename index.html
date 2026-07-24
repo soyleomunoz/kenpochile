@@ -234,7 +234,7 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 
 /* ── HERO ── */
 #hero {
-  position: relative; min-height: 100vh;
+  position: relative; height: 100vh;
   display: flex; align-items: center; justify-content: center;
   overflow: hidden;
   width: 100%;
@@ -266,10 +266,13 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   position: relative; z-index: 2;
   text-align: center;
   padding: 2rem;
-  max-width: 1600px;
+  max-width: 2000px;
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  /* minmax(0, 1fr): evita que las columnas laterales se "rompan" a 0px cuando el
+     ancho fijo del retrato de Vidal no cabe entero (sin esto, un 1fr desnudo toma
+     como mínimo el max-content del hijo y puede colapsar la columna vecina). */
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   gap: 2rem;
 }
@@ -278,14 +281,42 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   flex-direction: column;
   align-items: center;
 }
-.hero-side-img {
+.hero-crests {
+  position: relative;
   width: 100%;
-  max-width: 420px;
+  /* Tope solo para la insignia: la columna (1fr) ya limita el tamaño real en
+     pantallas angostas; este máximo permite agrandarla en monitores anchos sin
+     tocar el tamaño del maestro (columna derecha, ancho fijo sin cambios). */
+  max-width: 500px;
+  aspect-ratio: 640 / 480;
+  /* .hero-side-left ahora usa justify-self:stretch (ver más abajo) para darle a
+     este div un ancho definido -a diferencia de <img>, un <div> con width:100%
+     no puede resolverse dentro de un contenedor con ancho "auto"-; este margen
+     lo pega al borde interno de su columna, igual que el justify-self:end previo. */
+  margin-left: auto;
+}
+.hero-crest {
+  position: absolute;
+  width: auto;
   height: auto;
   display: block;
   filter: drop-shadow(0 4px 30px rgba(228,87,46,0.5));
 }
-.hero-side-left { justify-self: end; }
+/* Posiciones en % relativas a .hero-crests: reproducen el solapamiento de la
+   insignia compuesta original (TCB detrás/izquierda, International Kenpo
+   Studio encima/derecha) y se mantienen fijas sin importar el tamaño de
+   pantalla, porque el contenedor conserva su aspect-ratio 640/480. */
+.hero-crest-tcb {
+  left: 8.3%; top: 9%;
+  height: 83%;
+  z-index: 1;
+}
+.hero-crest-iks {
+  right: 4%; bottom: 8%;
+  height: 65%;
+  z-index: 2;
+}
+.hero-side-left { justify-self: stretch; }
 .hero-side-right { justify-self: start; }
 .hero-vidal-rotator {
   position: relative;
@@ -3672,7 +3703,10 @@ footer {
     
     <div class="hero-content">
       <div class="hero-side-left">
-        <img src="img/header/insignias.png" alt="Insignias Kenpo" class="hero-side-img" width="640" height="480" loading="eager" fetchpriority="high">
+        <div class="hero-crests" role="img" aria-label="Insignias Kenpo: TCB e International Kenpo Studio">
+          <img src="img/header/tcb-crest.svg" alt="" class="hero-crest hero-crest-tcb" aria-hidden="true" loading="eager" fetchpriority="high">
+          <img src="img/header/international-kenpo-studio-crest.svg" alt="" class="hero-crest hero-crest-iks" aria-hidden="true" loading="eager" fetchpriority="high">
+        </div>
       </div>
       <div class="hero-center">
         <div class="hero-badge">Chinese Karate Federation · International Vidal Kenpo Studio</div>
