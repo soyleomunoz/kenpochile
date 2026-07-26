@@ -2306,6 +2306,18 @@ button.escuela-icon:hover {
 }
 .escuela-horario-lugar:first-child { margin-top: 0; }
 .escuela-horario-lugar .icon { width: 12px; height: 12px; flex-shrink: 0; }
+.escuela-modal-video-frame {
+  position: relative;
+  aspect-ratio: 16/9;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #000;
+}
+.escuela-modal-video-frame video {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: contain;
+}
 .escuela-galeria-pager { margin-top: 0.8rem; }
 .escuela-modal-galeria { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; }
 @media (max-width: 640px) {
@@ -7046,21 +7058,27 @@ const ESCUELAS = [
     },
     // Las 2 imágenes de cabecera de la página van primero, luego la galería del artículo.
     galeria: ['img/escuelas/lions-warriors/header-1.jpg', 'img/escuelas/lions-warriors/header-2.jpg', ...Array.from({ length: 22 }, (_, i) => `img/escuelas/lions-warriors/foto-${String(i + 1).padStart(2, '0')}.jpg`)] },
-  // Ficha extraída de kenpochile.cl/internacional-gtf-kenpo-studio/: biografía, sede con
-  // coordenadas reales (resueltas de su enlace de Google Maps), horarios (los de la sección
-  // Información, más actuales que los de la biografía), contacto y Multimedia (2 cabeceras
-  // + 5 fotos del cuerpo del artículo + 36 de la galería). QR de WhatsApp omitido.
+  // Ficha extraída de kenpochile.cl/internacional-gtf-kenpo-studio/, con biografía, sede
+  // y horarios actualizados a pedido de la escuela (2026-07-25): dirección real en pasaje
+  // Braulio Arenas 7786, Villa Coloane, San Pedro de la Paz (sin coordenadas resueltas,
+  // se usa el texto de la dirección como query de Google Maps), clases Lun a Vie 18–21h
+  // desde los 6 años, y grado de la instructora como Cinturón Negro 2do Dan en Defensa
+  // Personal, instructora autorizada por la DGMN. Contacto sin cambios. Multimedia: 2
+  // cabeceras + 14 fotos nuevas agregadas al inicio (foto-01 a foto-14, 2026-07-25) para
+  // que se vean en la página 1 de la galería, seguidas de las 41 fotos originales
+  // (renumeradas a foto-15..foto-55). QR de WhatsApp omitido.
   // Su entrada de blog ya está en BLOG_POSTS (gtf-san-pedro-de-la-paz).
   { id: 'gtf', corto: 'GTF', nombre: 'Internacional GTF Kenpo Studio', director: 'Gisela Torres', region: 'Región del Biobío', comuna: null, lugar: 'San Pedro de la Paz, Provincia de Concepción', insignia: 'Insignia-Gisela-Torres-03.webp',
+    video: 'img/escuelas/gtf/video-1.mp4',
     historiaTitulo: 'Biografía',
     historia: `
-      <p>Gisela Torres Flores, de 44 años, es una destacada electricista titulada de la Universidad Técnica Federico Santa María. Su pasión por la educación la ha llevado a impartir clases relacionadas con su carrera y también en matemáticas. Desde inicios de 2017, Gisela inició junto a su hijo Andrew, de 10 años, el camino en el Kenpo, disciplina en la que ambos han alcanzado el grado de Black Belt «Probationary Black Belt», obtenido el 11 de enero 2025. Siempre ligada al deporte, Gisela ha ampliado sus conocimientos certificándose en entrenamiento deportivo para niños y adultos, entrenamiento de fuerza y defensa contra cuchillos.</p>
-      <p>Desde el 20 de agosto, Gisela comenzó oficialmente a funcionar con su escuela de Kenpo, en la que se imparten cuatro horarios diferentes los días lunes, miércoles y viernes, de 18:00 a 22:00 horas, en el Centro de Salud y Rehabilitación «TeCuido», ubicado en San Pedro de la Paz. Además, ofrece clases personalizadas en horarios diferentes, de acuerdo a la disponibilidad, brindando así opciones flexibles para sus alumnos.</p>`,
+      <p>Gisela Torres Flores es una destacada electricista titulada de la Universidad Técnica Federico Santa María. Su pasión por la educación la ha llevado a impartir clases relacionadas con su carrera y también en matemáticas. Desde inicios de 2017, Gisela inició junto a su hijo Andrew, de 10 años, el camino en el Kenpo. Desde hace dos años forma parte del grupo de Instructores autorizado por la DGMN, ostentando el grado de Cinturón Negro 2do Dan en Defensa Personal. Siempre ligada al deporte, Gisela ha ampliado sus conocimientos certificándose en entrenamiento deportivo para niños y adultos, entrenamiento de fuerza y defensa contra cuchillos.</p>
+      <p>Las clases se realizan de lunes a viernes, de 18:00 a 21:00 horas, en pasaje Braulio Arenas 7786, Villa Coloane, San Pedro de la Paz. Los alumnos son recibidos desde los 6 años en adelante, y además se ofrecen clases personalizadas en horarios diferentes, de acuerdo a la disponibilidad, brindando así opciones flexibles para sus alumnos.</p>`,
     direcciones: [
-      { label: 'Maitén 475 (La Foresta 4), San Pedro de la Paz', query: '-36.8785146,-73.1307175' },
+      { label: 'Pasaje Braulio Arenas 7786, Villa Coloane, San Pedro de la Paz', query: 'Pasaje Braulio Arenas 7786, Villa Coloane, San Pedro de la Paz, Chile' },
     ],
     horarios: [
-      { lugar: 'Maitén 475 (La Foresta 4)', dias: 'Lun a Vie', nivel: 'Todas las edades', hora: '18:00–21:00' },
+      { lugar: 'Pasaje Braulio Arenas 7786, Villa Coloane', dias: 'Lun a Vie', nivel: 'Desde los 6 años', hora: '18:00–21:00' },
     ],
     redes: {
       whatsapp: 'https://wa.me/56973871181?text=' + encodeURIComponent('Contactado desde KenpoChile.cl'),
@@ -7068,7 +7086,7 @@ const ESCUELAS = [
       instagram: 'https://www.instagram.com/International.gtf.kenpostudio/',
     },
     // Las 2 imágenes de cabecera de la página van primero, luego las fotos del artículo y la galería.
-    galeria: ['img/escuelas/gtf/header-1.jpg', 'img/escuelas/gtf/header-2.jpg', ...Array.from({ length: 41 }, (_, i) => `img/escuelas/gtf/foto-${String(i + 1).padStart(2, '0')}.jpg`)] },
+    galeria: ['img/escuelas/gtf/header-1.jpg', 'img/escuelas/gtf/header-2.jpg', ...Array.from({ length: 55 }, (_, i) => `img/escuelas/gtf/foto-${String(i + 1).padStart(2, '0')}.jpg`)] },
   // Ficha extraída de kenpochile.cl/kenpo-karate-calbuco/: biografía, sede (la página no
   // enlaza mapa, dirección como texto), horarios por grupo, contacto y Multimedia
   // (2 cabeceras; la página no tiene galería propia). QR de WhatsApp omitido. Sus 5
@@ -7397,8 +7415,10 @@ function openEscuelaFicha(id, trigger) {
       inst ? `<button type="button" class="escuela-director-link" data-instructor="${inst.nombre}" title="Conocer a ${inst.nombre}">${nombre}</button>` : nombre
     ).join(' y ');
 
-  // Columna izquierda: historia/biografía, horarios y contacto (si existen).
+  // Columna izquierda: video destacado (si existe), historia/biografía, horarios y
+  // contacto. El video va primero para que sea lo más visible al abrir la ficha.
   const izq = [];
+  if (e.video) izq.push(`<div class="escuela-modal-block escuela-modal-video"><div class="escuela-modal-video-frame"><video src="${e.video}" controls playsinline preload="metadata"></video></div></div>`);
   if (e.historia) izq.push(`<div class="escuela-modal-block escuela-modal-historia"><h4>${e.historiaTitulo || 'Historia'}</h4>${e.historia}</div>`);
   if (e.horarios && e.horarios.length) {
     // Los horarios van agrupados por lugar (campo opcional "lugar", filas ya ordenadas
@@ -7497,6 +7517,7 @@ function closeEscuelaFicha() {
   if (!modal.classList.contains('open')) return;
   modal.classList.remove('is-open');
   setTimeout(() => modal.classList.remove('open'), 220);
+  modal.querySelectorAll('.escuela-modal-video-frame video').forEach(v => v.pause());
   if (escuelaFichaTrigger) { escuelaFichaTrigger.focus(); escuelaFichaTrigger = null; }
   if (/^#escuela=/.test(location.hash)) history.replaceState(null, '', '#escuelas');
 }
