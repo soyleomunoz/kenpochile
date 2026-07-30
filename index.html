@@ -2684,8 +2684,13 @@ body:has(#lightbox.open, .instructor-modal.open, .programa-modal.open, .seminari
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 10px;
-  overflow: hidden;
-  z-index: 20;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  max-height: min(60vh, 420px);
+  /* Por encima de los botones flotantes (WhatsApp/scroll-top, z-index 999): con muchos
+     resultados la lista es más alta que el hueco hasta el borde de la pantalla y, sin esto,
+     quedaba tapada (recortada visualmente) detrás de esos botones fijos. */
+  z-index: 1000;
   box-shadow: 0 10px 30px rgba(0,0,0,0.45);
 }
 .section-search-suggestions.open { display: block; }
@@ -9352,6 +9357,11 @@ function initCardSearch(cfg) {
     }
   }
   input.addEventListener('input', renderSuggestions);
+  // El input es alcanzable con Tab aunque el buscador esté cerrado (queda oculto con
+  // opacity:0, no con display:none); si el foco llega así en vez de por el botón lupa,
+  // la caja se queda con su ancho cerrado (2.6rem) mientras las sugerencias sí se abren,
+  // renderizándose recortadas a ese ancho angosto. Abrir la caja también al enfocar evita eso.
+  input.addEventListener('focus', () => { if (!box.classList.contains('open')) open(); });
   input.addEventListener('blur', () => setTimeout(hideSuggestions, 150));
   input.addEventListener('keydown', e => {
     if (e.key === 'Escape') { close(); return; }
@@ -9367,7 +9377,21 @@ function initCardSearch(cfg) {
         return;
       }
     }
-    if (!matches.length) return;
+    if (!matches.length) {
+      // Sin sugerencias abiertas: si el texto actual deja un único resultado en la grilla
+      // (lo típico justo tras elegir uno con Enter, durante o después de su animación),
+      // un segundo Enter abre directamente su ficha/modal.
+      if (e.key === 'Enter' && cfg.onEnterUnico) {
+        const query = normalizarTexto(input.value.trim());
+        if (!query) return;
+        const unico = getItems().filter(i => matchesQuery(i, query));
+        if (unico.length === 1) {
+          e.preventDefault();
+          cfg.onEnterUnico(unico[0]);
+        }
+      }
+      return;
+    }
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       activeIndex = (activeIndex + 1) % matches.length;
@@ -9508,6 +9532,7 @@ initCardSearch({
   // (ej. "Aaron Torres" encuentra International Caliga Kenpo Studio).
   getItems: () => ESCUELAS.map(e => ({ nombre: e.nombre, meta: `${e.lugar} · Dir. ${e.director}`, search: e.director, escuela: e })),
   onSelect: item => selectEscuela(item.escuela),
+  onEnterUnico: item => openEscuelaFicha(item.escuela.id, document.getElementById('escuelaSearch')),
   onClear: () => {
     escuelaQuery = '';
     escuelaPage = 1;
