@@ -4096,6 +4096,7 @@ footer {
     <div class="lightbox-icon" id="lbIcon"><svg class="icon" style="width:5rem;height:5rem"><use href="#icon-user"/></svg></div>
     <img id="lbImage" alt="" style="display:none;max-width:320px;width:100%;border-radius:8px;margin:0 auto 1rem">
     <div class="lightbox-title" id="lbTitle"></div>
+    <div id="lbSubtitulo" style="display:none;color:#fff"></div>
     <div class="maestro-grade" id="lbGrade" style="margin:0.5rem 0 1rem"></div>
     <div class="lightbox-desc" id="lbDesc"></div>
     <div class="lb-significado" id="lbSignificado" style="display:none"></div>
@@ -5580,6 +5581,9 @@ function updateInsigniaContent(index) {
   img.alt = `Insignia ${nombre}`;
   img.style.display = 'block';
   document.getElementById('lbTitle').textContent = nombre;
+  const lbSubtitulo = document.getElementById('lbSubtitulo');
+  lbSubtitulo.textContent = e && e.id === 'calbuco' ? 'Insignia Kenpo Ramón Morales' : '';
+  lbSubtitulo.style.display = e && e.id === 'calbuco' ? 'block' : 'none';
   document.getElementById('lbGrade').textContent = directores
     ? `${directores.split(/\s+y\s+/i).length > 1 ? 'Directores' : 'Director'}: ${directores}`
     : 'International Vidal Kenpo Studio';
@@ -7176,7 +7180,7 @@ const ESCUELAS = [
       <h5>Forma</h5>
       <p>Al igual que la forma de la insignia original de GM Ed. Parker, representa los contornos de un templo chino, esto significa protección como también conocimiento de sus orígenes chinos y americano.</p>
       <h5>Bordes rojos</h5>
-      <p>Los bordes rojos interiores y exteriores, indican la línea sanguínea de KRM y el linaje de GM Ed. Parker; el color rojo también simboliza la sangre que será derramada en combate en nombre del país, valor y honor.</p>
+      <p>Los bordes rojos interiores y exteriores, indican la línea sanguínea de KRM (Kenpo Ramón Morales) y el linaje de GM Ed. Parker; el color rojo también simboliza la sangre que será derramada en combate en nombre del país, valor y honor.</p>
       <h5>Techo</h5>
       <p>Representa la protección, permitiendo resguardar a todos los miembros de la Escuela Internacional Kenpo Karate Calbuco (IKKC).</p>
       <h5>Costados</h5>
@@ -7659,6 +7663,9 @@ function openEscuelaInsignia(id, trigger) {
   img.alt = `Insignia ${e.nombre}`;
   img.style.display = 'block';
   document.getElementById('lbTitle').textContent = e.nombre;
+  const lbSubtitulo = document.getElementById('lbSubtitulo');
+  lbSubtitulo.textContent = e.id === 'calbuco' ? 'Insignia Kenpo Ramón Morales' : '';
+  lbSubtitulo.style.display = e.id === 'calbuco' ? 'block' : 'none';
   document.getElementById('lbGrade').textContent = escuelaUbicacion(e);
   document.getElementById('lbDesc').textContent = '';
   document.getElementById('lbCounter').textContent = '';
@@ -9963,6 +9970,9 @@ function openBeltChart() {
   img.style.maxWidth = '1000px';
   img.style.maxHeight = 'calc(100vh - 260px)';
   document.getElementById('lbTitle').textContent = 'American Kenpo – Belt Ranking Chart';
+  const lbSubtitulo = document.getElementById('lbSubtitulo');
+  lbSubtitulo.textContent = '';
+  lbSubtitulo.style.display = 'none';
   document.getElementById('lbGrade').textContent = '';
   document.getElementById('lbDesc').textContent = 'Sistema completo de grados del International Vidal Kenpo Studio.';
   document.getElementById('lbCounter').textContent = '';
