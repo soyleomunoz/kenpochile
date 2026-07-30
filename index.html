@@ -1057,6 +1057,28 @@ button.escuela-icon:hover {
 /* Botón "Ver ficha de la escuela" del lightbox de insignias: solo aparece cuando la
    insignia corresponde a una escuela con tarjeta en la grilla. */
 #lbFichaBtn { width: auto; margin-top: 1rem; }
+/* Botón "Ver el significado de la insignia": solo aparece si la escuela tiene el campo
+   insigniaSignificado (por ahora, Calbuco). Alterna el contenido del mismo lightbox entre
+   la imagen y el texto explicativo, ver toggleLbSignificado(). */
+.lb-significado-btn { width: auto; margin-top: 0.9rem; }
+/* En modo texto se permite scroll vertical porque el contenido puede superar el 90vh. */
+#lightbox.lb-texto .lightbox-content { overflow-y: auto; }
+.lb-significado { margin-top: 0.8rem; text-align: left; }
+.lb-significado h5 {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--accent);
+  margin: 1.1rem 0 0.4rem;
+}
+.lb-significado h5:first-child { margin-top: 0; }
+.lb-significado p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem; line-height: 1.5;
+  color: var(--text-muted);
+  text-align: justify;
+}
+.lb-significado p + p { margin-top: 0.5rem; }
 /* Insignias que agrupan varias escuelas (la del IVKS del maestro Vidal): lista en dos
    columnas con el nombre a la izquierda y el botón a su ficha a la derecha. */
 .lb-escuelas {
@@ -4076,8 +4098,10 @@ footer {
     <div class="lightbox-title" id="lbTitle"></div>
     <div class="maestro-grade" id="lbGrade" style="margin:0.5rem 0 1rem"></div>
     <div class="lightbox-desc" id="lbDesc"></div>
+    <div class="lb-significado" id="lbSignificado" style="display:none"></div>
     <div class="lb-escuelas" id="lbEscuelas" style="display:none"></div>
     <button type="button" class="btn-escuela" id="lbFichaBtn" style="display:none">Ver ficha de la escuela</button>
+    <button type="button" class="btn-escuela lb-significado-btn" id="lbSignificadoBtn" style="display:none" onclick="toggleLbSignificado()">Ver el significado de la insignia</button>
     <div class="lightbox-counter" id="lbCounter"></div>
   </div>
   <button class="lightbox-nav lightbox-next" onclick="navInsignia(1)" aria-label="Siguiente insignia"><svg class="icon"><use href="#icon-chevron-right"/></svg></button>
@@ -5031,7 +5055,7 @@ function closeLightbox() {
   const lb = document.getElementById('lightbox');
   if (!lb.classList.contains('open')) return;
   lb.classList.remove('is-open');
-  setTimeout(() => lb.classList.remove('open', 'lightbox-gallery', 'lb-chart'), 220);
+  setTimeout(() => lb.classList.remove('open', 'lightbox-gallery', 'lb-chart', 'lb-texto'), 220);
   const lbImage = document.getElementById('lbImage');
   lbImage.style.width = '100%';
   lbImage.style.maxWidth = '320px';
@@ -5040,12 +5064,53 @@ function closeLightbox() {
   const lbEscuelas = document.getElementById('lbEscuelas');
   lbEscuelas.style.display = 'none';
   lbEscuelas.innerHTML = '';
+  document.getElementById('lbSignificadoBtn').style.display = 'none';
+  const lbSignificado = document.getElementById('lbSignificado');
+  lbSignificado.style.display = 'none';
+  lbSignificado.innerHTML = '';
+  const content = lb.querySelector('.lightbox-content');
+  content.style.height = '';
+  content.style.transition = '';
   currentInsigniaIndex = -1;
   if (lightboxTrigger) { lightboxTrigger.focus(); lightboxTrigger = null; }
 }
 document.getElementById('lightbox').addEventListener('click', function(e) {
   if(e.target === this) closeLightbox();
 });
+// Alterna el lightbox de una insignia entre la imagen y su significado (texto extraído de
+// documentos de la propia escuela, ej. "Insignia KRM.docx" de Calbuco). El modal anima su
+// alto para adaptarse al contenido: se congela el alto actual, se cambia la vista, se mide
+// el alto natural del nuevo contenido y se anima desde el alto viejo hasta el nuevo.
+function toggleLbSignificado() {
+  const lb = document.getElementById('lightbox');
+  const show = !lb.classList.contains('lb-texto');
+  const content = lb.querySelector('.lightbox-content');
+
+  const startH = content.offsetHeight;
+  content.style.transition = 'none';
+  content.style.height = startH + 'px';
+  content.offsetHeight; // fuerza reflow con el alto congelado
+
+  lb.classList.toggle('lb-texto', show);
+  document.getElementById('lbImage').style.display = show ? 'none' : 'block';
+  document.getElementById('lbSignificado').style.display = show ? 'block' : 'none';
+  document.getElementById('lbSignificadoBtn').textContent = show ? 'Volver a la insignia' : 'Ver el significado de la insignia';
+
+  content.style.height = 'auto';
+  const endH = content.offsetHeight;
+  content.style.height = startH + 'px';
+  content.offsetHeight; // fuerza reflow de vuelta al alto viejo antes de animar
+
+  content.style.transition = 'height 320ms var(--ease-out)';
+  requestAnimationFrame(() => { content.style.height = endH + 'px'; });
+  content.addEventListener('transitionend', function te(ev) {
+    if (ev.target === content && ev.propertyName === 'height') {
+      content.style.height = '';
+      content.style.transition = '';
+      content.removeEventListener('transitionend', te);
+    }
+  });
+}
 // ── BIOGRAFÍAS DE MAESTROS (contenido real de kenpochile.cl/maestros-2) ──
 // Cada entrada replica el artículo publicado en kenpochile.cl: la tarjeta abre el modal
 // (openMaestroBio) con la portada del artículo, la biografía completa, el video embebido
@@ -5504,6 +5569,11 @@ function updateInsigniaContent(index) {
   const e = id ? escuelaPorId(id) : null;
   const nombre = e ? e.nombre : (titulo || alt);
   const directores = e ? e.director : director;
+  const lb = document.getElementById('lightbox');
+  lb.classList.remove('lb-texto');
+  const content = lb.querySelector('.lightbox-content');
+  content.style.height = '';
+  content.style.transition = '';
   document.getElementById('lbIcon').style.display = 'none';
   const img = document.getElementById('lbImage');
   img.src = src;
@@ -5514,6 +5584,12 @@ function updateInsigniaContent(index) {
     ? `${directores.split(/\s+y\s+/i).length > 1 ? 'Directores' : 'Director'}: ${directores}`
     : 'International Vidal Kenpo Studio';
   document.getElementById('lbDesc').textContent = e ? escuelaUbicacion(e) : '';
+  const significadoBtn = document.getElementById('lbSignificadoBtn');
+  significadoBtn.textContent = 'Ver el significado de la insignia';
+  significadoBtn.style.display = e && e.insigniaSignificado ? 'inline-flex' : 'none';
+  const lbSignificado = document.getElementById('lbSignificado');
+  lbSignificado.innerHTML = (e && e.insigniaSignificado) || '';
+  lbSignificado.style.display = 'none';
   const abrirFicha = fichaId => {
     const trigger = lightboxTrigger;
     closeLightbox();
@@ -7093,6 +7169,39 @@ const ESCUELAS = [
   // entradas de blog están en BLOG_POSTS (grupo calbuco).
   { id: 'calbuco', corto: 'Calbuco', nombre: 'Internacional Kenpo Karate Calbuco', director: 'Ramón Morales', region: 'Región de Los Lagos', comuna: null, lugar: 'Calbuco, Provincia de Llanquihue', insignia: 'Insignia-Calbuco.webp',
     fundada: 1992,
+    // Texto extraído de "Insignia KRM.docx" (documento de la escuela): se muestra en el
+    // lightbox de la insignia al presionar "Ver el significado de la insignia".
+    insigniaSignificado: `
+      <p>Cada elemento diseñado representa aspectos de herencia, linaje e ideales.</p>
+      <h5>Forma</h5>
+      <p>Al igual que la forma de la insignia original de GM Ed. Parker, representa los contornos de un templo chino, esto significa protección como también conocimiento de sus orígenes chinos y americano.</p>
+      <h5>Bordes rojos</h5>
+      <p>Los bordes rojos interiores y exteriores, indican la línea sanguínea de KRM y el linaje de GM Ed. Parker; el color rojo también simboliza la sangre que será derramada en combate en nombre del país, valor y honor.</p>
+      <h5>Techo</h5>
+      <p>Representa la protección, permitiendo resguardar a todos los miembros de la Escuela Internacional Kenpo Karate Calbuco (IKKC).</p>
+      <h5>Costados</h5>
+      <p>Los costados son arqueados como en la tradición china para prevenir que los malos espíritus penetren.</p>
+      <h5>Parte inferior</h5>
+      <p>Representa los estados de la materia (líquido, sólido y gaseoso) como también las etapas del aprendizaje (primitivo, mecánico y espontaneo).</p>
+      <h5>Punta de la lanza</h5>
+      <p>La punta de la lanza muestra que la Escuela es la fuerza principal que prepara el camino para nuevos conocimientos en el arte.</p>
+      <h5>Letra K</h5>
+      <p>La letra K, dentro de la figura de la lanza significa KENPO (Ley del Puño) en donde los miembros son leales, cualquiera que deshonre, falte a los principios o no siga las reglas, será expulsado con carta al representante.</p>
+      <h5>Tigre y dragón</h5>
+      <p>El tigre (fuerza física) y el dragón (fuerza espiritual) están envueltos dentro del patrón universal simbolizando igual equilibrio, las fuerzas físicas y espirituales en armonía en el estudiante del Kenpo; también representan que Kenpo es un sistema que busca lo correcto.</p>
+      <h5>Patrón universal</h5>
+      <p>Es un diagrama tridimensional de movimientos desarrollado por GM Ed. Parker, en la cual debes manejar tus movimientos para poder manejar los movimientos de tus enemigos.</p>
+      <h5>Letras chinas</h5>
+      <p>Las letras chinas son idénticas al original escudo de GM Ed. Parker. Y un recordatorio de los creadores de nuestro arte. Las letras de la derecha significan «Kenpo Karate» y las letras de la izquierda significan «el Espíritu del Tigre y del Dragón». La esencia filosófica del Kenpo.</p>
+      <h5>El círculo</h5>
+      <p>Es un símbolo que representa el ciclo continuo de la vida en donde uno nunca deja de aprender, además del vínculo de amistad que debe existir entre los miembros, los movimientos defensivos y ofensivos evolucionan a partir del círculo, es la base del alfabeto de Kenpo.</p>
+      <h5>Los colores</h5>
+      <p>El color gris representa el cerebro, el blanco representa a los principiantes que son la base del arte. El amarillo y naranjo representan el primer nivel de habilidad, la etapa mecánica. El café, color de los ojos del tigre, representa a los estudiantes avanzados. El negro, nivel de experto, y el rojo, más arriba del negro, representa a los profesores y maestros.</p>
+      <h5>Color rojo en la CKF</h5>
+      <p>Representa el fuego = expansión.</p>
+      <p>En todos los aspectos de la vida, siempre hay un opuesto y un reverso, y vemos todo en el Kenpo americano como tal. «Para cada movimiento, concepto, principio y definición hay un opuesto y un reverso».</p>
+      <p>Mediante el estudio detallado del significado de los colores en la cultura china, Máster Kelley ha decidido revertir "CIELO y FUEGO" (cinturón negro con rayas rojas) en "FUEGO y CIELO" (cinto rojo con rayas negras). Esto significa humildad, honra la sabiduría y se compromete a la voluntad de ser un estudiante de por vida de Kenpo, con el objetivo final "EL VERDADERO CIELO".</p>
+      <p>Es un honor conseguir y usar el "cinturón rojo" que solo puede ser presentado por el presidente de la Federación China de Karate para los rangos quinto y superior.</p>`,
     historiaTitulo: 'Biografía',
     historia: `
       <p>La Escuela Kenpo Karate Calbuco, ubicada en la región de Los Lagos, ha sido un faro de excelencia en artes marciales desde su fundación en 1992 bajo la dirección del instructor Ramón Morales. Con el grado de 4th Degree Black Belt «Senior Instructor», Morales ha guiado a estudiantes de todas las edades hacia la maestría en el Kenpo Karate y ha forjado una comunidad unida por valores de respeto y perseverancia. La escuela ofrece una educación integral que abarca desde el acondicionamiento físico hasta la defensa personal, preparación para torneos y programas personalizados, incluida una dedicación especial a empoderar a las mujeres a través de la enseñanza de la defensa personal. Bajo la dirección del maestro Roberto Vidal, la escuela ahora se enorgullece de ser parte de la asociación internacional Chinese Karate Federation (CKF), ampliando su influencia y alcance en la comunidad global de artes marciales.</p>`,
@@ -7540,7 +7649,10 @@ function openEscuelaInsignia(id, trigger) {
   const e = escuelaPorId(id);
   if (!e) return;
   const lb = document.getElementById('lightbox');
-  lb.classList.remove('lightbox-gallery', 'lb-chart');
+  lb.classList.remove('lightbox-gallery', 'lb-chart', 'lb-texto');
+  const content = lb.querySelector('.lightbox-content');
+  content.style.height = '';
+  content.style.transition = '';
   document.getElementById('lbIcon').style.display = 'none';
   const img = document.getElementById('lbImage');
   img.src = `img/escuelas-insignias/${e.insignia}`;
@@ -7550,6 +7662,12 @@ function openEscuelaInsignia(id, trigger) {
   document.getElementById('lbGrade').textContent = escuelaUbicacion(e);
   document.getElementById('lbDesc').textContent = '';
   document.getElementById('lbCounter').textContent = '';
+  const significadoBtn = document.getElementById('lbSignificadoBtn');
+  significadoBtn.textContent = 'Ver el significado de la insignia';
+  significadoBtn.style.display = e.insigniaSignificado ? 'inline-flex' : 'none';
+  const lbSignificado = document.getElementById('lbSignificado');
+  lbSignificado.innerHTML = e.insigniaSignificado || '';
+  lbSignificado.style.display = 'none';
   lightboxTrigger = trigger || null;
   openLightbox();
 }
