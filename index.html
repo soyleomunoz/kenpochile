@@ -9319,8 +9319,14 @@ function initCardSearch(cfg) {
     }));
   }
   // Además del nombre, algunas secciones (ej. seminarios) buscan también en un campo extra "search".
+  // cfg.wholeWord evita falsos positivos por coincidencia dentro de otra palabra (ej. Programa
+  // Técnico: buscar "form" no debe encontrar "(formulation)").
   function matchesQuery(item, query) {
-    return !query || normalizarTexto(`${item.nombre} ${item.search || ''}`).includes(query);
+    if (!query) return true;
+    const haystack = normalizarTexto(`${item.nombre} ${item.search || ''}`);
+    if (!cfg.wholeWord) return haystack.includes(query);
+    const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return new RegExp(`(^|[^a-z0-9])${escaped}([^a-z0-9]|$)`, 'i').test(haystack);
   }
   function applyFilter(query) {
     if (cfg.getItems) return;
@@ -9355,7 +9361,7 @@ function initCardSearch(cfg) {
     const query = normalizarTexto(input.value.trim());
     applyFilter(query);
     if (!query) { hideSuggestions(); return; }
-    matches = getItems().filter(i => matchesQuery(i, query)).slice(0, 8);
+    matches = getItems().filter(i => matchesQuery(i, query)).slice(0, cfg.maxResults || 8);
     if (!matches.length) { hideSuggestions(); return; }
     activeIndex = -1;
     suggestions.innerHTML = matches.map(i => `<button type="button" class="section-search-suggestion"><span class="section-search-suggestion-name">${highlightMatch(i.nombre, query)}</span>${i.meta ? `<span class="section-search-suggestion-meta">${highlightMatch(i.meta, query)}</span>` : ''}</button>`).join('');
@@ -10037,7 +10043,7 @@ function selectTecnico(item) {
 initCardSearch({
   sectionId: 'programa-tecnico', inputId: 'tecnicoSearch', toggleId: 'tecnicoSearchToggle',
   boxId: 'tecnicoSearchBox', suggestionsId: 'tecnicoSuggestions', resultsId: 'beltGrid',
-  getItems: getTecnicoSearchItems,
+  getItems: getTecnicoSearchItems, maxResults: 30, wholeWord: true,
   onSelect: selectTecnico,
   onEnterUnico: item => { selectTecnico(item); openProgramaModal(item.grado.id); },
   onClear: () => {
