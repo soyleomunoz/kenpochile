@@ -9319,14 +9319,15 @@ function initCardSearch(cfg) {
     }));
   }
   // Además del nombre, algunas secciones (ej. seminarios) buscan también en un campo extra "search".
-  // cfg.wholeWord evita falsos positivos por coincidencia dentro de otra palabra (ej. Programa
-  // Técnico: buscar "form" no debe encontrar "(formulation)").
+  // item.matchText, si viene definido, reemplaza a item.nombre para el matching (ej. Programa
+  // Técnico usa una versión sin paréntesis: "form" no debe encontrar "(formulation)" ni
+  // "(optativo)" etc, pero sí debe encontrar "Snapping" al buscar "snap" por prefijo de palabra).
   function matchesQuery(item, query) {
     if (!query) return true;
-    const haystack = normalizarTexto(`${item.nombre} ${item.search || ''}`);
+    const haystack = normalizarTexto(`${item.matchText || item.nombre} ${item.search || ''}`);
     if (!cfg.wholeWord) return haystack.includes(query);
     const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    return new RegExp(`(^|[^a-z0-9])${escaped}([^a-z0-9]|$)`, 'i').test(haystack);
+    return new RegExp(`(^|[^a-z0-9])${escaped}`, 'i').test(haystack);
   }
   function applyFilter(query) {
     if (cfg.getItems) return;
@@ -10023,7 +10024,7 @@ function getTecnicoSearchItems() {
       items.push({ nombre: `${t.n}. ${t.en}`, meta: `${g.nombre} · ${g.grado}`, grado: g, kind: 'tecnica', key: idx });
     });
     (g.setForm || []).forEach((s, idx) => {
-      items.push({ nombre: s, meta: `${g.nombre} · ${g.grado} · Set/Form`, grado: g, kind: 'setForm', key: idx });
+      items.push({ nombre: s, matchText: s.replace(/\s*\([^)]*\)/g, ''), meta: `${g.nombre} · ${g.grado} · Set/Form`, grado: g, kind: 'setForm', key: idx });
     });
   });
   return items;
