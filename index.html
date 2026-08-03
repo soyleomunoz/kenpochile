@@ -1832,7 +1832,12 @@ button.escuela-icon:hover {
   margin-left: 0.4rem; white-space: nowrap;
 }
 .pm-list { list-style: none; font-family: 'Cormorant Garamond', serif; color: var(--text-muted); font-style: italic; line-height: 1.7; }
+.pm-list li { padding: 0.3rem 0; border-radius: 6px; transition: background 220ms ease; }
 .pm-note { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--text-muted); line-height: 1.7; }
+.pm-tecnicas li.pm-highlight, .pm-list li.pm-highlight {
+  background: rgba(228,87,46,0.15); border-radius: 6px;
+  animation: search-found-pulse 0.9s ease-in-out 2;
+}
 @media (max-width: 640px) {
   .programa-modal-head { padding: 1.5rem 1.25rem 1rem; gap: 0.9rem; }
   .programa-modal-name { font-size: 1.1rem; padding: 0.7rem 3rem 0.7rem 1.25rem; }
@@ -4331,7 +4336,25 @@ footer {
 <section id="programa-tecnico">
   <div class="section-inner">
     <div class="section-label">Sistema de Grados</div>
-    <h2 class="section-title">Nuestro <span>Programa Técnico</span></h2>
+    <div class="section-title-row">
+      <h2 class="section-title">Nuestro <span>Programa Técnico</span></h2>
+      <div class="section-search-box" id="tecnicoSearchBox">
+        <input type="text" id="tecnicoSearch" placeholder="Buscar técnica, set o forma..." aria-label="Buscar técnica, set o forma" autocomplete="off">
+        <button type="button" class="section-search-toggle" id="tecnicoSearchToggle" aria-label="Buscar técnica" aria-describedby="tecnicoSearchTip" aria-expanded="false" aria-controls="tecnicoSearchBox">
+          <svg class="icon"><use href="#icon-search"/></svg>
+        </button>
+        <div class="search-tip" id="tecnicoSearchTip" role="tooltip">
+          <p class="search-tip-title">Buscar técnica</p>
+          <p class="search-tip-desc">Por nombre de técnica, set o forma; muestra a qué grado pertenece</p>
+          <ul class="search-tip-keys">
+            <li><kbd>B</kbd><span>Abrir buscador</span></li>
+            <li><kbd>↑↓</kbd><span>Navegar sugerencias</span></li>
+            <li><kbd>Enter</kbd><span>Seleccionar</span></li>
+          </ul>
+        </div>
+        <div class="section-search-suggestions" id="tecnicoSuggestions"></div>
+      </div>
+    </div>
     <div class="divider"></div>
     <p class="section-subtitle">Doce grados —de cinturón amarillo a cuarto grado de cinturón negro— bajo el sistema American Kenpo de Ed Parker.<br>Haz clic en cada cinturón para ver sus técnicas, sets/formas y teoría.</p>
 
@@ -9925,6 +9948,7 @@ window.addEventListener('resize', syncBeltChartHeight);
 syncBeltChartHeight();
 
 let programaModalTrigger = null;
+let tecnicoPendingHighlight = null;
 function openProgramaModal(id) {
   const grado = PROGRAMA_TECNICO.find(g => g.id === id);
   if (!grado) return;
@@ -9935,13 +9959,26 @@ function openProgramaModal(id) {
   document.getElementById('progModalGrade').textContent = grado.grado;
   document.getElementById('progModalTime').textContent = 'Tiempo recomendado: ' + grado.tiempo;
 
-  const tecnicasHTML = pmSectionHTML('Técnicas', grado.tecnicas, items => `<ol class="pm-tecnicas">${items.map(t => `
-    <li><span class="pm-tecnica-n">${t.n}.</span><span><span class="pm-tecnica-en">${t.en}</span>${t.opt ? '<span class="pm-tecnica-opt">Opcional</span>' : ''}<br><span class="pm-tecnica-es">${t.es}</span></span></li>`).join('')}</ol>`);
-  const setFormHTML = pmSectionHTML('Set y Form', grado.setForm, items => `<ul class="pm-list">${items.map(s => `<li>${s}</li>`).join('')}</ul>`);
-  const teoriaHTML = pmSectionHTML('Teoría', grado.teoria, items => `<ul class="pm-list">${items.map(t => `<li>${t}</li>`).join('')}</ul>`);
+  const tecnicasHTML = pmSectionHTML('Técnicas', grado.tecnicas, items => `<ol class="pm-tecnicas">${items.map((t, idx) => `
+    <li data-kind="tecnica" data-key="${idx}"><span class="pm-tecnica-n">${t.n}.</span><span><span class="pm-tecnica-en">${t.en}</span>${t.opt ? '<span class="pm-tecnica-opt">Opcional</span>' : ''}<br><span class="pm-tecnica-es">${t.es}</span></span></li>`).join('')}</ol>`);
+  const setFormHTML = pmSectionHTML('Set y Form', grado.setForm, items => `<ul class="pm-list">${items.map((s, idx) => `<li data-kind="setForm" data-key="${idx}">${s}</li>`).join('')}</ul>`);
+  const teoriaHTML = pmSectionHTML('Teoría', grado.teoria, items => `<ul class="pm-list">${items.map((t, idx) => `<li data-kind="teoria" data-key="${idx}">${t}</li>`).join('')}</ul>`);
   const notaHTML = grado.nota ? `<div class="pm-section"><p class="pm-note">${grado.nota}</p></div>` : '';
 
   document.getElementById('progModalBody').innerHTML = tecnicasHTML + setFormHTML + teoriaHTML + notaHTML;
+
+  if (tecnicoPendingHighlight && tecnicoPendingHighlight.gradoId === id) {
+    const { kind, key } = tecnicoPendingHighlight;
+    tecnicoPendingHighlight = null;
+    const el = document.getElementById('progModalBody').querySelector(`[data-kind="${kind}"][data-key="${key}"]`);
+    if (el) {
+      requestAnimationFrame(() => {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.classList.add('pm-highlight');
+        setTimeout(() => el.classList.remove('pm-highlight'), 2400);
+      });
+    }
+  }
 
   const modal = document.getElementById('programaModal');
   modal.querySelector('.programa-modal-scroll').scrollTop = 0;
@@ -9968,6 +10005,47 @@ document.getElementById('beltGrid').addEventListener('click', e => {
   const card = e.target.closest('.belt-card');
   if (!card) return;
   openProgramaModal(card.dataset.grado);
+});
+
+// Buscador de técnicas/sets/formas: indexa el contenido de cada grado y, al elegir un
+// resultado, filtra la grilla a la sola tarjeta del cinturón dueño y deja pendiente el
+// resaltado del ítem exacto para cuando se abra su modal.
+function getTecnicoSearchItems() {
+  const items = [];
+  PROGRAMA_TECNICO.forEach(g => {
+    (g.tecnicas || []).forEach((t, idx) => {
+      items.push({ nombre: `${t.n}. ${t.en}`, meta: `${g.nombre} · ${g.grado}`, search: t.es, grado: g, kind: 'tecnica', key: idx });
+    });
+    (g.setForm || []).forEach((s, idx) => {
+      items.push({ nombre: s, meta: `${g.nombre} · ${g.grado} · Set/Form`, grado: g, kind: 'setForm', key: idx });
+    });
+    (g.teoria || []).forEach((q, idx) => {
+      items.push({ nombre: q, meta: `${g.nombre} · ${g.grado} · Teoría`, grado: g, kind: 'teoria', key: idx });
+    });
+  });
+  return items;
+}
+function selectTecnico(item) {
+  tecnicoPendingHighlight = { gradoId: item.grado.id, kind: item.kind, key: item.key };
+  document.querySelectorAll('#beltGrid .belt-card').forEach(c => {
+    c.style.display = c.dataset.grado === item.grado.id ? '' : 'none';
+  });
+  const card = document.querySelector(`#beltGrid .belt-card[data-grado="${item.grado.id}"]`);
+  if (card) {
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    card.classList.add('search-found');
+    setTimeout(() => card.classList.remove('search-found'), 1900);
+  }
+}
+initCardSearch({
+  sectionId: 'programa-tecnico', inputId: 'tecnicoSearch', toggleId: 'tecnicoSearchToggle',
+  boxId: 'tecnicoSearchBox', suggestionsId: 'tecnicoSuggestions', resultsId: 'beltGrid',
+  getItems: getTecnicoSearchItems,
+  onSelect: selectTecnico,
+  onEnterUnico: item => { selectTecnico(item); openProgramaModal(item.grado.id); },
+  onClear: () => {
+    document.querySelectorAll('#beltGrid .belt-card').forEach(c => { c.style.display = ''; });
+  }
 });
 // Deep-link compartible: #cinturon=<id> abre directamente la ficha de ese cinturón de color.
 function aplicarHashCinturon() {
