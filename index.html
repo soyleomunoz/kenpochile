@@ -10014,7 +10014,7 @@ function getTecnicoSearchItems() {
   const items = [];
   PROGRAMA_TECNICO.forEach(g => {
     (g.tecnicas || []).forEach((t, idx) => {
-      items.push({ nombre: `${t.n}. ${t.en}`, meta: `${g.nombre} · ${g.grado}`, search: t.es, grado: g, kind: 'tecnica', key: idx });
+      items.push({ nombre: `${t.n}. ${t.en}`, meta: `${g.nombre} · ${g.grado}`, grado: g, kind: 'tecnica', key: idx });
     });
     (g.setForm || []).forEach((s, idx) => {
       items.push({ nombre: s, meta: `${g.nombre} · ${g.grado} · Set/Form`, grado: g, kind: 'setForm', key: idx });
