@@ -10019,9 +10019,6 @@ function getTecnicoSearchItems() {
     (g.setForm || []).forEach((s, idx) => {
       items.push({ nombre: s, meta: `${g.nombre} · ${g.grado} · Set/Form`, grado: g, kind: 'setForm', key: idx });
     });
-    (g.teoria || []).forEach((q, idx) => {
-      items.push({ nombre: q, meta: `${g.nombre} · ${g.grado} · Teoría`, grado: g, kind: 'teoria', key: idx });
-    });
   });
   return items;
 }
