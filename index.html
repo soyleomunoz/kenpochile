@@ -8945,6 +8945,12 @@ instructorSearchInput.addEventListener('input', () => {
   renderInstructoresGridAndPager();
   renderInstructorSuggestions();
 });
+// El input es alcanzable con Tab aunque el buscador esté cerrado (queda oculto con
+// opacity:0, no con display:none); si el foco llega así en vez de por el botón lupa,
+// la caja se queda cerrada mientras se escribe. Abrir la caja también al enfocar lo evita.
+instructorSearchInput.addEventListener('focus', () => {
+  if (!instructorSearchBox.classList.contains('open')) openInstructorSearch();
+});
 instructorSearchInput.addEventListener('blur', () => {
   setTimeout(hideInstructorSuggestions, 150);
 });
