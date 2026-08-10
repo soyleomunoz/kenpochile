@@ -8349,7 +8349,7 @@ const INSTRUCTOR_GRUPOS = [
     miembros: ['Pablo Gajardo'] },
   { grado: 'Nuevos', titulo: 'Nuevos Members',
     miembros: ['Marta Burgos'] },
-  { grado: 'Honorarios', titulo: 'Membresías honorarias (Q.E.P.D)',
+  { grado: 'In Memoriam', titulo: 'Membresías honorarias (Q.E.P.D)',
     miembros: ['Juan Carlos Lastra Dinamarca', 'Daniel Alejandro Flores Salinas', 'Rodrigo Pizarro'] },
 ];
 const INSTRUCTORES = INSTRUCTOR_GRUPOS.flatMap(g => g.miembros.map(nombre => ({ nombre, grado: g.grado })));
@@ -8372,7 +8372,7 @@ function ordenarPorApellido(lista) {
 }
 // Orden fijo por apellido, usado cuando la etiqueta "Todos" está activa.
 // Los miembros honorarios (Q.E.P.D) no se muestran en "Todos", solo en su propia etiqueta.
-const INSTRUCTORES_ORDENADOS = ordenarPorApellido(INSTRUCTORES.filter(i => i.grado !== 'Honorarios'));
+const INSTRUCTORES_ORDENADOS = ordenarPorApellido(INSTRUCTORES.filter(i => i.grado !== 'In Memoriam'));
 const INSTRUCTORES_PAGE_SIZE = 6;
 let instructorGrado = 'Todos';
 let instructorPage = 1;
@@ -8491,7 +8491,7 @@ function escuelaWebURL(esc) {
   return (esc && ESCUELA_WEB[esc.nombre]) || '';
 }
 // Imagen real del cinturón por grado (img/cinturones/). Grados sin cinturón físico asociado
-// (Nuevos, Honorarios) no muestran ninguna imagen ni ícono en la tarjeta.
+// (Nuevos, In Memoriam) no muestran ninguna imagen ni ícono en la tarjeta.
 const CINTURON_POR_GRADO = {
   '6° Degree': 'negro5.png',
   '4° Degree': 'negro4.png',
@@ -8513,7 +8513,7 @@ function beltBadgeHTML(inst, size) {
 }
 // Vela encendida (SVG animado por CSS, ver .vela-honoraria) que acompaña como etiqueta a
 // las membresías honorarias (Q.E.P.D.) en la esquina inferior derecha de su foto.
-function esInstructorHonorario(inst) { return inst.grado === 'Honorarios'; }
+function esInstructorHonorario(inst) { return inst.grado === 'In Memoriam'; }
 function velaHonorariaSVG() {
   return `<svg viewBox="0 0 36 62" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Vela encendida, membresía honoraria">
     <circle class="vela-halo" cx="18" cy="17" r="11" fill="#FFD75E" opacity="0.35"/>
