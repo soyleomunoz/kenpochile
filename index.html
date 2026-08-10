@@ -8353,8 +8353,26 @@ const INSTRUCTOR_GRUPOS = [
     miembros: ['Juan Carlos Lastra Dinamarca', 'Daniel Alejandro Flores Salinas', 'Rodrigo Pizarro'] },
 ];
 const INSTRUCTORES = INSTRUCTOR_GRUPOS.flatMap(g => g.miembros.map(nombre => ({ nombre, grado: g.grado })));
-// Orden aleatorio fijo para esta carga de página, usado solo cuando la etiqueta "Todos" está activa.
-const INSTRUCTORES_SHUFFLED = shuffleArray(INSTRUCTORES);
+// Apellido de cada instructor para ordenar las tarjetas. Por defecto es la segunda
+// palabra del nombre; se listan las excepciones (nombres compuestos).
+const INSTRUCTOR_APELLIDO_EXCEPCIONES = {
+  'María Elena Araya': 'Araya',
+  'Miguel Ángel Manríquez': 'Manríquez',
+  'Juan Carlos Castro': 'Castro',
+  'Matías Raúl Pinto': 'Pinto',
+  'José Luis Moncada': 'Moncada',
+  'Juan Carlos Lastra Dinamarca': 'Lastra',
+  'Daniel Alejandro Flores Salinas': 'Flores',
+};
+function instructorApellido(nombre) {
+  return INSTRUCTOR_APELLIDO_EXCEPCIONES[nombre] || nombre.split(' ')[1] || nombre;
+}
+function ordenarPorApellido(lista) {
+  return lista.slice().sort((a, b) => instructorApellido(a.nombre).localeCompare(instructorApellido(b.nombre), 'es'));
+}
+// Orden fijo por apellido, usado cuando la etiqueta "Todos" está activa.
+// Los miembros honorarios (Q.E.P.D) no se muestran en "Todos", solo en su propia etiqueta.
+const INSTRUCTORES_ORDENADOS = ordenarPorApellido(INSTRUCTORES.filter(i => i.grado !== 'Honorarios'));
 const INSTRUCTORES_PAGE_SIZE = 6;
 let instructorGrado = 'Todos';
 let instructorPage = 1;
@@ -8765,10 +8783,10 @@ function getInstructorQuery() {
 function getFilteredInstructores() {
   const query = getInstructorQuery();
   if (query) return INSTRUCTORES.filter(i => normalizarTexto(i.nombre).includes(query));
-  if (instructorGrado === 'Todos') return INSTRUCTORES_SHUFFLED;
+  if (instructorGrado === 'Todos') return INSTRUCTORES_ORDENADOS;
   if (instructorGrado === INSTRUCTOR_TAG_DIRECTIVO) return INSTRUCTORES.filter(i => esEquipoDirectivo(i.nombre));
-  if (instructorGrado === INSTRUCTOR_TAG_DIRECTORES) return INSTRUCTORES.filter(i => esDirector(i.nombre));
-  return INSTRUCTORES.filter(i => i.grado === instructorGrado && !INSTRUCTOR_SIN_TAB_GRADO.has(i.nombre));
+  if (instructorGrado === INSTRUCTOR_TAG_DIRECTORES) return ordenarPorApellido(INSTRUCTORES.filter(i => esDirector(i.nombre)));
+  return ordenarPorApellido(INSTRUCTORES.filter(i => i.grado === instructorGrado && !INSTRUCTOR_SIN_TAB_GRADO.has(i.nombre)));
 }
 
 function renderInstructorGradoSubtitle() {
@@ -8797,7 +8815,7 @@ function renderInstructorTabs() {
   wrap.classList.toggle('is-searching', !!getInstructorQuery());
   renderInstructorGradoSubtitle();
   wrap.innerHTML = grados.map(g => {
-    const count = g === 'Todos' ? INSTRUCTORES.length
+    const count = g === 'Todos' ? INSTRUCTORES_ORDENADOS.length
       : g === INSTRUCTOR_TAG_DIRECTIVO ? INSTRUCTORES.filter(i => esEquipoDirectivo(i.nombre)).length
       : g === INSTRUCTOR_TAG_DIRECTORES ? INSTRUCTORES.filter(i => esDirector(i.nombre)).length
       : INSTRUCTORES.filter(i => i.grado === g && !INSTRUCTOR_SIN_TAB_GRADO.has(i.nombre)).length;
