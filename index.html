@@ -1712,8 +1712,10 @@ button.escuela-icon:hover {
   transform: translateY(-4px);
   border-color: rgba(228,87,46,0.4);
   box-shadow: 0 12px 40px rgba(0,0,0,0.35);
-  outline: none;
 }
+/* El foco por teclado usa el mismo anillo del sitio (outline naranja de la regla
+   global), ajustado al radio de la tarjeta; el hover con mouse no muestra anillo. */
+.belt-card:focus-visible { border-radius: 8px; }
 .belt-card-img { width: 4.5rem; height: auto; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5)); }
 .belt-card-name { font-family: 'Cinzel', serif; font-size: 0.9rem; font-weight: 700; color: var(--text-main); }
 .belt-card-grade { font-family: 'Cormorant Garamond', serif; font-size: 0.85rem; font-style: italic; color: var(--accent); }
@@ -4921,14 +4923,51 @@ reveals.forEach(r => observer.observe(r));
     return !!el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable);
   }
   document.addEventListener('keydown', e => {
-    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    if (!['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp', 'Escape'].includes(e.key)) return;
     if (!sectionInView || isTypingTarget(e.target)) return;
     if (document.getElementById('lightbox')?.classList.contains('open')) return;
     if (document.getElementById('maestroModal')?.classList.contains('open')) return;
     if (document.getElementById('instructorModal')?.classList.contains('open')) return;
     if (document.getElementById('escuelaModal')?.classList.contains('open')) return;
+
+    // Esc: descarta la búsqueda, devuelve el carrusel al inicio y suelta el foco por
+    // completo: la próxima ↓ vuelve a marcar al primer maestro, como la primera vez.
+    if (e.key === 'Escape') {
+      const searchInput = document.getElementById('maestroSearch');
+      if (searchInput) searchInput.value = '';
+      track.querySelectorAll('.maestro-card').forEach(c => { c.style.display = ''; });
+      track.scrollTo({ left: 0, behavior: 'smooth' });
+      document.activeElement?.blur?.();
+      return;
+    }
+
+    const focusedCard = e.target.closest?.('#maestrosGrid .maestro-card');
+
+    // Ctrl + ← → : deslizar el carrusel un grupo completo de maestros por vez
+    // (equivalente a la paginación inmediata de las otras secciones).
+    if (e.ctrlKey && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+      e.preventDefault();
+      if (e.key === 'ArrowLeft') goPrev(); else goNext();
+      return;
+    }
+
+    // Nada marcado: ↓ ↑ entran marcando al primer maestro; ← → conservan su función
+    // original de deslizar el carrusel al grupo siguiente/anterior de maestros.
+    if (!focusedCard) {
+      e.preventDefault();
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') track.querySelector('.maestro-card')?.focus();
+      else if (e.key === 'ArrowLeft') goPrev();
+      else goNext();
+      return;
+    }
+
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') return;
     e.preventDefault();
-    if (e.key === 'ArrowLeft') goPrev(); else goNext();
+    // Con un maestro marcado, ← → recorren las tarjetas de a una (el foco arrastra
+    // el scroll del carrusel hacia la tarjeta enfocada); en los extremos se detiene.
+    const cards = Array.from(track.querySelectorAll('.maestro-card'));
+    const next = cards[cards.indexOf(focusedCard) + (e.key === 'ArrowRight' ? 1 : -1)];
+    next?.focus();
   });
 
   track.addEventListener('scroll', () => requestAnimationFrame(updateArrows), { passive: true });
@@ -6762,18 +6801,40 @@ document.getElementById('blogModal').addEventListener('click', function(e) {
     const rowEl = document.querySelector('.blogs-tabs');
     if (!rowEl || !rowEl.children.length) return;
 
-    // Esc: cierra el desplegable de escuelas, vuelve el filtro a "Todas las escuelas"
-    // y quita el foco (sin scroll), tanto en las etiquetas como en las tarjetas.
+    // Ctrl + ← → : paginación inmediata de la categoría activa (como ← → en Videos),
+    // sin importar dónde esté el foco; ← → sin Ctrl conservan su función de moverse
+    // por etiquetas y tarjetas.
+    if (e.ctrlKey && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+      e.preventDefault();
+      const cat = document.querySelector('#blogs .blog-panel.active .blog-grid')?.dataset.cat;
+      if (!cat) return;
+      const dir = e.key === 'ArrowRight' ? 1 : -1;
+      const totalPages = Math.max(1, Math.ceil(getBlogPosts(cat).length / BLOG_PAGE_SIZE));
+      const newPage = blogPage[cat] + dir;
+      if (newPage >= 1 && newPage <= totalPages) {
+        blogPage[cat] = newPage;
+        renderBlogCategory(cat);
+        if (e.target.closest?.('#blogs .blog-pager')) document.querySelector(`#blogs .blog-pager[data-cat="${cat}"] .pager-btn.active`)?.focus();
+      }
+      return;
+    }
+
+    // Esc: cierra el desplegable de escuelas, vuelve el filtro a "Todas las escuelas",
+    // la categoría activa a su página 1, y suelta el foco por completo: la próxima ↓
+    // vuelve a entrar por la etiqueta de categoría, como la primera vez.
     if (e.key === 'Escape') {
       cerrarBlogEscuelaDd();
-      if (blogEscuelaFiltro !== 'Todas') {
+      const teniaFiltro = blogEscuelaFiltro !== 'Todas';
+      if (teniaFiltro) {
         blogEscuelaFiltro = 'Todas';
-        blogPage.Noticias = 1;
         renderBlogEscuelaFiltro();
-        renderBlogCategory('Noticias');
         history.replaceState(null, '', '#blogs');
       }
-      e.target.closest?.('#blogs .blog-card, #blogs .blog-tab')?.blur();
+      Object.keys(blogPage).forEach(cat => {
+        if (blogPage[cat] !== 1) { blogPage[cat] = 1; renderBlogCategory(cat); }
+      });
+      if (teniaFiltro) renderBlogCategory('Noticias');
+      document.activeElement?.blur?.();
       return;
     }
 
@@ -6797,7 +6858,18 @@ document.getElementById('blogModal').addEventListener('click', function(e) {
         else if (!goBlogPage(cat, dir)) goBlogCategory(cat, dir);
       } else if (e.key === 'ArrowDown') {
         const nextRow = rows[rowIdx + 1];
-        nextRow?.[Math.min(colIdx, nextRow.length - 1)].focus();
+        if (nextRow) {
+          nextRow[Math.min(colIdx, nextRow.length - 1)].focus();
+        } else {
+          // Última fila de tarjetas: el cursor continúa hacia el paginador de la
+          // categoría activa, sobre el número de la página actual. Si no hay
+          // paginación (una sola página), el ciclo continúa directo hacia la
+          // etiqueta de la categoría, cerrando el loop.
+          const cat = focusedCard.closest('.blog-grid').dataset.cat;
+          const activeBtn = document.querySelector(`#blogs .blog-pager[data-cat="${cat}"] .pager-btn.active`);
+          if (activeBtn) activeBtn.focus();
+          else (rowEl.querySelector('button.active') || rowEl.querySelector('button'))?.focus();
+        }
       } else if (e.key === 'ArrowUp') {
         if (rowIdx === 0) {
           // Vuelve a la etiqueta de la categoría activa.
@@ -6807,6 +6879,43 @@ document.getElementById('blogModal').addEventListener('click', function(e) {
           prevRow[Math.min(colIdx, prevRow.length - 1)].focus();
         }
       }
+      return;
+    }
+
+    // ── Cursor sobre el paginador de la categoría activa ──
+    const focusedPagerBtn = e.target.closest?.('#blogs .blog-pager .pager-btn');
+    if (focusedPagerBtn) {
+      const cat = focusedPagerBtn.closest('.blog-pager').dataset.cat;
+      e.preventDefault();
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        // Cambia directamente de página manteniendo el foco sobre el número activo
+        // (el paginador se re-renderiza, así que se vuelve a buscar el botón).
+        const dir = e.key === 'ArrowRight' ? 1 : -1;
+        const totalPages = Math.max(1, Math.ceil(getBlogPosts(cat).length / BLOG_PAGE_SIZE));
+        const newPage = blogPage[cat] + dir;
+        if (newPage >= 1 && newPage <= totalPages) {
+          blogPage[cat] = newPage;
+          renderBlogCategory(cat);
+        }
+        document.querySelector(`#blogs .blog-pager[data-cat="${cat}"] .pager-btn.active`)?.focus();
+      } else if (e.key === 'ArrowUp') {
+        // Vuelve a la última fila de tarjetas de la categoría.
+        const rows = getBlogCardRows();
+        rows[rows.length - 1]?.[0]?.focus();
+      } else if (e.key === 'ArrowDown') {
+        // ↓ desde el paginador: el cursor vuelve al inicio de la sección, la etiqueta
+        // de la categoría activa ("Noticias" por defecto), como al entrar por primera vez.
+        (rowEl.querySelector('button.active') || rowEl.querySelector('button'))?.focus();
+      }
+      return;
+    }
+
+    // ── Cursor aún fuera de la sección (nada enfocado en etiquetas/tarjetas/paginador):
+    // cualquier flecha entra marcando la etiqueta de categoría activa ("Noticias" por defecto). ──
+    const focusedTab = e.target.closest?.('.blogs-tabs button');
+    if (!focusedTab) {
+      e.preventDefault();
+      (rowEl.querySelector('button.active') || rowEl.querySelector('button'))?.focus();
       return;
     }
 
@@ -6825,6 +6934,14 @@ document.getElementById('blogModal').addEventListener('click', function(e) {
     } else if (e.key === 'ArrowDown') {
       // Baja el cursor a la primera tarjeta de la categoría activa.
       getBlogCardRows()[0]?.[0]?.focus();
+    } else if (e.key === 'ArrowUp') {
+      // Desde la etiqueta el ciclo continúa hacia el paginador de la categoría activa,
+      // sobre el número de la página actual; si no hay paginación, hacia la última
+      // tarjeta de la categoría (loop en reversa).
+      const cat = document.querySelector('#blogs .blog-panel.active .blog-grid')?.dataset.cat;
+      const activeBtn = cat && document.querySelector(`#blogs .blog-pager[data-cat="${cat}"] .pager-btn.active`);
+      if (activeBtn) activeBtn.focus();
+      else { const cardRows = getBlogCardRows(); cardRows[cardRows.length - 1]?.slice(-1)[0]?.focus(); }
     }
   });
 })();
@@ -7882,10 +7999,26 @@ function renderEscuelasSection() {
     if (document.getElementById('instructorModal')?.classList.contains('open')) return;
     if (document.getElementById('escuelaModal')?.classList.contains('open')) return;
 
+    // Ctrl + ← → : paginación inmediata (como ← → en Videos), sin importar dónde esté
+    // el foco; ← → sin Ctrl conservan su función de moverse por etiquetas y tarjetas.
+    if (e.ctrlKey && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+      e.preventDefault();
+      const dir = e.key === 'ArrowRight' ? 1 : -1;
+      const totalPages = Math.max(1, Math.ceil(getFilteredEscuelas().length / escuelasPageSize()));
+      const newPage = escuelaPage + dir;
+      if (newPage >= 1 && newPage <= totalPages) {
+        escuelaPage = newPage;
+        renderEscuelasGridAndPager();
+        if (e.target.closest?.('#escuelasPager')) document.querySelector('#escuelasPager .pager-btn.active')?.focus();
+      }
+      return;
+    }
+
     const focusedCard = e.target.closest('#escuelasGrid .escuela-card');
 
-    // Esc: descarta cualquier filtro/búsqueda activo y vuelve a "Todas", la 1ra etiqueta,
-    // mostrando la grilla completa de escuelas.
+    // Esc: descarta cualquier filtro/búsqueda activo y vuelve la grilla a su estado
+    // original ("Todas", página 1), soltando el foco por completo: la próxima ↓ vuelve
+    // a entrar por la etiqueta de país, como la primera vez.
     if (e.key === 'Escape') {
       e.preventDefault();
       clearEscuelaQuery();
@@ -7895,13 +8028,7 @@ function renderEscuelasSection() {
       escuelaPage = 1;
       escuelaKeyboardRow = 'paisTabs';
       renderEscuelasSection();
-      const todasTab = document.querySelector('.pais-tab[data-pais="Todas"]');
-      if (todasTab) {
-        // Foco sin anillo visible: Esc es un "reset", no un movimiento de cursor de teclado.
-        todasTab.classList.add('no-focus-ring');
-        todasTab.focus();
-        todasTab.addEventListener('blur', () => todasTab.classList.remove('no-focus-ring'), { once: true });
-      }
+      document.activeElement?.blur?.();
       return;
     }
 
@@ -7939,11 +8066,26 @@ function renderEscuelasSection() {
         }
       } else if (e.key === 'ArrowDown') {
         const nextRow = rows[rowIdx + 1];
-        if (nextRow) { e.preventDefault(); nextRow[Math.min(colIdx, nextRow.length - 1)].focus(); }
+        if (nextRow) {
+          e.preventDefault();
+          nextRow[Math.min(colIdx, nextRow.length - 1)].focus();
+        } else {
+          // Última fila de tarjetas: el cursor continúa hacia el paginador, sobre el
+          // número de la página actual. Si no hay paginación (una sola página), el
+          // ciclo continúa directo hacia la etiqueta de país activa, cerrando el loop
+          // hasta que se presione Esc o se haga click fuera.
+          e.preventDefault();
+          const activeBtn = document.querySelector('#escuelasPager .pager-btn.active');
+          if (activeBtn) activeBtn.focus(); else focusTabRow('paisTabs');
+        }
       } else if (e.key === 'ArrowUp') {
         e.preventDefault();
         if (rowIdx === 0) {
-          focusTabRow(escuelaKeyboardRow) || focusTabRow('paisTabs');
+          // Sube a la fila de etiquetas visible más profunda (comuna → región → país),
+          // sin saltarse ninguna: es la fila inmediatamente sobre la grilla.
+          for (let i = ESCUELA_TAB_ROW_IDS.length - 1; i >= 0; i--) {
+            if (focusTabRow(ESCUELA_TAB_ROW_IDS[i])) break;
+          }
         } else {
           const prevRow = rows[rowIdx - 1];
           prevRow[Math.min(colIdx, prevRow.length - 1)].focus();
@@ -7952,8 +8094,46 @@ function renderEscuelasSection() {
       return;
     }
 
+    // ── Cursor sobre el paginador ──
+    const focusedPagerBtn = e.target.closest('#escuelasPager .pager-btn');
+    if (focusedPagerBtn) {
+      e.preventDefault();
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        // Cambia directamente de página manteniendo el foco sobre el número activo
+        // (el paginador se re-renderiza, así que se vuelve a buscar el botón).
+        const dir = e.key === 'ArrowRight' ? 1 : -1;
+        const totalPages = Math.max(1, Math.ceil(getFilteredEscuelas().length / escuelasPageSize()));
+        const newPage = escuelaPage + dir;
+        if (newPage >= 1 && newPage <= totalPages) {
+          escuelaPage = newPage;
+          renderEscuelasGridAndPager();
+        }
+        document.querySelector('#escuelasPager .pager-btn.active')?.focus();
+      } else if (e.key === 'ArrowUp') {
+        // Vuelve a la última fila de tarjetas.
+        const rows = getEscuelaCardRows();
+        rows[rows.length - 1]?.[0]?.focus();
+      } else if (e.key === 'ArrowDown') {
+        // ↓ desde el paginador: el cursor vuelve al inicio de la sección, la etiqueta
+        // de país activa ("Todas" por defecto), como al entrar por primera vez.
+        focusTabRow('paisTabs');
+      }
+      return;
+    }
+
+    // ── Cursor aún fuera de la sección (nada enfocado en etiquetas/tarjetas/paginador):
+    // cualquier flecha entra marcando la etiqueta de país activa ("Todas" por defecto). ──
+    if (!e.target.closest?.('#paisTabs, #regionRow, #comunaChips')) {
+      e.preventDefault();
+      focusTabRow('paisTabs');
+      return;
+    }
+
     // ── Cursor sobre las etiquetas de país/región/comuna ──
-    let rowEl = escuelaTabRowEl(escuelaKeyboardRow) || escuelaTabRowEl('paisTabs');
+    // La fila actual se toma del foco real (no del estado recordado, que puede quedar
+    // desactualizado al entrar/salir de la sección o tras un re-render).
+    const focusedRowEl = e.target.closest('#paisTabs, #regionRow, #comunaChips');
+    let rowEl = (focusedRowEl && escuelaTabRowEl(focusedRowEl.id)) || escuelaTabRowEl(escuelaKeyboardRow) || escuelaTabRowEl('paisTabs');
     if (!rowEl) return;
     escuelaKeyboardRow = rowEl.id;
 
@@ -7984,9 +8164,18 @@ function renderEscuelasSection() {
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       let pos = ESCUELA_TAB_ROW_IDS.indexOf(escuelaKeyboardRow) - 1;
+      let moved = false;
       while (pos >= 0) {
-        if (focusTabRow(ESCUELA_TAB_ROW_IDS[pos])) break;
+        if (focusTabRow(ESCUELA_TAB_ROW_IDS[pos])) { moved = true; break; }
         pos -= 1;
+      }
+      // Ya estaba en la primera fila de etiquetas: el ciclo continúa hacia el paginador,
+      // sobre el número de la página actual; si no hay paginación, hacia la última
+      // tarjeta de la grilla (loop en reversa).
+      if (!moved) {
+        const activeBtn = document.querySelector('#escuelasPager .pager-btn.active');
+        if (activeBtn) activeBtn.focus();
+        else { const rows = getEscuelaCardRows(); rows[rows.length - 1]?.slice(-1)[0]?.focus(); }
       }
     }
   });
@@ -8111,21 +8300,99 @@ renderVideosGridAndPager();
     const tag = (el.tagName || '').toLowerCase();
     return tag === 'input' || tag === 'textarea' || el.isContentEditable;
   }
+  function goVideoPage(dir) {
+    const totalPages = Math.max(1, Math.ceil(getFilteredVideos().length / VIDEOS_PAGE_SIZE));
+    const newPage = videoPage + dir;
+    if (newPage < 1 || newPage > totalPages) return false;
+    videoPage = newPage;
+    renderVideosGridAndPager();
+    return true;
+  }
   document.addEventListener('keydown', e => {
-    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    if (!['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp', 'Escape'].includes(e.key)) return;
     if (!sectionInView || isTypingTarget(e.target)) return;
     if (document.getElementById('lightbox')?.classList.contains('open')) return;
     if (document.getElementById('maestroModal')?.classList.contains('open')) return;
     if (document.getElementById('instructorModal')?.classList.contains('open')) return;
     if (document.getElementById('escuelaModal')?.classList.contains('open')) return;
-    const pager = document.getElementById('videosPager');
-    if (!pager || !pager.children.length) return;
-    const buttons = Array.from(pager.querySelectorAll('.pager-btn[data-page]'));
-    if (!buttons.length) return;
-    const btn = e.key === 'ArrowRight' ? buttons[buttons.length - 1] : buttons[0];
-    if (btn.disabled) return;
+
+    // Esc: descarta la búsqueda, vuelve la grilla a su estado original (página 1) y
+    // suelta el foco por completo: la próxima ↓ vuelve a marcar la primera tarjeta.
+    if (e.key === 'Escape') {
+      const searchInput = document.getElementById('videoSearch');
+      if (searchInput) searchInput.value = '';
+      videoQuery = '';
+      videoPage = 1;
+      renderVideosGridAndPager();
+      document.activeElement?.blur?.();
+      return;
+    }
+
+    const grid = document.getElementById('videosGrid');
+    const focusedCard = e.target.closest?.('#videosGrid .video-card');
+    const focusedPagerBtn = e.target.closest?.('#videosPager .pager-btn');
+
+    // Ctrl + ← → : paginación inmediata, sin importar dónde esté el foco.
+    if (e.ctrlKey && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+      e.preventDefault();
+      goVideoPage(e.key === 'ArrowRight' ? 1 : -1);
+      if (focusedPagerBtn) document.querySelector('#videosPager .pager-btn.active')?.focus();
+      return;
+    }
+
+    if (e.key === 'ArrowDown') {
+      // 1ª ↓ marca la primera tarjeta de video; con una tarjeta marcada, ↓ baja al
+      // paginador sobre el número de la página actual; desde el paginador, ↓ vuelve
+      // al inicio de la sección (la primera tarjeta), como al entrar por primera vez.
+      e.preventDefault();
+      // Sin paginación (una sola página), ↓ desde una tarjeta vuelve a la primera
+      // tarjeta, cerrando el loop.
+      if (focusedCard) (document.querySelector('#videosPager .pager-btn.active') || grid.querySelector('.video-card'))?.focus();
+      else grid.querySelector('.video-card')?.focus();
+      return;
+    }
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (focusedPagerBtn) {
+        // Desde el paginador el cursor vuelve a la última tarjeta de la página.
+        const cards = grid.querySelectorAll('.video-card');
+        cards[cards.length - 1]?.focus();
+      } else if (focusedCard) {
+        // Desde una tarjeta el ciclo continúa hacia el paginador, sobre el número de
+        // la página actual; si no hay paginación, hacia la última tarjeta (loop en reversa).
+        const cards = grid.querySelectorAll('.video-card');
+        (document.querySelector('#videosPager .pager-btn.active') || cards[cards.length - 1])?.focus();
+      } else {
+        // Nada marcado: cualquier flecha entra marcando la primera tarjeta.
+        grid.querySelector('.video-card')?.focus();
+      }
+      return;
+    }
+
     e.preventDefault();
-    btn.click();
+    const dir = e.key === 'ArrowRight' ? 1 : -1;
+    if (focusedCard) {
+      // Con una tarjeta marcada, ← → recorren los videos de a uno; al salir por el
+      // borde de la página continúa hacia la vecina (primera/última tarjeta).
+      const cards = Array.from(grid.querySelectorAll('.video-card'));
+      const next = cards[cards.indexOf(focusedCard) + dir];
+      if (next) { next.focus(); return; }
+      if (goVideoPage(dir)) {
+        const newCards = grid.querySelectorAll('.video-card');
+        (dir === 1 ? newCards[0] : newCards[newCards.length - 1])?.focus();
+      }
+      return;
+    }
+    if (focusedPagerBtn) {
+      // Con el paginador marcado, ← → cambian de página manteniendo el foco sobre el
+      // número recién activado (el paginador se re-renderiza al cambiar de página).
+      goVideoPage(dir);
+      document.querySelector('#videosPager .pager-btn.active')?.focus();
+      return;
+    }
+    // Nada marcado: cualquier flecha entra marcando la primera tarjeta
+    // (la paginación inmediata sin foco queda en Ctrl + ← →).
+    grid.querySelector('.video-card')?.focus();
   });
 })();
 
@@ -8297,15 +8564,93 @@ renderSeminariosGridAndPager();
     renderSeminariosGridAndPager();
   }
   document.addEventListener('keydown', e => {
-    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    if (!['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp', 'Escape'].includes(e.key)) return;
     if (!sectionInView || isTypingTarget(e.target)) return;
     if (document.getElementById('lightbox')?.classList.contains('open')) return;
     if (document.getElementById('maestroModal')?.classList.contains('open')) return;
     if (document.getElementById('instructorModal')?.classList.contains('open')) return;
     if (document.getElementById('escuelaModal')?.classList.contains('open')) return;
     if (document.getElementById('seminarioModal')?.classList.contains('open')) return;
+
+    // Esc: descarta la búsqueda, vuelve la grilla a su estado original (página 1) y
+    // suelta el foco por completo: la próxima ↓ vuelve a marcar la primera tarjeta.
+    if (e.key === 'Escape') {
+      const searchInput = document.getElementById('seminarioSearch');
+      if (searchInput) searchInput.value = '';
+      seminarioQuery = '';
+      seminarioPage = 1;
+      renderSeminariosGridAndPager();
+      document.activeElement?.blur?.();
+      return;
+    }
+
+    const grid = document.getElementById('seminariosGrid');
+    const focusedCard = e.target.closest?.('#seminariosGrid .seminario-card');
+    const focusedPagerBtn = e.target.closest?.('#seminariosPager .pager-btn');
+
+    // Ctrl + ← → : paginación inmediata, sin importar dónde esté el foco.
+    if (e.ctrlKey && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+      e.preventDefault();
+      if (e.key === 'ArrowRight') goNextSeminarios(); else goPrevSeminarios();
+      if (focusedPagerBtn) document.querySelector('#seminariosPager .pager-btn.active')?.focus();
+      return;
+    }
+
+    if (e.key === 'ArrowDown') {
+      // 1ª ↓ marca la primera tarjeta; con una tarjeta marcada, ↓ baja al paginador
+      // sobre el número de la página actual; desde el paginador, ↓ vuelve al inicio
+      // de la sección (la primera tarjeta), como al entrar por primera vez.
+      e.preventDefault();
+      // Sin paginación (una sola página), ↓ desde una tarjeta vuelve a la primera
+      // tarjeta, cerrando el loop.
+      if (focusedCard) (document.querySelector('#seminariosPager .pager-btn.active') || grid.querySelector('.seminario-card'))?.focus();
+      else grid.querySelector('.seminario-card')?.focus();
+      return;
+    }
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (focusedPagerBtn) {
+        // Desde el paginador el cursor vuelve a la última tarjeta de la página.
+        const cards = grid.querySelectorAll('.seminario-card');
+        cards[cards.length - 1]?.focus();
+      } else if (focusedCard) {
+        // Desde una tarjeta el ciclo continúa hacia el paginador, sobre el número de
+        // la página actual; si no hay paginación, hacia la última tarjeta (loop en reversa).
+        const cards = grid.querySelectorAll('.seminario-card');
+        (document.querySelector('#seminariosPager .pager-btn.active') || cards[cards.length - 1])?.focus();
+      } else {
+        // Nada marcado: cualquier flecha entra marcando la primera tarjeta.
+        grid.querySelector('.seminario-card')?.focus();
+      }
+      return;
+    }
+
     e.preventDefault();
-    if (e.key === 'ArrowLeft') goPrevSeminarios(); else goNextSeminarios();
+    const dir = e.key === 'ArrowRight' ? 1 : -1;
+    if (focusedCard) {
+      // Con una tarjeta marcada, ← → recorren las tarjetas de a una; al salir por el
+      // borde de la página continúa hacia la vecina (primera/última tarjeta).
+      const cards = Array.from(grid.querySelectorAll('.seminario-card'));
+      const next = cards[cards.indexOf(focusedCard) + dir];
+      if (next) { next.focus(); return; }
+      const prevPage = seminarioPage;
+      if (dir === 1) goNextSeminarios(); else goPrevSeminarios();
+      if (seminarioPage !== prevPage) {
+        const newCards = grid.querySelectorAll('.seminario-card');
+        (dir === 1 ? newCards[0] : newCards[newCards.length - 1])?.focus();
+      }
+      return;
+    }
+    if (focusedPagerBtn) {
+      // Con el paginador marcado, ← → cambian de página manteniendo el foco sobre el
+      // número recién activado (el paginador se re-renderiza al cambiar de página).
+      if (dir === 1) goNextSeminarios(); else goPrevSeminarios();
+      document.querySelector('#seminariosPager .pager-btn.active')?.focus();
+      return;
+    }
+    // Nada marcado: cualquier flecha entra marcando la primera tarjeta
+    // (la paginación inmediata sin foco queda en Ctrl + ← →).
+    grid.querySelector('.seminario-card')?.focus();
   });
 })();
 
@@ -9110,8 +9455,24 @@ document.addEventListener('click', e => {
     const tabsEl = document.getElementById('instructorTabs');
     if (!tabsEl || !tabsEl.children.length) return;
 
-    // Esc: descarta cualquier filtro/búsqueda activo y vuelve a "Todos", sin destacar
-    // la etiqueta con el anillo de foco (es un reset, no un movimiento de cursor).
+    // Ctrl + ← → : paginación inmediata (como ← → en Videos), sin importar dónde esté
+    // el foco; ← → sin Ctrl conservan su función de moverse por etiquetas y tarjetas.
+    if (e.ctrlKey && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+      e.preventDefault();
+      const dir = e.key === 'ArrowRight' ? 1 : -1;
+      const totalPages = Math.max(1, Math.ceil(getFilteredInstructores().length / INSTRUCTORES_PAGE_SIZE));
+      const newPage = instructorPage + dir;
+      if (newPage >= 1 && newPage <= totalPages) {
+        instructorPage = newPage;
+        renderInstructoresGridAndPager();
+        if (e.target.closest?.('#instructoresPager')) document.querySelector('#instructoresPager .pager-btn.active')?.focus();
+      }
+      return;
+    }
+
+    // Esc: descarta cualquier filtro/búsqueda activo y vuelve la grilla a su estado
+    // original ("Todos", página 1), soltando el foco por completo: la próxima ↓ vuelve
+    // a entrar por la etiqueta activa, como la primera vez.
     if (e.key === 'Escape') {
       e.preventDefault();
       if (instructorSearchInput.value) instructorSearchInput.value = '';
@@ -9120,12 +9481,7 @@ document.addEventListener('click', e => {
       renderInstructorTabs();
       renderInstructoresGridAndPager();
       hideInstructorSuggestions();
-      const todosTab = document.querySelector('#instructorTabs .instructor-tab[data-grado="Todos"]');
-      if (todosTab) {
-        todosTab.classList.add('no-focus-ring');
-        todosTab.focus();
-        todosTab.addEventListener('blur', () => todosTab.classList.remove('no-focus-ring'), { once: true });
-      }
+      document.activeElement?.blur?.();
       return;
     }
 
@@ -9160,7 +9516,16 @@ document.addEventListener('click', e => {
         if (next) next.focus(); else goInstructorPage(dir);
       } else if (e.key === 'ArrowDown') {
         const nextRow = rows[rowIdx + 1];
-        nextRow?.[Math.min(colIdx, nextRow.length - 1)].focus();
+        if (nextRow) {
+          nextRow[Math.min(colIdx, nextRow.length - 1)].focus();
+        } else {
+          // Última fila de tarjetas: el cursor continúa hacia el paginador, sobre el
+          // número de la página actual. Si no hay paginación (una sola página), el
+          // ciclo continúa directo hacia la etiqueta activa, cerrando el loop.
+          const activeBtn = document.querySelector('#instructoresPager .pager-btn.active');
+          if (activeBtn) activeBtn.focus();
+          else (tabsEl.querySelector('button.active') || tabsEl.querySelector('button'))?.focus();
+        }
       } else if (e.key === 'ArrowUp') {
         if (rowIdx === 0) {
           // Vuelve a las etiquetas: solo foco (sin cambiar el filtro), a la de la última
@@ -9172,6 +9537,41 @@ document.addEventListener('click', e => {
           prevRow[Math.min(colIdx, prevRow.length - 1)].focus();
         }
       }
+      return;
+    }
+
+    // ── Cursor sobre el paginador ──
+    const focusedPagerBtn = e.target.closest?.('#instructoresPager .pager-btn');
+    if (focusedPagerBtn) {
+      e.preventDefault();
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        // Cambia directamente de página manteniendo el foco sobre el número activo
+        // (el paginador se re-renderiza, así que se vuelve a buscar el botón).
+        const dir = e.key === 'ArrowRight' ? 1 : -1;
+        const totalPages = Math.max(1, Math.ceil(getFilteredInstructores().length / INSTRUCTORES_PAGE_SIZE));
+        const newPage = instructorPage + dir;
+        if (newPage >= 1 && newPage <= totalPages) {
+          instructorPage = newPage;
+          renderInstructoresGridAndPager();
+        }
+        document.querySelector('#instructoresPager .pager-btn.active')?.focus();
+      } else if (e.key === 'ArrowUp') {
+        // Vuelve a la última fila de tarjetas, a la más cercana horizontalmente.
+        const rows = getGridRows(instructoresGrid, '.instructor-card');
+        if (rows.length) nearestByCenterX(focusedPagerBtn, rows[rows.length - 1])?.focus();
+      } else if (e.key === 'ArrowDown') {
+        // ↓ desde el paginador: el cursor vuelve al inicio de la sección, la etiqueta
+        // activa ("Todos" por defecto), como al entrar por primera vez.
+        (tabsEl.querySelector('button.active') || tabsEl.querySelector('button'))?.focus();
+      }
+      return;
+    }
+
+    // ── Cursor aún fuera de la sección (nada enfocado en etiquetas/tarjetas/paginador):
+    // cualquier flecha entra marcando la etiqueta activa ("Todos" por defecto). ──
+    if (!focusedTab) {
+      e.preventDefault();
+      (tabsEl.querySelector('button.active') || tabsEl.querySelector('button'))?.focus();
       return;
     }
 
@@ -9204,7 +9604,16 @@ document.addEventListener('click', e => {
       }
     } else if (e.key === 'ArrowUp') {
       const prevRow = tabRows[rowIdx - 1];
-      prevRow?.[Math.min(colIdx, prevRow.length - 1)].focus();
+      if (prevRow) {
+        prevRow[Math.min(colIdx, prevRow.length - 1)].focus();
+      } else {
+        // Ya estaba en la primera fila de etiquetas: el ciclo continúa hacia el
+        // paginador, sobre el número de la página actual; si no hay paginación,
+        // hacia la última tarjeta de la grilla (loop en reversa).
+        const activeBtn = document.querySelector('#instructoresPager .pager-btn.active');
+        if (activeBtn) activeBtn.focus();
+        else { const cardRows = getGridRows(instructoresGrid, '.instructor-card'); cardRows[cardRows.length - 1]?.slice(-1)[0]?.focus(); }
+      }
     }
   });
 })();
@@ -10037,6 +10446,66 @@ document.getElementById('beltGrid').addEventListener('click', e => {
   if (!card) return;
   openProgramaModal(card.dataset.grado);
 });
+
+// Flechas del teclado en Programa Técnico: activas mientras la sección está a la vista.
+// La primera ↓ marca la primera tarjeta (cinturón amarillo); con una tarjeta marcada,
+// ← → recorren los cinturones de a uno y ↓ ↑ se mueven entre las filas de la grilla.
+// Enter/Espacio abren el programa del cinturón marcado (manejo global de [role=button]).
+(function initProgramaKeyboard() {
+  let sectionInView = false;
+  const section = document.getElementById('programa-tecnico');
+  if (!section) return;
+  new IntersectionObserver(entries => {
+    entries.forEach(en => { sectionInView = en.isIntersecting; });
+  }, { threshold: 0, rootMargin: '-30% 0px -30% 0px' }).observe(section);
+
+  function isTypingTarget(el) {
+    return !!el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable);
+  }
+  document.addEventListener('keydown', e => {
+    if (!['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp', 'Escape'].includes(e.key)) return;
+    if (!sectionInView || isTypingTarget(e.target)) return;
+    if (document.getElementById('lightbox')?.classList.contains('open')) return;
+    if (document.getElementById('programaModal')?.classList.contains('open')) return;
+    if (document.getElementById('escuelaModal')?.classList.contains('open')) return;
+
+    // Esc: descarta la búsqueda de técnicas, muestra los 12 cinturones de nuevo y
+    // suelta el foco por completo: la próxima ↓ vuelve a marcar el cinturón amarillo.
+    if (e.key === 'Escape') {
+      const searchInput = document.getElementById('tecnicoSearch');
+      if (searchInput) searchInput.value = '';
+      document.querySelectorAll('#beltGrid .belt-card').forEach(c => { c.style.display = ''; });
+      document.activeElement?.blur?.();
+      return;
+    }
+
+    const grid = document.getElementById('beltGrid');
+    // El buscador de técnicas puede ocultar tarjetas (display:none): se navegan solo las visibles.
+    const cards = Array.from(grid.querySelectorAll('.belt-card')).filter(c => c.style.display !== 'none');
+    if (!cards.length) return;
+    const focusedCard = e.target.closest?.('#beltGrid .belt-card');
+
+    if (!focusedCard) {
+      // Cursor aún fuera de la grilla: cualquier flecha entra marcando la primera
+      // tarjeta (cinturón amarillo).
+      e.preventDefault();
+      cards[0].focus();
+      return;
+    }
+
+    e.preventDefault();
+    const idx = cards.indexOf(focusedCard);
+    if (idx === -1) return;
+    const colCount = getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length || 1;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+      cards[idx + (e.key === 'ArrowRight' ? 1 : -1)]?.focus();
+    } else if (e.key === 'ArrowDown') {
+      cards[idx + colCount]?.focus();
+    } else if (e.key === 'ArrowUp') {
+      cards[idx - colCount]?.focus();
+    }
+  });
+})();
 
 // Buscador de técnicas/sets/formas: indexa el contenido de cada grado y, al elegir un
 // resultado, filtra la grilla a la sola tarjeta del cinturón dueño y deja pendiente el
