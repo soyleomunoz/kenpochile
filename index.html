@@ -2737,8 +2737,10 @@ body:has(#lightbox.open, .instructor-modal.open, .programa-modal.open, .seminari
   padding: 0.85rem 1rem;
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   opacity: 0;
+  /* Oculto con visibility (no pointer-events): un elemento hidden no recibe el mouse,
+     pero durante la transición de salida sí, lo que permite llegar hasta el tooltip
+     y mantenerlo abierto (.search-tip:hover) para clickear su enlace a la guía PDF. */
   visibility: hidden;
-  pointer-events: none;
   transform: translateY(-6px);
   transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
   z-index: 30;
@@ -2791,10 +2793,24 @@ body:has(#lightbox.open, .instructor-modal.open, .programa-modal.open, .seminari
   color: var(--accent);
 }
 .section-search-toggle:hover + .search-tip,
-.section-search-toggle:focus-visible + .search-tip {
+.section-search-toggle:focus-visible + .search-tip,
+.search-tip:hover {
   opacity: 1; visibility: visible;
   transform: translateY(0);
 }
+/* Enlace a la guía de búsqueda (PDF) al pie del tooltip del Programa Técnico */
+.search-tip-link {
+  display: block;
+  margin-top: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--border);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  text-decoration: none;
+}
+.search-tip-link:hover { text-decoration: underline; }
 .section-search-box.open .search-tip { opacity: 0 !important; visibility: hidden !important; }
 @media (max-width: 600px) {
   .search-tip { max-width: 180px; }
@@ -4316,12 +4332,13 @@ footer {
         </button>
         <div class="search-tip" id="tecnicoSearchTip" role="tooltip">
           <p class="search-tip-title">Buscar técnica</p>
-          <p class="search-tip-desc">Por nombre de técnica, set o forma; muestra a qué grado pertenece</p>
+          <p class="search-tip-desc">Por nombre de técnica, set o forma, en inglés o español ("palo" encuentra las defensas contra garrote); muestra a qué grado pertenece</p>
           <ul class="search-tip-keys">
             <li><kbd>B</kbd><span>Abrir buscador</span></li>
             <li><kbd>↑↓</kbd><span>Navegar sugerencias</span></li>
             <li><kbd>Enter</kbd><span>Seleccionar</span></li>
           </ul>
+          <a class="search-tip-link" href="busqueda-programa-tecnico.pdf" target="_blank" rel="noopener">Ver guía completa de búsqueda (PDF)</a>
         </div>
         <div class="section-search-suggestions" id="tecnicoSuggestions"></div>
       </div>
@@ -4357,6 +4374,10 @@ footer {
           <a class="belt-doc-chip" href="https://drive.google.com/file/d/1lwJ_qvLItsX_iL9Miec1ByNRgYQbJnDw/view?usp=sharing" target="_blank" rel="noopener">
             <svg class="icon"><use href="#icon-graduation"/></svg>
             <span><strong>Syllabus</strong><em>Ver documento</em></span>
+          </a>
+          <a class="belt-doc-chip" href="busqueda-programa-tecnico.pdf" target="_blank" rel="noopener">
+            <svg class="icon"><use href="#icon-search"/></svg>
+            <span><strong>Guía del Buscador</strong><em>Buscar en español · Ver PDF</em></span>
           </a>
         </div>
       </div>
