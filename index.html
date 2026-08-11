@@ -5039,6 +5039,37 @@ document.addEventListener('keydown', e => {
   }
 });
 
+// ── NAVEGACIÓN GLOBAL: Ctrl + ↑ ↓ desplazan a la sección anterior/siguiente del sitio ──
+// Se registra en fase de captura con stopPropagation para que los manejadores de flechas
+// de cada sección (que no distinguen Ctrl en ↑ ↓) no reaccionen al mismo evento.
+(function initSectionKeyboardNav() {
+  const SECTION_IDS = ['inicio', 'institucional', 'cita-ed-parker', 'escuelas', 'instructores',
+    'maestros', 'cita-vidal', 'seminarios', 'blogs', 'programa-tecnico', 'videos', 'faq', 'contacto'];
+  function isTypingTarget(el) {
+    return !!el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable);
+  }
+  function anyModalOpen() {
+    return ['lightbox', 'maestroModal', 'instructorModal', 'escuelaModal', 'programaModal',
+      'seminarioModal', 'blogModal'].some(id => document.getElementById(id)?.classList.contains('open'));
+  }
+  document.addEventListener('keydown', e => {
+    if (!e.ctrlKey || (e.key !== 'ArrowUp' && e.key !== 'ArrowDown')) return;
+    if (isTypingTarget(e.target) || anyModalOpen()) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const sections = SECTION_IDS.map(id => document.getElementById(id)).filter(Boolean);
+    // Sección actual: la última cuyo inicio ya pasó el tercio superior de la pantalla.
+    let idx = -1;
+    sections.forEach((s, i) => { if (s.getBoundingClientRect().top <= window.innerHeight * 0.3) idx = i; });
+    const target = sections[idx + (e.key === 'ArrowDown' ? 1 : -1)];
+    if (!target) return;
+    // Se suelta el foco para que las flechas entren limpias por el primer elemento
+    // de la sección recién visitada.
+    document.activeElement?.blur?.();
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, true);
+})();
+
 // ── INSIGNIAS (imágenes reales de la colección oficial) ──
 const totalInsignias = 29;
 // Escuela a la que pertenece cada insignia de la colección, en el orden de los archivos
