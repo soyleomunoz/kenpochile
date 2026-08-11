@@ -9384,7 +9384,16 @@ instructorSearchInput.addEventListener('keydown', e => {
       return;
     }
   }
-  if (!instructorSuggestionMatches.length) return;
+  if (!instructorSuggestionMatches.length) {
+    // Sin sugerencias abiertas: si el texto actual deja un único instructor en la grilla
+    // (lo típico tras elegirlo con Enter o con click en la sugerencia), un segundo
+    // Enter abre directamente su modal.
+    if (e.key === 'Enter' && getInstructorQuery() && getFilteredInstructores().length === 1) {
+      e.preventDefault();
+      openInstructorModal(0);
+    }
+    return;
+  }
   if (e.key === 'ArrowDown') {
     e.preventDefault();
     instructorSuggestionIndex = (instructorSuggestionIndex + 1) % instructorSuggestionMatches.length;
