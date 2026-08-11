@@ -9405,6 +9405,15 @@ instructorSearchInput.addEventListener('keydown', e => {
 const instructorSearchToggle = document.getElementById('instructorSearchToggle');
 const instructorSearchBox = document.getElementById('instructorSearchBox');
 function openInstructorSearch() {
+  // Mismo resguardo que en initCardSearch: si quedó texto de una búsqueda anterior,
+  // se parte limpio para no reabrir con texto viejo y sugerencias descuadradas.
+  if (instructorSearchInput.value) {
+    instructorSearchInput.value = '';
+    instructorPage = 1;
+    renderInstructorTabs();
+    renderInstructoresGridAndPager();
+    hideInstructorSuggestions();
+  }
   instructorSearchBox.classList.add('open');
   instructorSearchToggle.setAttribute('aria-expanded', 'true');
   instructorSearchInput.focus();
@@ -9878,6 +9887,15 @@ function initCardSearch(cfg) {
     });
   }
   function open() {
+    // Si quedó texto de una búsqueda anterior (el cuadro puede cerrarse sin pasar por
+    // close(), o el navegador restaurar el valor al volver a la página), se parte
+    // limpio: evita reabrir con texto viejo y la lista de sugerencias descuadrada.
+    if (input.value) {
+      input.value = '';
+      applyFilter('');
+      hideSuggestions();
+      if (cfg.onClear) cfg.onClear();
+    }
     box.classList.add('open');
     toggle.setAttribute('aria-expanded', 'true');
     input.focus();
