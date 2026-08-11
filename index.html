@@ -9786,12 +9786,27 @@ function initCardSearch(cfg) {
   // item.matchText, si viene definido, reemplaza a item.nombre para el matching (ej. Programa
   // Técnico usa una versión sin paréntesis: "form" no debe encontrar "(formulation)" ni
   // "(optativo)" etc, pero sí debe encontrar "Snapping" al buscar "snap" por prefijo de palabra).
-  function matchesQuery(item, query) {
+  function matchesOne(item, query) {
     if (!query) return true;
     const haystack = normalizarTexto(`${item.matchText || item.nombre} ${item.search || ''}`);
     if (!cfg.wholeWord) return haystack.includes(query);
-    const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    return new RegExp(`(^|[^a-z0-9])${escaped}`, 'i').test(haystack);
+    // En modo wholeWord cada palabra de la consulta se exige por separado (como prefijo
+    // de palabra), sin importar el orden: "espada retardada" encuentra "Delayed Sword".
+    return query.split(/\s+/).every(w => {
+      const escaped = w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      return new RegExp(`(^|[^a-z0-9])${escaped}`, 'i').test(haystack);
+    });
+  }
+  // query puede ser un string o una lista de variantes equivalentes (cfg.mapQuery puede
+  // traducir una palabra a varias alternativas, ej. "palo" → "club" y "storm"): el ítem
+  // calza si cualquiera de las variantes calza.
+  function matchesQuery(item, query) {
+    return Array.isArray(query) ? query.some(q => matchesOne(item, q)) : matchesOne(item, query);
+  }
+  // Variante que calzó con el ítem, para destacar en la sugerencia la palabra correcta.
+  function matchedVariant(item, query) {
+    if (!Array.isArray(query)) return query;
+    return query.find(q => matchesOne(item, q)) || query[0];
   }
   function applyFilter(query) {
     if (cfg.getItems) return;
@@ -9823,13 +9838,19 @@ function initCardSearch(cfg) {
     focusItem(item);
   }
   function renderSuggestions() {
-    const query = normalizarTexto(input.value.trim());
+    // cfg.mapQuery permite reescribir lo tecleado antes de buscar (ej. Programa Técnico
+    // traduce palabras en español al inglés de los nombres reales de las técnicas).
+    let query = normalizarTexto(input.value.trim());
+    if (query && cfg.mapQuery) query = cfg.mapQuery(query);
     applyFilter(query);
     if (!query) { hideSuggestions(); return; }
     matches = getItems().filter(i => matchesQuery(i, query)).slice(0, cfg.maxResults || 8);
     if (!matches.length) { hideSuggestions(); return; }
     activeIndex = -1;
-    suggestions.innerHTML = matches.map(i => `<button type="button" class="section-search-suggestion"><span class="section-search-suggestion-name">${highlightMatch(i.nombre, query)}</span>${i.meta ? `<span class="section-search-suggestion-meta">${highlightMatch(i.meta, query)}</span>` : ''}</button>`).join('');
+    suggestions.innerHTML = matches.map(i => {
+      const v = matchedVariant(i, query);
+      return `<button type="button" class="section-search-suggestion"><span class="section-search-suggestion-name">${highlightMatch(i.nombre, v)}</span>${i.meta ? `<span class="section-search-suggestion-meta">${highlightMatch(i.meta, v)}</span>` : ''}</button>`;
+    }).join('');
     suggestions.classList.add('open');
     suggestions.querySelectorAll('.section-search-suggestion').forEach((btn, idx) => {
       btn.addEventListener('click', () => selectItem(matches[idx]));
@@ -9876,8 +9897,9 @@ function initCardSearch(cfg) {
       // (lo típico justo tras elegir uno con Enter, durante o después de su animación),
       // un segundo Enter abre directamente su ficha/modal.
       if (e.key === 'Enter' && cfg.onEnterUnico) {
-        const query = normalizarTexto(input.value.trim());
+        let query = normalizarTexto(input.value.trim());
         if (!query) return;
+        if (cfg.mapQuery) query = cfg.mapQuery(query);
         const unico = getItems().filter(i => matchesQuery(i, query));
         if (unico.length === 1) {
           e.preventDefault();
@@ -10565,10 +10587,116 @@ function selectTecnico(item) {
     setTimeout(() => card.classList.remove('search-found'), 1900);
   }
 }
+// Diccionario español → inglés del vocabulario real de las técnicas, sets y formas:
+// permite buscar en español nombres que solo existen en inglés ("espada" encuentra
+// "Sword", "martillo" encuentra "Hammer"). La lista de sugerencias siempre muestra y
+// destaca la palabra en inglés; el español es solo para efectos de búsqueda.
+// Claves normalizadas (minúsculas y sin acentos, como las deja normalizarTexto).
+const TECNICO_ES_EN = {
+  espada: 'sword', espadas: 'swords', martillo: 'hammer', martillos: 'hammers',
+  maza: 'mace', mazas: 'maces', vara: 'staff', baston: 'staff',
+  // Símbolos de ataque del American Kenpo: la palabra en español busca también el
+  // símbolo que representa ese ataque en los nombres (palo → storm, puñetazo → mace,
+  // cuchillo → lance, pistola → rod, brazo → twig, pierna → branch, pelo → feathers...).
+  garrote: ['club', 'storm'], palo: ['club', 'storm'],
+  cuchillo: 'lance', daga: 'lance', navaja: 'lance',
+  punetazo: 'mace', puno: 'mace', punos: 'maces', golpe: 'mace',
+  brazo: ['twig', 'twigs'], brazos: 'twigs', pierna: 'branch', piernas: 'branch',
+  pelo: 'feathers', cabello: 'feathers', solapa: 'kimono',
+  embestida: ['ram', 'charging'], tacleada: 'ram',
+  lanza: 'lance', flecha: 'arrow', pistola: 'rod', revolver: 'rod',
+  arma: ['weapon', 'rod', 'firearms'],
+  escudo: 'shield', garra: 'claw', garras: 'claws', ala: 'wing', alas: 'wings',
+  plumas: 'feathers', pluma: 'feathers', cuernos: 'horns', pezuna: 'hoof', casco: 'hoof',
+  aguila: 'eagle', aguilas: 'eagles', halcon: 'falcon', halcones: 'falcons', grulla: 'crane',
+  tigre: 'tiger', pantera: 'panther', serpiente: 'serpent', serpientes: 'snakes',
+  oso: 'bear', osos: 'bears', carnero: 'ram', carneros: 'rams',
+  muerte: 'death', oscuridad: 'darkness', oscuro: 'dark', peligro: 'danger',
+  destino: 'destiny', fatalidad: 'fate', destruccion: 'destruction', devastacion: 'devastation',
+  perdicion: 'doom', sacrificio: 'sacrifice', saludo: 'salute', libertad: 'freedom',
+  sabiduria: 'wisdom', matrimonio: 'marriage', cortejo: 'courting', danza: 'dance',
+  baile: 'dance', regalo: 'gift', proteccion: 'protection', defensa: 'defense',
+  fuerza: 'force', tormenta: 'storm', trueno: 'thundering', lluvia: 'raining',
+  nubes: 'clouds', horizonte: 'horizon', celestial: 'heavenly', estrella: 'star',
+  circulo: 'circle', circulos: 'circles', cruz: 'cross', cruzado: 'crossed',
+  molinos: 'windmills', pendulo: 'pendulum', cuna: 'wedge', rama: 'branch',
+  ramita: 'twig', ramitas: 'twigs', hojas: 'leaves', durazno: 'peach', melocoton: 'peach',
+  seda: 'silk', abanicos: 'fans', dedo: 'finger', mano: 'hand', manos: 'hands',
+  cabeza: 'head', patada: 'kicking', rodilla: 'kneel', reverencia: 'bow', abrazo: 'hugging',
+  agarre: 'grip', asiendo: 'grasping', apreton: 'squeezing', pinza: 'pincher',
+  torcido: 'twisted', giro: 'twist', girando: 'twirling', rotacion: 'rotating',
+  espiral: 'spiraling', retorno: 'return', retirada: 'retreating', partida: 'departure',
+  vuelo: 'flight', huida: 'flight', salto: 'leap', saltando: 'leaping', caida: 'falling',
+  caido: 'fallen', roto: 'broken', aplastando: 'crushing', chocando: 'crashing',
+  rastrillando: 'raking', cepillando: 'brushing', atrapado: 'captured', capturando: 'capturing',
+  enredado: 'entangled', entrelazado: 'entwined', desplegando: 'unfolding',
+  bloqueo: 'block', esquivando: 'evading', desviando: 'deflecting', desvio: 'detour',
+  interceptando: 'intercepting', obstruyendo: 'obstructing', dominando: 'dominating',
+  conquistando: 'conquering', amenazante: 'menacing', enganoso: 'deceptive',
+  cegador: 'blinding', destellante: 'flashing', calmando: 'calming', domando: 'taming',
+  desafiando: 'defying', durmiente: 'sleeper', solitario: 'lone', hombre: 'man',
+  gemelo: 'twin', gemelos: 'twins', vacias: 'empty', vacio: 'empty',
+  cinturon: 'belt', naranja: 'orange', purpura: 'purple', morado: 'purple',
+  corto: 'short', largo: 'long', forma: 'form', formas: 'form',
+  tecnica: 'technique', entrenamiento: 'training', tacticas: 'tactics', entradas: 'entries',
+  coordinacion: 'coordination', postura: 'stance', estocada: 'thrust', empujando: 'thrusting',
+  penetrante: 'piercing', chasquido: 'snapping', buda: 'buddah', intelectual: 'intellectual',
+  ascenso: 'ascent', encuentro: 'encounter', agresion: 'aggression', agresivo: 'aggressive',
+  alternando: 'alternating', repetido: 'repeated', invirtiendo: 'reversing',
+  asegurando: 'securing', protegiendo: 'protecting', recolectando: 'gathering',
+  cargando: 'charging', atacando: 'attacking', golpeando: 'striking', balanceo: 'swinging',
+  enganchando: 'hooking', desarme: 'disarm', dos: 'two', cinco: 'five',
+  // Verbos/gerundios según el sentido real de cada técnica (no traducción literal).
+  retardada: 'delayed', demorada: 'delayed', retrasada: 'delayed', tardia: 'delayed',
+  chequeando: 'checking', conteniendo: 'checking', frenando: 'checking', controlando: 'checking',
+  evadiendo: 'evading', esquivando: 'evading',
+  embistiendo: ['charging', 'ram'], cegando: 'blinding', inclinandose: 'bowing',
+  rozando: ['brushing', 'glancing'], oblicuo: 'glancing', doblegando: 'buckling',
+  aquietando: 'calming', captura: 'capturing', circulando: 'circling', rodeando: 'circling',
+  podando: 'clipping', aferrando: 'clutching', venciendo: 'conquering', cortejando: 'courting',
+  estrellando: 'crashing', cruzando: 'crossing', triturando: 'crushing', dardo: 'darting',
+  despedida: 'departure', destructivo: 'destructive', desviacion: 'deviation', rodeo: 'detour',
+  desarmando: 'disarm', cayendo: 'falling', destello: 'flashing', relampagueante: 'flashing',
+  reuniendo: 'gathering', agarrando: 'grasping', empunando: 'gripping', abrazando: 'hugging',
+  gancho: 'hooking', arrodillandose: 'kneel', llave: 'locking', bloqueado: 'locked',
+  amenazando: 'menacing', apartando: 'parting', perforando: 'piercing', lloviendo: 'raining',
+  raspando: 'scraping', reprendiendo: 'reprimanding', repitiendo: 'repeating',
+  retrocediendo: 'retreating', regresando: 'returning', devolviendo: 'return',
+  revirtiendo: 'reversing', rotando: 'rotating', girando: ['twirling', 'rotating', 'spiraling'],
+  escudando: 'shielding', blindando: 'shielding', serpenteando: 'snaking',
+  chasqueando: 'snapping', extendiendo: 'spreading', agachado: 'squatting',
+  cuclillas: 'squatting', apretando: 'squeezing', exprimiendo: 'squeezing',
+  balanceando: 'swinging', columpiando: 'swinging', atronador: 'thundering',
+  tropezando: 'triping', torciendo: ['twist', 'twisted', 'twirling'],
+  desenrollando: 'unfurling', desenroscando: 'unwinding', desplegando: ['unfolding', 'spreading']
+};
+// Reemplaza cada palabra en español de lo tecleado por su equivalente en inglés; si no
+// hay traducción exacta prueba sin plural y luego por prefijo (>= 4 letras), y si nada
+// calza deja la palabra tal cual (puede ser ya el término en inglés).
+function traducirQueryTecnico(query) {
+  // Cada palabra puede traducir a varias alternativas en inglés (ej. "palo" → club y
+  // storm); se devuelven todas las combinaciones como variantes de búsqueda y el ítem
+  // calza si cualquiera de ellas calza (acotado para queries de muchas palabras).
+  const opciones = query.split(/\s+/).map(t => {
+    let v = TECNICO_ES_EN[t];
+    if (!v) { const singular = t.replace(/(?:es|s)$/, ''); v = TECNICO_ES_EN[singular]; }
+    if (!v && t.length >= 4) {
+      const k = Object.keys(TECNICO_ES_EN).find(k => k.startsWith(t));
+      if (k) v = TECNICO_ES_EN[k];
+    }
+    return v ? (Array.isArray(v) ? v : [v]) : [t];
+  });
+  let variantes = [''];
+  opciones.forEach(alts => {
+    variantes = variantes.flatMap(v => alts.map(a => (v ? v + ' ' : '') + a)).slice(0, 12);
+  });
+  return variantes;
+}
 initCardSearch({
   sectionId: 'programa-tecnico', inputId: 'tecnicoSearch', toggleId: 'tecnicoSearchToggle',
   boxId: 'tecnicoSearchBox', suggestionsId: 'tecnicoSuggestions', resultsId: 'beltGrid',
   getItems: getTecnicoSearchItems, maxResults: 30, wholeWord: true,
+  mapQuery: traducirQueryTecnico,
   onSelect: selectTecnico,
   onEnterUnico: item => { selectTecnico(item); openProgramaModal(item.grado.id); },
   onClear: () => {
