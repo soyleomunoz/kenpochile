@@ -2135,6 +2135,13 @@ button.escuela-icon:hover {
   background: none; border: none; cursor: pointer;
 }
 .blog-link:hover { gap: 0.8rem; }
+/* Enlace inline dentro del texto de una entrada (nombres de instructores/escuelas) */
+.blog-link-inline {
+  font: inherit; color: var(--accent);
+  background: none; border: none; padding: 0; cursor: pointer;
+  text-decoration: underline; text-underline-offset: 2px;
+}
+.blog-link-inline:hover { color: var(--primary); }
 /* Filtro por escuela de la pestaña Noticias: selector desplegable con nombres completos,
    ubicado a la derecha de las pestañas de sección. El ancho es FIJO para que el borde
    derecho quede siempre alineado (bajo la lupa del buscador), sin importar el largo del
@@ -5953,6 +5960,26 @@ function switchTabById(id) {
 // navegación por la lista completa). "url" (opcional) solo registra
 // el artículo WordPress de origen; las entradas nuevas ya no lo llevan.
 const BLOG_POSTS = [
+  {
+    id: 'taller-defensa-personal-penalolen-2026', cat: 'Noticias', fecha: '2026-08-18', escuelas: ['uz'],
+    titulo: 'Talleres de Kenpo Karate en Peñalolén: nuevo programa comunal de defensa personal',
+    img: 'img/blog/taller-defensa-personal-penalolen-2026/portada.jpg',
+    imgFull: 'img/blog/taller-defensa-personal-penalolen-2026/portada.jpg',
+    excerpt: 'Los instructores Felipe Urra y Sebastián Opazo dieron inicio a dos talleres gratuitos de Kenpo Karate para niños, adjudicados en un programa concursable comunal de Peñalolén, en las sedes Campo Lindo y Los Cobres.',
+    galeria: Array.from({ length: 4 }, (_, i) => `img/blog/taller-defensa-personal-penalolen-2026/foto-${String(i + 1).padStart(2, '0')}.jpg`),
+    contenido: `
+      <p>Los instructores <button type="button" class="blog-link-inline" onclick="closeBlogModal(); openInstructorPorNombre('Felipe Urra')">Felipe Urra</button>, director de <button type="button" class="blog-link-inline" onclick="closeBlogModal(); openEscuelaFicha('uz')">International UZ Kenpo Studio</button>, y <button type="button" class="blog-link-inline" onclick="closeBlogModal(); openInstructorPorNombre('Sebastián Opazo')">Sebastián Opazo</button> postularon con éxito a un <strong>programa concursable a nivel comunal</strong> de la Municipalidad de Peñalolén, ganando la posibilidad de impartir un <strong>taller de defensa personal</strong> con una duración de 4 meses.</p>
+      <h4>Un programa pensado para las juntas de vecinos</h4>
+      <p>En esta modalidad, son las propias comunidades las que postulan al programa y, cumpliendo ciertos requisitos, acceden a un taller de su preferencia. En este caso, las comunidades beneficiadas optaron por un <strong>taller de Karate para niños de 8 a 16 años</strong>, con un cupo cercano a los <strong>15 alumnos</strong> por sede.</p>
+      <h4>Inicio de los talleres</h4>
+      <p>Los talleres comenzaron el <strong>martes 18 de agosto</strong>, en dos sedes de Peñalolén:</p>
+      <ul>
+        <li><strong>Sebastián Opazo</strong>, en la sede <strong>Los Cobres</strong>.</li>
+        <li><strong>Felipe Urra</strong>, en la sede <strong>Campo Lindo</strong>.</li>
+      </ul>
+      <p>Durante 4 meses, los niños de ambas comunidades tendrán la oportunidad de acercarse al Kenpo Karate y a la defensa personal de la mano de estos dos instructores, llevando la disciplina y los valores del arte marcial directamente a sus barrios.</p>
+      <p>Porque el Kenpo no solo se entrena… <strong>se vive</strong>. ¡Éxito a ambos talleres en esta nueva etapa!</p>`
+  },
   {
     id: 'seminario-graduacion-gtf-2026', cat: 'Noticias', fecha: '2026-07-11', escuelas: ['gtf'],
     titulo: 'Seminario y graduación en International GTF Kenpo Studio',
