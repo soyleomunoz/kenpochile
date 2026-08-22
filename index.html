@@ -190,21 +190,25 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   transform: translateY(-1px);
 }
 .nav-cta::after { display: none !important; }
-/* ── Botón del menú principal: recuerda el atajo de ayuda de teclado (Shift + ?) ── */
+/* ── Botón flotante: recuerda el atajo de ayuda de teclado (Shift + ?) ── */
 .nav-shortcuts-btn {
+  position: fixed; bottom: calc(2rem + 2.8rem + 0.8rem); left: 2rem;
+  z-index: 999;
   display: flex; align-items: center; justify-content: center;
-  width: 2.1rem; height: 2.1rem;
-  margin-left: 0.3rem;
-  background: rgba(228,87,46,0.1);
-  border: 1px solid rgba(245,166,35,0.4);
+  width: 44px; height: 44px;
+  background: rgba(20,16,13,0.95);
+  border: 1px solid rgba(245,166,35,0.5);
   border-radius: 50%;
   color: var(--accent);
   cursor: pointer;
   font-family: 'Rajdhani', sans-serif;
-  font-size: 0.95rem; font-weight: 700;
-  transition: background 0.3s, border-color 0.3s, color 0.3s, transform 0.3s;
+  font-size: 1.1rem; font-weight: 700;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 12px rgba(245,166,35,0.2);
+  transition: background 0.3s, border-color 0.3s, color 0.3s, transform 0.3s, box-shadow 0.3s;
 }
-.nav-shortcuts-btn:hover { background: var(--primary); border-color: var(--primary); color: #fff; transform: translateY(-1px); }
+.nav-shortcuts-btn:hover { background: var(--primary); border-color: var(--primary); color: #fff; transform: translateY(-2px); box-shadow: 0 0 20px rgba(245,166,35,0.4); }
+.nav-shortcuts-btn:focus-visible { outline-offset: 3px; border-radius: 50%; }
 .hamburger {
   display: none; flex-direction: column; justify-content: center; gap: 5px;
   cursor: pointer; padding: 4px;
@@ -3789,7 +3793,6 @@ footer {
 /* ── RESPONSIVE ── */
 @media (max-width: 900px) {
   .nav-links { display: none; }
-  .nav-shortcuts-btn { display: none; }
   .hamburger { display: flex; }
   .institucional-grid { grid-template-columns: 1fr; }
   .contact-grid { grid-template-columns: 1fr; }
@@ -3865,11 +3868,12 @@ footer {
     <li><a href="#faq">FAQ</a></li>
     <li><a href="#contacto" class="nav-cta">Inscríbete</a></li>
   </ul>
-  <button type="button" class="nav-shortcuts-btn" onclick="openShortcutsModal()" aria-label="Ver atajos de teclado disponibles en el sitio (Shift + ?)">?</button>
   <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu">
     <span></span><span></span><span></span>
   </button>
 </nav>
+
+<button type="button" class="nav-shortcuts-btn" onclick="openShortcutsModal()" aria-label="Ver atajos de teclado disponibles en el sitio (Shift + ?)">?</button>
 
 <!-- Mobile Menu -->
 <div class="mobile-menu" id="mobileMenu">
