@@ -2610,6 +2610,41 @@ button.escuela-icon:hover {
   .maestro-modal-gallery-grid { grid-template-columns: repeat(2, 1fr); }
 }
 .maestro-galeria-pager { margin-top: 1rem; }
+/* Zona destacada de afiches al inicio de una entrada de blog (post.afiches): los
+   afiches se muestran completos (sin recorte) y en tamaño mayor que la galería,
+   porque son piezas gráficas para leer, no fotos. Se amplían en el visor compartido. */
+.blog-afiches {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.9rem;
+  margin: 0 0 1.6rem;
+  padding: 1rem;
+  border: 1px solid rgba(228,87,46,0.22);
+  border-radius: 10px;
+  background: rgba(228,87,46,0.05);
+}
+.blog-afiches img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.3s var(--ease-out), box-shadow 0.3s;
+}
+.blog-afiches img:hover {
+  transform: scale(1.02);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+}
+.blog-afiches-title {
+  grid-column: 1 / -1;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.85rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--accent);
+  margin: 0;
+}
+@media (max-width: 640px) {
+  .blog-afiches { grid-template-columns: 1fr; }
+}
 /* Botón para volver al modal del maestro desde el que se llegó (vía enlace de mención).
    Vive en la esquina superior izquierda de la portada y SOLO existe cuando hay un salto
    que deshacer: [hidden] debe ganarle al display propio del botón. */
@@ -5957,7 +5992,9 @@ function switchTabById(id) {
 // la pestaña Noticias y en el enlace "Actividades" de la tarjeta de la escuela.
 // "galeria" (opcional) lista fotos de img/blog/<id>/ que se muestran en la sección
 // "Galería" al final del artículo (grilla paginada de a 8, visor ampliado con
-// navegación por la lista completa). "url" (opcional) solo registra
+// navegación por la lista completa). "afiches" (opcional) lista los afiches del evento:
+// se muestran completos (sin recorte) en una zona destacada ANTES del texto del
+// artículo y se amplían en el visor. "url" (opcional) solo registra
 // el artículo WordPress de origen; las entradas nuevas ya no lo llevan.
 const BLOG_POSTS = [
   {
@@ -5979,6 +6016,38 @@ const BLOG_POSTS = [
       </ul>
       <p>Durante 4 meses, los niños de ambas comunidades tendrán la oportunidad de acercarse al Kenpo Karate y a la defensa personal de la mano de estos dos instructores, llevando la disciplina y los valores del arte marcial directamente a sus barrios.</p>
       <p>Porque el Kenpo no solo se entrena… <strong>se vive</strong>. ¡Éxito a ambos talleres en esta nueva etapa!</p>`
+  },
+  {
+    id: 'seminario-american-kenpo-calbuco-2026', cat: 'Noticias', fecha: '2026-07-25', escuelas: ['calbuco'],
+    titulo: '7° Seminario de American Kenpo y Boxeo en Calbuco, con el maestro Roberto Vidal y el campeón Carlos Cruzat',
+    img: 'img/blog/seminario-american-kenpo-calbuco-2026/portada.jpg',
+    imgFull: 'img/blog/seminario-american-kenpo-calbuco-2026/portada.jpg',
+    excerpt: 'El sábado 25 de julio de 2026 la Escuela Internacional Kenpo Karate Calbuco realizó su 7° Seminario de American Kenpo, dictado por el maestro Roberto Vidal, con una jornada paralela de boxeo a cargo del 5 veces campeón mundial de peso crucero Carlos Cruzat.',
+    // Los dos afiches del evento van en la zona destacada al inicio del artículo;
+    // las fotos de la jornada, en la galería paginada del final.
+    afiches: [
+      'img/blog/seminario-american-kenpo-calbuco-2026/afiche-01.jpg',
+      'img/blog/seminario-american-kenpo-calbuco-2026/afiche-02.jpg',
+    ],
+    galeria: Array.from({ length: 11 }, (_, i) => `img/blog/seminario-american-kenpo-calbuco-2026/foto-${String(i + 1).padStart(2, '0')}.jpg`),
+    contenido: `
+      <p>El pasado <strong>sábado 25 de julio de 2026</strong> se realizó en Calbuco el <strong>7° Seminario de American Kenpo</strong>, una jornada dictada por el maestro <strong>Roberto Vidal</strong>, 8th Degree Black Belt «Associate Master of the Arts» y representante de la <strong>Chinese Karate Federation (CKF)</strong> para Chile y Sudamérica. Los alumnos de la <button type="button" class="blog-link-inline" onclick="closeBlogModal(); openEscuelaFicha('calbuco')">Escuela Internacional Kenpo Karate Calbuco</button>, dirigida por el instructor <strong>Ramón Morales Álvarez</strong>, tuvieron así la oportunidad de sumar nuevas experiencias a su formación marcial.</p>
+      <h4>Un gran evento deportivo: Kenpo y boxeo en la misma jornada</h4>
+      <p>El seminario se planteó desde el comienzo como un <strong>gran evento deportivo abierto a niños, jóvenes y adultos</strong>, combinando dos disciplinas en un mismo día: el trabajo técnico de <strong>American Kenpo</strong> —<em>forms</em> y <em>self defense</em>— y un <strong>seminario técnico de boxeo</strong>. Las inscripciones estuvieron abiertas a toda la comunidad a través del instructor Ramón Morales, quien atendió consultas de valores, horarios y lugar por WhatsApp y mensajería directa.</p>
+      <ul>
+        <li><strong>Fecha:</strong> Sábado 25 de julio de 2026</li>
+        <li><strong>Lugar:</strong> Calbuco, Región de Los Lagos</li>
+        <li><strong>Disciplinas:</strong> American Kenpo (forms y self defense) y boxeo</li>
+        <li><strong>Dirigido a:</strong> Niños, jóvenes y adultos</li>
+        <li><strong>Organiza:</strong> Escuela Internacional Kenpo Karate Calbuco</li>
+        <li><strong>Inscripciones:</strong> <a href="https://wa.me/56954247660?text=Contactado%20desde%20KenpoChile.cl" target="_blank" rel="noopener">+56 9 5424 7660</a> (instructor Ramón Morales)</li>
+      </ul>
+      <h4>La visita de un campeón: Carlos Cruzat</h4>
+      <p>La jornada contó con la presencia de <strong>Carlos Eduardo Cruzat Pacheco</strong>, campeón americano, campeón latinoamericano y <strong>5 veces campeón mundial de peso crucero</strong>, quien dictó el módulo de boxeo. Su participación permitió que los asistentes —desde principiantes hasta practicantes con experiencia— aprendieran fundamentos, técnica y estrategia directamente de un deportista de élite, en una oportunidad poco habitual para una comuna como Calbuco.</p>
+      <p>No era la primera vez que Cruzat llegaba a la zona: ya había dictado un <button type="button" class="blog-link-inline" onclick="openBlogModal('seminario-cruzat-calbuco-2024')">seminario técnico de boxeo en Calbuco en noviembre de 2024</button>, también organizado por la escuela de Ramón Morales.</p>
+      <h4>Una organización que se sostiene en la comunidad</h4>
+      <p>La actividad fue organizada por el <strong>delegado IVKS/CKF señor Ramón Morales Álvarez</strong>, 4th Degree Black Belt «Senior Instructor», junto a los <strong>alumnos, padres y apoderados</strong> de la Escuela Kenpo Calbuco. Ese trabajo conjunto —el mismo que sostiene año a año el Open Calbuco y las demás actividades de la escuela— es lo que hace posible traer maestros y campeones de este nivel al sur del país.</p>
+      <p>Séptima versión de un seminario que ya es una tradición en Calbuco, y una nueva demostración de que el Kenpo no solo se entrena… <strong>se vive</strong>.</p>`
   },
   {
     id: 'seminario-graduacion-gtf-2026', cat: 'Noticias', fecha: '2026-07-11', escuelas: ['gtf'],
@@ -6983,9 +7052,20 @@ function openBlogModal(id) {
   // Sección "Galería" opcional (post.galeria) al final del artículo: grilla paginada
   // de a 8 fotos (mismo patrón que la galería del modal de maestros); cada thumbnail
   // amplía en el visor compartido, que navega la lista completa de la entrada.
+  // Zona destacada opcional (post.afiches): los afiches del evento van ANTES del texto,
+  // completos y ampliables en el visor compartido (lista propia, aparte de la galería).
   const article = document.getElementById('blogModalArticle');
-  article.innerHTML = post.contenido
+  const afiches = post.afiches || [];
+  article.innerHTML = (afiches.length
+      ? `<div class="blog-afiches"><div class="blog-afiches-title">Afiches del evento</div>`
+        + afiches.map((src, i) => `<img src="${src}" alt="Afiche ${i + 1} de ${post.titulo}" loading="lazy" decoding="async" onerror="this.remove()">`).join('')
+        + `</div>`
+      : '')
+    + post.contenido
     + ((post.galeria || []).length ? '<div id="blogModalGaleria"></div>' : '');
+  article.querySelectorAll('.blog-afiches img').forEach((im, i) => {
+    im.addEventListener('click', () => openImgViewer(afiches, i));
+  });
   blogGaleriaPage = 1;
   renderBlogGaleria(post);
   // Si la entrada es una actividad de escuela, ofrece saltar a todas sus actividades.
