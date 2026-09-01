@@ -7614,8 +7614,9 @@ const ESCUELAS = [
       facebook: 'https://www.facebook.com/profile.php?id=100079896505645',
       instagram: 'https://www.instagram.com/ilkks_kenpo_karate/',
     },
-    // Multimedia: solo la foto del maestro Roberto Vidal junto al director de la escuela.
-    galeria: ['img/escuelas/lagos/header-1.jpg'] },
+    // Multimedia: primero la foto del maestro Roberto Vidal junto al director de la
+    // escuela, luego el afiche de la actividad y las fotos de la jornada.
+    galeria: ['img/escuelas/lagos/header-1.jpg', 'img/escuelas/lagos/afiche.jpg', ...Array.from({ length: 3 }, (_, i) => `img/escuelas/lagos/foto-${String(i + 1).padStart(2, '0')}.jpg`)] },
   // Ficha extraída de kenpochile.cl/internacional-lions-warriors-kenpo-studio/: biografía,
   // sede con coordenadas reales (resueltas de su enlace de Google Maps), horarios, contacto
   // y Multimedia (2 cabeceras + 22 fotos de la galería). La página publica además el
