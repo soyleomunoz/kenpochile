@@ -1239,12 +1239,18 @@ button.escuela-icon:hover {
 @media (max-width: 700px) {
   .escuelas-filter-row { grid-template-columns: repeat(auto-fit, minmax(110px,1fr)) !important; }
 }
-/* Filtro secundario "Con sitio web": chip pequeño tipo interruptor bajo los tabs de país.
-   Se combina con país/región/comuna; criterio neutral (solo si la escuela tiene web propia). */
-.escuelas-web-toggle-row {
-  display: flex; justify-content: center;
-  margin-top: 0.7rem;
+/* Filtro secundario "Con sitio web": chip pequeño tipo interruptor a la derecha del
+   subtítulo (sobre el tab Argentina, bajo el buscador). Se combina con país/región/comuna;
+   criterio neutral (solo si la escuela tiene web propia). */
+.escuelas-subtitle-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; flex-wrap: wrap;
 }
+.escuelas-web-toggle-row {
+  display: flex; justify-content: flex-end;
+  margin-left: auto;
+}
+#escuelas .escuelas-filter-row#paisTabs { margin-top: 1.2rem; }
 .escuela-web-toggle {
   display: inline-flex; align-items: center; gap: 0.4em;
   font-family: 'Rajdhani', sans-serif;
@@ -4139,9 +4145,11 @@ footer {
       </div>
     </div>
     <div class="divider"></div>
-    <p class="section-subtitle">Encuentra la escuela más cercana y comienza tu camino en el Kenpo Karate.</p>
+    <div class="escuelas-subtitle-row">
+      <p class="section-subtitle">Encuentra la escuela más cercana y comienza tu camino en el Kenpo Karate.</p>
+      <div class="escuelas-web-toggle-row" id="escuelaWebToggleRow"></div>
+    </div>
     <div class="escuelas-filter-row" id="paisTabs"></div>
-    <div class="escuelas-web-toggle-row" id="escuelaWebToggleRow"></div>
     <div class="escuelas-filter-row" id="regionRow"></div>
     <div class="escuelas-filter-row" id="comunaChips"></div>
     <div class="escuelas-grid" id="escuelasGrid"></div>
