@@ -9564,6 +9564,15 @@ const INSTRUCTOR_SOCIAL_PLATFORMS = [
   { key: 'facebook', label: 'Facebook', icon: 'icon-facebook' },
   { key: 'whatsapp', label: 'WhatsApp', icon: 'icon-whatsapp' },
 ];
+// Ícono de sitio web: solo para directores cuya escuela tiene web propia activa (campo
+// "sitioWeb" de ESCUELAS). No hay marcador "próximamente": sin web, no se muestra.
+function instructorWebItemHTML(nombre) {
+  const escuela = escuelaDeInstructor(nombre);
+  const url = escuelaWebURL(escuela);
+  return url
+    ? `<a class="social-btn-sm" href="${url}" target="_blank" rel="noopener" title="Sitio web de ${escuela.nombre}" aria-label="Sitio web de ${escuela.nombre}" onclick="event.stopPropagation()"><svg class="icon"><use href="#icon-globe"/></svg></a>`
+    : '';
+}
 function instructorSocialItemsHTML(nombre) {
   const redes = INSTRUCTOR_REDES[nombre] || {};
   return INSTRUCTOR_SOCIAL_PLATFORMS.map(p => {
@@ -9571,7 +9580,7 @@ function instructorSocialItemsHTML(nombre) {
     return url
       ? `<a class="social-btn-sm" href="${url}" target="_blank" rel="noopener" aria-label="${p.label} de ${nombre}" onclick="event.stopPropagation()"><svg class="icon"><use href="#${p.icon}"/></svg></a>`
       : `<span class="social-btn-sm is-soon" title="${p.label} — próximamente" aria-label="${p.label}, próximamente disponible" onclick="event.stopPropagation()"><svg class="icon"><use href="#${p.icon}"/></svg></span>`;
-  }).join('');
+  }).join('') + instructorWebItemHTML(nombre);
 }
 function instructorSocialHTML(nombre) {
   return `<div class="instructor-social">${instructorSocialItemsHTML(nombre)}</div>`;
