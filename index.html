@@ -4185,7 +4185,10 @@ footer {
       </div>
     </div>
     <div class="divider"></div>
-    <p class="section-subtitle">Cuerpo de instructores activos del International Vidal Kenpo Studio / Chinese Karate Federation, organizado por grado.</p>
+    <div class="escuelas-subtitle-row">
+      <p class="section-subtitle">Cuerpo de instructores activos del International Vidal Kenpo Studio / Chinese Karate Federation, organizado por grado.</p>
+      <div class="escuelas-web-toggle-row" id="instructorWebToggleRow"></div>
+    </div>
     <div class="instructor-tabs-scroller">
       <button type="button" class="instructor-tabs-arrow instructor-tabs-arrow-prev" id="instructorTabsPrev" aria-label="Ver etiquetas anteriores"><svg class="icon"><use href="#icon-chevron-left"/></svg></button>
       <div class="escuelas-filter-row instructor-tabs" id="instructorTabs"></div>
@@ -9627,9 +9630,17 @@ function getInstructorQuery() {
 // Con búsqueda activa, se ignora la etiqueta de grado y se busca en todos los instructores.
 // "Equipo Directivo" y "Directores" son etiquetas especiales: filtran por pertenencia,
 // no por i.grado (agrupan instructores de distintos grados).
+// Filtro "Con sitio web" (chip junto al subtítulo): directores cuya escuela tiene web propia
+// (campo "sitioWeb" de ESCUELAS). Se combina con la etiqueta de grado; la búsqueda lo ignora.
+let instructorSoloWeb = false;
+function instructorTieneWeb(i) { return !!escuelaWebURL(escuelaDeInstructor(i.nombre)); }
 function getFilteredInstructores() {
   const query = getInstructorQuery();
   if (query) return INSTRUCTORES.filter(i => normalizarTexto(i.nombre).includes(query));
+  const base = getInstructoresPorGrado();
+  return instructorSoloWeb ? base.filter(instructorTieneWeb) : base;
+}
+function getInstructoresPorGrado() {
   if (instructorGrado === 'Todos') return INSTRUCTORES_ORDENADOS;
   if (instructorGrado === INSTRUCTOR_TAG_DIRECTIVO) return INSTRUCTORES.filter(i => esEquipoDirectivo(i.nombre));
   if (instructorGrado === INSTRUCTOR_TAG_DIRECTORES) return ordenarPorApellido(INSTRUCTORES.filter(i => esDirector(i.nombre)));
@@ -9656,7 +9667,27 @@ function renderInstructorGradoSubtitle() {
   el.style.display = texto ? 'block' : 'none';
 }
 
+// Chip "Con sitio web" de Instructores: mismo estilo y lógica que el de Escuelas. El conteo
+// respeta la etiqueta de grado activa; se oculta si ningún director tiene escuela con web.
+function renderInstructorWebToggle() {
+  const wrap = document.getElementById('instructorWebToggleRow');
+  if (!wrap) return;
+  if (!INSTRUCTORES.some(instructorTieneWeb)) { wrap.innerHTML = ''; wrap.style.display = 'none'; return; }
+  wrap.style.display = '';
+  const count = getInstructoresPorGrado().filter(instructorTieneWeb).length;
+  wrap.innerHTML = `<button type="button" class="escuela-web-toggle${instructorSoloWeb ? ' active' : ''}" aria-pressed="${instructorSoloWeb}" title="Mostrar solo directores con escuela con sitio web propio"><svg class="icon"><use href="#icon-globe"/></svg>Con sitio web<span class="count">(${count})</span></button>`;
+  wrap.querySelector('button').addEventListener('click', () => {
+    instructorSoloWeb = !instructorSoloWeb;
+    instructorPage = 1;
+    document.getElementById('instructorSearch').value = '';
+    hideInstructorSuggestions();
+    renderInstructorTabs();
+    renderInstructoresGridAndPager();
+  });
+}
+
 function renderInstructorTabs() {
+  renderInstructorWebToggle();
   const wrap = document.getElementById('instructorTabs');
   const grados = ['Todos', INSTRUCTOR_TAG_DIRECTIVO, INSTRUCTOR_TAG_DIRECTORES, ...INSTRUCTOR_GRUPOS.map(g => g.grado)];
   wrap.classList.toggle('is-searching', !!getInstructorQuery());
@@ -9730,6 +9761,9 @@ function renderInstructoresGridAndPager() {
   currentInstructorPageItems = pageItems;
   if (pageItems.length === 0) {
     grid.innerHTML = '';
+    empty.textContent = (instructorSoloWeb && !getInstructorQuery())
+      ? 'No hay directores con sitio web en esta etiqueta todavía.'
+      : 'No se encontraron instructores con ese nombre.';
     empty.style.display = 'block';
   } else {
     empty.style.display = 'none';
