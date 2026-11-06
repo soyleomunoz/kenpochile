@@ -1239,6 +1239,52 @@ button.escuela-icon:hover {
 @media (max-width: 700px) {
   .escuelas-filter-row { grid-template-columns: repeat(auto-fit, minmax(110px,1fr)) !important; }
 }
+/* Filtro secundario "Con sitio web": chip pequeño tipo interruptor bajo los tabs de país.
+   Se combina con país/región/comuna; criterio neutral (solo si la escuela tiene web propia). */
+.escuelas-web-toggle-row {
+  display: flex; justify-content: center;
+  margin-top: 0.7rem;
+}
+.escuela-web-toggle {
+  display: inline-flex; align-items: center; gap: 0.4em;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700; text-transform: uppercase;
+  font-size: 0.68rem; letter-spacing: 0.08em;
+  padding: 0.35rem 0.85rem;
+  border-radius: 50px;
+  background: transparent;
+  border: 1px dashed rgba(245,166,35,0.35);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.3s, border-color 0.3s, background 0.3s;
+}
+.escuela-web-toggle .icon { width: 13px; height: 13px; }
+.escuela-web-toggle .count { opacity: 0.6; font-weight: 600; }
+.escuela-web-toggle:hover { color: var(--accent); border-color: var(--accent); }
+.escuela-web-toggle.active {
+  background: rgba(245,166,35,0.14);
+  border-style: solid;
+  border-color: var(--accent);
+  color: var(--text-main);
+}
+/* Insignia "Sitio web" en la tarjeta: enlace directo a la web propia de la escuela. */
+.escuela-web-badge {
+  align-self: flex-start;
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  margin: -0.15rem 0 0.7rem;
+  padding: 0.22rem 0.65rem;
+  border-radius: 50px;
+  border: 1px solid rgba(245,166,35,0.35);
+  background: rgba(245,166,35,0.08);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--accent);
+  text-decoration: none;
+  transition: background 0.3s, border-color 0.3s, color 0.3s;
+}
+.escuela-web-badge .icon { width: 12px; height: 12px; }
+.escuela-web-badge:hover { background: rgba(245,166,35,0.18); border-color: var(--accent); color: var(--text-main); }
 .escuelas-empty {
   margin-top: 3rem; text-align: center;
   font-family: 'Cormorant Garamond', serif; font-style: italic;
@@ -4095,6 +4141,7 @@ footer {
     <div class="divider"></div>
     <p class="section-subtitle">Encuentra la escuela más cercana y comienza tu camino en el Kenpo Karate.</p>
     <div class="escuelas-filter-row" id="paisTabs"></div>
+    <div class="escuelas-web-toggle-row" id="escuelaWebToggleRow"></div>
     <div class="escuelas-filter-row" id="regionRow"></div>
     <div class="escuelas-filter-row" id="comunaChips"></div>
     <div class="escuelas-grid" id="escuelasGrid"></div>
@@ -7490,6 +7537,7 @@ const ESCUELAS = [
   // (la página no publica enlace de Maps, el mapa geocodifica la dirección), horarios,
   // redes y Multimedia (2 cabeceras + 12 fotos en img/escuelas/cornejo/).
   { id: 'cornejo', corto: 'Cornejo', nombre: 'International Cornejo Kenpo Studio', director: 'Daniel Cornejo', region: 'Región Metropolitana', comuna: 'Maipú', lugar: 'Maipú', insignia: 'INTERNATIONAL-CORNEJO-v2.webp',
+    sitioWeb: 'https://kenpocornejo.cl/',
     historiaTitulo: 'Biografía',
     historia: `
       <p>El instructor Daniel Cornejo es alumno directo del maestro Roberto Vidal desde el año 1994, tiene el grado de Black Belt «Probationary Black Belt» en Kenpo Karate, grado obtenido en el año 2016. En el año 1999, entró al Centro Deportivo de Alto Rendimiento CAM. Como un destacado deportista y member oficial de nuestra federación CKF, Daniel ha participado en distintos seminarios nacionales y ha obtenido importantes premios. Actualmente ha abierto su propia escuela donde está efectuando clases a alumnos de distintas edades; entre ellos se destaca su hija, que ha obtenido el grado de cinturón amarillo en Kenpo.</p>`,
@@ -7811,6 +7859,10 @@ let escuelaRegion = 'Todas';
 let escuelaComuna = 'Todas';
 let escuelaPage = 1;
 let escuelaQuery = '';
+// Filtro "Con sitio web": escuelas con campo "sitioWeb" (web propia de la escuela, sin
+// importar quién la desarrolló). Para sumar una escuela basta agregarle sitioWeb: 'https://...'.
+let escuelaSoloWeb = false;
+function escuelaTieneWeb(e) { return !!e.sitioWeb; }
 
 function escuelaLabel(e) { return `${e.nombre} — ${e.lugar}`; }
 
@@ -7819,6 +7871,7 @@ function getFilteredEscuelas() {
   if (escuelaQuery) return ESCUELAS.filter(e => normalizarTexto(e.nombre).includes(escuelaQuery));
   const source = escuelaPais === 'Todas' ? ESCUELAS_SHUFFLED : ESCUELAS;
   return source.filter(e => {
+    if (escuelaSoloWeb && !escuelaTieneWeb(e)) return false;
     const esArgentina = e.region === 'Argentina';
     if (escuelaPais === 'Chile' && esArgentina) return false;
     if (escuelaPais === 'Argentina' && !esArgentina) return false;
@@ -7894,6 +7947,26 @@ function renderPaisTabs() {
     });
   });
   setupTabMarquee(wrap);
+}
+
+// Chip secundario bajo los tabs de país: activa/desactiva el filtro "Con sitio web".
+// El conteo respeta el país activo; se oculta si ninguna escuela tiene web propia.
+function renderEscuelaWebToggle() {
+  const wrap = document.getElementById('escuelaWebToggleRow');
+  if (!wrap) return;
+  const enPais = e => escuelaPais === 'Todas' || (escuelaPais === 'Argentina') === (e.region === 'Argentina');
+  const total = ESCUELAS.filter(escuelaTieneWeb).length;
+  if (!total) { wrap.innerHTML = ''; wrap.style.display = 'none'; return; }
+  wrap.style.display = '';
+  const count = ESCUELAS.filter(e => escuelaTieneWeb(e) && enPais(e)).length;
+  wrap.innerHTML = `<button type="button" class="escuela-web-toggle${escuelaSoloWeb ? ' active' : ''}" aria-pressed="${escuelaSoloWeb}" title="Mostrar solo escuelas con sitio web propio"><svg class="icon"><use href="#icon-globe"/></svg>Con sitio web<span class="count">(${count})</span></button>`;
+  wrap.querySelector('button').addEventListener('click', () => {
+    clearEscuelaQuery();
+    escuelaSoloWeb = !escuelaSoloWeb;
+    escuelaPage = 1;
+    renderEscuelaWebToggle();
+    renderEscuelasGridAndPager();
+  });
 }
 
 // Línea 2: regiones de Chile, de norte a sur
@@ -8101,8 +8174,8 @@ function openEscuelaFicha(id, trigger) {
       { key: 'web', label: 'Sitio web', icon: 'icon-globe' },
       { key: 'facebook', label: 'Facebook', icon: 'icon-facebook' },
       { key: 'instagram', label: 'Instagram', icon: 'icon-instagram' },
-    ].filter(r => e.redes[r.key]).map(r =>
-      `<a class="social-btn-sm" href="${e.redes[r.key]}" target="_blank" rel="noopener" title="${r.label}" aria-label="${r.label} de ${e.nombre}"><svg class="icon"><use href="#${r.icon}"/></svg></a>`
+    ].filter(r => r.key === 'web' ? (e.redes.web || e.sitioWeb) : e.redes[r.key]).map(r =>
+      `<a class="social-btn-sm" href="${r.key === 'web' ? (e.redes.web || e.sitioWeb) : e.redes[r.key]}" target="_blank" rel="noopener" title="${r.label}" aria-label="${r.label} de ${e.nombre}"><svg class="icon"><use href="#${r.icon}"/></svg></a>`
     ).join('');
     if (iconos) izq.push(`<div class="escuela-modal-block"><h4>Contacto y Redes</h4><div class="escuela-modal-redes">${iconos}</div></div>`);
   }
@@ -8280,6 +8353,7 @@ function renderEscuelasGridAndPager() {
         <div class="escuela-card-body">
           <div class="escuela-nombre">${e.nombre}</div>
           <div class="escuela-ciudad"><svg class="icon"><use href="#icon-map-pin"/></svg> ${escuelaUbicacion(e)}</div>
+          ${e.sitioWeb ? `<a class="escuela-web-badge" href="${e.sitioWeb}" target="_blank" rel="noopener" title="Visitar el sitio web de ${e.nombre}"><svg class="icon"><use href="#icon-globe"/></svg> Sitio web ↗</a>` : ''}
           <div class="escuela-director">Director${partesDirector.length > 1 ? 'es' : ''}: ${directores}${instructorApoyo ? `<br>Instructor: ${instructorApoyo}` : ''}</div>
           <button type="button" class="escuela-ficha-link" data-ficha="${e.id}" title="Ver la ficha de ${e.nombre}">Ver ficha completa</button>
           ${acciones ? `<div class="escuela-card-actions${verBlogBtn && inscribirmeBtn ? '' : ' solo'}">${acciones}</div>` : ''}
@@ -8332,6 +8406,7 @@ function renderEscuelasPager(totalPages) {
 // tarjetas muestran al director clickeable, lo que requiere INSTRUCTORES ya definido.
 function renderEscuelasSection() {
   renderPaisTabs();
+  renderEscuelaWebToggle();
   renderRegionRow();
   renderComunaChips();
   renderEscuelasGridAndPager();
@@ -9244,7 +9319,7 @@ function escuelaNombreParaTarjeta(nombre, escuela) {
 // la tarjeta/modal del instructor director muestra el enlace como "próximamente".
 const ESCUELA_WEB = {};
 function escuelaWebURL(esc) {
-  return (esc && ESCUELA_WEB[esc.nombre]) || '';
+  return (esc && (esc.sitioWeb || ESCUELA_WEB[esc.nombre])) || '';
 }
 // Imagen real del cinturón por grado (img/cinturones/). Grados sin cinturón físico asociado
 // (Nuevos, In Memoriam) no muestran ninguna imagen ni ícono en la tarjeta.
