@@ -1079,6 +1079,7 @@ button.escuela-icon:hover {
   transition: color 0.3s;
 }
 .escuela-ficha-link::after { content: '→'; transition: transform 0.3s; }
+.escuela-web-badge + .escuela-ficha-link { margin-top: 0; padding-top: 0.75rem; }
 .escuela-ficha-link:hover { color: var(--accent); }
 .escuela-ficha-link:hover::after { transform: translateX(3px); }
 /* Pie de la tarjeta: "Ver Blog" e "Inscribirme" en la misma fila cuando la escuela tiene
@@ -1273,11 +1274,13 @@ button.escuela-icon:hover {
   border-color: var(--accent);
   color: var(--text-main);
 }
-/* Insignia "Sitio web" en la tarjeta: enlace directo a la web propia de la escuela. */
+/* Insignia "Sitio web" en la tarjeta: enlace directo a la web propia de la escuela, justo
+   sobre "Ver ficha completa". Toma el margin-top auto (anclada al pie con la ficha) y su
+   borde izquierdo queda alineado con el texto de la tarjeta (sin margen lateral). */
 .escuela-web-badge {
   align-self: flex-start;
   display: inline-flex; align-items: center; gap: 0.35rem;
-  margin: -0.15rem 0 0.7rem;
+  margin: auto 0 0;
   padding: 0.22rem 0.65rem;
   border-radius: 50px;
   border: 1px solid rgba(245,166,35,0.35);
@@ -8363,8 +8366,8 @@ function renderEscuelasGridAndPager() {
         <div class="escuela-card-body">
           <div class="escuela-nombre">${e.nombre}</div>
           <div class="escuela-ciudad"><svg class="icon"><use href="#icon-map-pin"/></svg> ${escuelaUbicacion(e)}</div>
-          ${e.sitioWeb ? `<a class="escuela-web-badge" href="${e.sitioWeb}" target="_blank" rel="noopener" title="Visitar el sitio web de ${e.nombre}"><svg class="icon"><use href="#icon-globe"/></svg> Sitio web ↗</a>` : ''}
           <div class="escuela-director">Director${partesDirector.length > 1 ? 'es' : ''}: ${directores}${instructorApoyo ? `<br>Instructor: ${instructorApoyo}` : ''}</div>
+          ${e.sitioWeb ? `<a class="escuela-web-badge" href="${e.sitioWeb}" target="_blank" rel="noopener" title="Visitar el sitio web de ${e.nombre}"><svg class="icon"><use href="#icon-globe"/></svg> Sitio web ↗</a>` : ''}
           <button type="button" class="escuela-ficha-link" data-ficha="${e.id}" title="Ver la ficha de ${e.nombre}">Ver ficha completa</button>
           ${acciones ? `<div class="escuela-card-actions${verBlogBtn && inscribirmeBtn ? '' : ' solo'}">${acciones}</div>` : ''}
         </div>
