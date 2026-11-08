@@ -8524,6 +8524,7 @@ function renderEscuelasSection() {
       escuelaPais = 'Todas';
       escuelaRegion = 'Todas';
       escuelaComuna = 'Todas';
+      escuelaSoloWeb = false;
       escuelaPage = 1;
       escuelaKeyboardRow = 'paisTabs';
       renderEscuelasSection();
@@ -10034,6 +10035,7 @@ document.addEventListener('click', e => {
       e.preventDefault();
       if (instructorSearchInput.value) instructorSearchInput.value = '';
       instructorGrado = 'Todos';
+      instructorSoloWeb = false;
       instructorPage = 1;
       renderInstructorTabs();
       renderInstructoresGridAndPager();
