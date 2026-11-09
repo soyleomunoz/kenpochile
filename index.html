@@ -6083,6 +6083,33 @@ function switchTabById(id) {
 // el artículo WordPress de origen; las entradas nuevas ya no lo llevan.
 const BLOG_POSTS = [
   {
+    id: 'nueva-web-cornejo-2026', cat: 'Noticias', fecha: '2026-11-08', escuelas: ['cornejo'],
+    titulo: 'International Cornejo Kenpo Studio estrena nueva web',
+    img: 'img/blog/nueva-web-cornejo-2026/portada-thumb.jpg',
+    imgFull: 'img/blog/nueva-web-cornejo-2026/portada-full.jpg',
+    excerpt: 'La escuela del instructor y director Daniel Cornejo lanza su página oficial para ganar presencia en redes y atraer a más alumnos al Kenpo.',
+    galeria: Array.from({ length: 12 }, (_, i) => `img/blog/nueva-web-cornejo-2026/foto-${String(i + 1).padStart(2, '0')}.jpg`),
+    contenido: `
+      <p>Con mucho orgullo compartimos una excelente noticia para la familia del Kenpo en Chile: la <button type="button" class="blog-link-inline" onclick="closeBlogModal(); openEscuelaFicha('cornejo')">International Cornejo Kenpo Studio</button>, escuela afiliada dirigida por su instructor y director <strong>Daniel Cornejo</strong>, ya cuenta con su propia página web oficial: <a href="https://kenpocornejo.cl/" target="_blank" rel="noopener"><strong>kenpocornejo.cl</strong></a>.</p>
+      <p>Es un paso importante en la historia de la escuela. Hoy la mayoría de las personas busca información desde su teléfono antes de decidir dónde entrenar, y tener un sitio propio, claro y profesional marca la diferencia entre ser conocido por unos pocos y ser descubierto por muchos.</p>
+      <h4>Una escuela con vida, disciplina y comunidad</h4>
+      <p>Quien ha pasado por una práctica en la International Cornejo Kenpo Studio lo sabe: aquí se entrena con respeto, constancia y alegría. Niños, jóvenes y adultos comparten el tatami, rinden exámenes de cinturón, participan en seminarios y celebran juntos cada logro, desde el primer cinturón hasta cada nuevo grado. Todo ese trabajo merecía un espacio digital a la altura, y eso es lo que representa la nueva web: un lugar donde mostrar la esencia de la escuela, su equipo, su forma de enseñar y los valores que transmite cada día.</p>
+      <h4>¿Qué cambia con la nueva web?</h4>
+      <p>El objetivo es claro: <strong>fortalecer la presencia de la escuela en redes sociales y en internet para atraer a más alumnos</strong>. La nueva página se convierte en el centro de todo el movimiento digital de la escuela:</p>
+      <ul>
+        <li><strong>Más presencia:</strong> cada publicación en Instagram o Facebook ahora tiene un destino al cual dirigir a los interesados.</li>
+        <li><strong>Mejor primera impresión:</strong> las familias conocen a la escuela, a su instructor y su metodología antes de la primera clase.</li>
+        <li><strong>Contacto directo:</strong> quien quiere inscribirse o resolver dudas lo hace en pocos pasos.</li>
+        <li><strong>Credibilidad y respaldo:</strong> una imagen profesional acorde a una escuela de la línea de la Chinese Karate Federation.</li>
+        <li><strong>Visibilidad en buscadores:</strong> quienes buscan Kenpo o defensa personal en su zona pueden encontrar a la escuela con mayor facilidad.</li>
+      </ul>
+      <h4>El Kenpo se abre a nuevas generaciones</h4>
+      <p>Para Daniel Cornejo y su equipo, esta web es una herramienta al servicio de lo que más importa: formar personas con disciplina, carácter y capacidad de defensa personal. Cada nuevo alumno que llegue por este canal será parte de una comunidad que entrena, crece y se apoya mutuamente. Desde KenpoChile.cl felicitamos a la escuela y a su instructor por dar este paso y los animamos a seguir difundiendo el legado que nuestro fundador, Senior Grandmaster Edmund Kealoha Parker, nos entregó. <strong>¡Nos vemos en prácticas!</strong></p>
+      <p>👉 Conoce la nueva web de la escuela: <a href="https://kenpocornejo.cl/" target="_blank" rel="noopener">kenpocornejo.cl</a></p>
+      <h4>¿Tu escuela o negocio necesita una web así?</h4>
+      <p>Si diriges una escuela, un club o un emprendimiento y quieres tener presencia profesional en internet, atraer más alumnos o clientes y fortalecer tus redes sociales, <strong>GestixPro</strong> diseña y desarrolla páginas web a la medida, optimizadas para celulares y pensadas para convertir visitas en contactos reales. <a href="https://gestixpro.cl/" target="_blank" rel="noopener"><strong>Cotiza tu web con GestixPro</strong></a>.</p>`
+  },
+  {
     id: 'open-class-maipu-2026', cat: 'Noticias', fecha: '2026-10-25', escuelas: ['taller-maipu'],
     titulo: 'Open Class de Artes Marciales en Maipú',
     img: 'img/blog/open-class-maipu-2026/portada.jpg',
