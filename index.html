@@ -2245,7 +2245,7 @@ button.escuela-icon:hover {
 }
 .blog-escuela-dd.open .blog-escuela-dd-btn { border-color: var(--accent); }
 .blog-escuela-dd.open .blog-escuela-dd-caret { transform: rotate(180deg); }
-.blog-escuela-dd-menu {
+.blog-escuela-dd-panel {
   position: absolute; top: calc(100% + 6px); left: 0; right: 0;
   z-index: 50;
   background: var(--bg-card);
@@ -2255,7 +2255,31 @@ button.escuela-icon:hover {
   box-shadow: 0 15px 40px rgba(0,0,0,0.55);
   display: none;
 }
-.blog-escuela-dd.open .blog-escuela-dd-menu { display: block; }
+.blog-escuela-dd.open .blog-escuela-dd-panel { display: block; }
+/* Buscador del desplegable: al escribir se achica la lista a las escuelas que coinciden. */
+.blog-escuela-dd-search { padding: 0.5rem; border-bottom: 1px solid var(--border); }
+.blog-escuela-dd-search input {
+  width: 100%;
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.5rem 0.8rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.85rem; font-weight: 600;
+  color: var(--text-main);
+  outline: none;
+  transition: border-color 0.3s;
+}
+.blog-escuela-dd-search input:focus { border-color: var(--accent); }
+.blog-escuela-dd-search input::placeholder { color: var(--text-muted); opacity: 0.7; }
+.blog-escuela-dd-menu { max-height: 260px; overflow-y: auto; }
+.blog-escuela-dd-option[hidden] { display: none; }
+.blog-escuela-dd-empty {
+  padding: 0.8rem 1rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.8rem; font-weight: 600;
+  color: var(--text-muted);
+}
 .blog-escuela-dd-option {
   width: 100%;
   display: flex; align-items: center; justify-content: space-between; gap: 0.8rem;
@@ -4541,7 +4565,13 @@ footer {
             <span id="blogEscuelaDdText"></span>
             <svg class="blog-escuela-dd-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
-          <div class="blog-escuela-dd-menu" id="blogEscuelaDdMenu" role="listbox" aria-label="Filtrar noticias por escuela"></div>
+          <div class="blog-escuela-dd-panel">
+            <div class="blog-escuela-dd-search">
+              <input type="search" id="blogEscuelaDdSearch" placeholder="Buscar escuela…" autocomplete="off" aria-label="Buscar escuela">
+            </div>
+            <div class="blog-escuela-dd-menu" id="blogEscuelaDdMenu" role="listbox" aria-label="Filtrar noticias por escuela"></div>
+            <div class="blog-escuela-dd-empty" id="blogEscuelaDdEmpty" hidden>Ninguna escuela coincide</div>
+          </div>
         </div>
       </div>
     </div>
@@ -7042,7 +7072,42 @@ document.getElementById('blogEscuelaDdBtn').addEventListener('click', () => {
   const dd = document.getElementById('blogEscuelaDd');
   const abierto = dd.classList.toggle('open');
   document.getElementById('blogEscuelaDdBtn').setAttribute('aria-expanded', String(abierto));
+  if (abierto) {
+    // Al abrir, la búsqueda parte vacía (lista completa) y el cursor queda listo para escribir.
+    const input = document.getElementById('blogEscuelaDdSearch');
+    input.value = '';
+    filtrarOpcionesBlogEscuela('');
+    input.focus({ preventScroll: true });
+  }
 });
+// Buscador del desplegable: oculta las escuelas cuyo nombre no contiene lo escrito
+// (sin distinguir mayúsculas ni tildes: "cornejo", "Lorca", "maipu"...).
+function filtrarOpcionesBlogEscuela(texto) {
+  const q = normalizarTexto(texto.trim());
+  let visibles = 0;
+  document.querySelectorAll('#blogEscuelaDdMenu .blog-escuela-dd-option').forEach(op => {
+    const coincide = !q || normalizarTexto(op.textContent).includes(q);
+    op.hidden = !coincide;
+    if (coincide) visibles++;
+  });
+  document.getElementById('blogEscuelaDdEmpty').hidden = visibles > 0;
+}
+(() => {
+  const input = document.getElementById('blogEscuelaDdSearch');
+  input.addEventListener('input', () => filtrarOpcionesBlogEscuela(input.value));
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      // Enter elige la primera escuela visible.
+      e.preventDefault();
+      const primera = document.querySelector('#blogEscuelaDdMenu .blog-escuela-dd-option:not([hidden])');
+      if (primera) primera.click();
+    } else if (e.key === 'Escape') {
+      e.stopPropagation();
+      cerrarBlogEscuelaDd();
+      document.getElementById('blogEscuelaDdBtn').focus();
+    }
+  });
+})();
 // Click fuera del desplegable: se cierra sin cambiar la selección.
 document.addEventListener('click', e => {
   if (!e.composedPath().includes(document.getElementById('blogEscuelaDd'))) cerrarBlogEscuelaDd();
