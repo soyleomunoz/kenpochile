@@ -6113,6 +6113,48 @@ function switchTabById(id) {
 // el artículo WordPress de origen; las entradas nuevas ya no lo llevan.
 const BLOG_POSTS = [
   {
+    id: 'copa-calbuco-2026', cat: 'Noticias', fecha: '2026-11-14', escuelas: ['taller-maipu', 'calbuco'],
+    titulo: '19° Torneo Abierto de Artes Marciales – Copa Calbuco 2026: nueve podios para el Taller de Kenpo Karate de Maipú',
+    img: 'img/blog/copa-calbuco-2026/portada.jpg',
+    imgFull: 'img/blog/copa-calbuco-2026/portada.jpg',
+    excerpt: 'Los alumnos del Taller de Kenpo Karate del Departamento de Deportes de la I. Municipalidad de Maipú volvieron del sur con 3 primeros, 4 segundos y 2 terceros lugares, en un torneo que contó con el apoyo del alcalde Marco Silva Maldonado y la presencia del excampeón mundial de boxeo Carlos Cruzat.',
+    afiches: ['img/blog/copa-calbuco-2026/afiche.jpg'],
+    galeria: Array.from({ length: 12 }, (_, i) => `img/blog/copa-calbuco-2026/foto-${String(i + 1).padStart(2, '0')}.jpg`),
+    contenido: `
+      <p>El <strong>sábado 14 y domingo 15 de noviembre</strong> se vivió en el <strong>Gimnasio Goycolea de Calbuco</strong> una nueva edición del <strong>19° Torneo Abierto de Artes Marciales – Copa Calbuco 2026</strong>, el ya tradicional encuentro del sur de Chile que reúne a escuelas y deportistas de distintas disciplinas en un fin de semana de sana competencia.</p>
+      <p>El evento fue organizado por el director e instructor <strong>Ramón Morales Álvarez</strong>, 4th Degree Black Belt «Senior Instructor» y delegado IVKS/CKF, junto a su <button type="button" class="blog-link-inline" onclick="closeBlogModal(); openEscuelaFicha('calbuco')">Escuela Internacional Kenpo Karate Calbuco</button>, y dirigido por el maestro <strong>Roberto Vidal C.</strong>, 8th Degree Black Belt «Associate Master of the Arts» y representante IVKS/CKF para Chile y Sudamérica.</p>
+      <h4>Reconocimiento al alcalde Marco Silva Maldonado</h4>
+      <p>En el marco del torneo, el instructor Ramón Morales entregó un reconocimiento al <strong>alcalde de la comuna de Calbuco, Marco Silva Maldonado</strong>, por su gran apoyo a los deportistas de la Escuela Internacional Kenpo Karate Calbuco. El respaldo de la Municipalidad y de su Oficina de Deportes ha sido clave para que el Open Calbuco llegue a su edición número 19 y se consolide como uno de los encuentros de artes marciales más importantes del sur del país.</p>
+      <h4>Un invitado de lujo: Carlos Cruzat</h4>
+      <p>Entre las autoridades presentes, junto a concejales de la comuna de Calbuco, estuvo el <strong>excampeón mundial de boxeo Carlos Eduardo Cruzat Pacheco</strong>, invitado especial del torneo y amigo de años del maestro Roberto Vidal. Su presencia volvió a unir al boxeo y las artes marciales en Calbuco, donde ya había dictado seminarios técnicos en <button type="button" class="blog-link-inline" onclick="openBlogModal('seminario-cruzat-calbuco-2024')">2024</button> y en <button type="button" class="blog-link-inline" onclick="openBlogModal('seminario-american-kenpo-calbuco-2026')">julio de este año</button>.</p>
+      <h4>El Taller de Kenpo Karate de Maipú, presente en el sur</h4>
+      <p>Hasta Calbuco viajó el team que representa a Kenpo Karate Maipú y al <button type="button" class="blog-link-inline" onclick="closeBlogModal(); openEscuelaFicha('taller-maipu')">Taller de Kenpo Karate</button> del <strong>Departamento de Deportes y Recreación de la I. Municipalidad de Maipú</strong>. El balance no pudo ser mejor: <strong>nueve podios</strong>, con <strong>3 primeros lugares, 4 segundos y 2 terceros</strong> entre las categorías infantiles y de adultos.</p>
+      <h4>Resultados</h4>
+      <p><strong>Formas manos vacías</strong></p>
+      <ul>
+        <li><strong>Juan José Philimon</strong> — 1° lugar, categoría 10 años</li>
+        <li><strong>Facundo Vergara</strong> — 2° lugar, categoría 8-9 años</li>
+        <li><strong>Francisco Martínez</strong> — 2° lugar, categoría 11 años</li>
+        <li><strong>Felipe Muñoz</strong> — 2° lugar, categoría adultos</li>
+      </ul>
+      <p><strong>Combate punto americano</strong></p>
+      <ul>
+        <li><strong>Felipe Muñoz</strong> — 1° lugar, categoría adultos</li>
+        <li><strong>Nicolás Ramos</strong> — 2° lugar, categoría adultos</li>
+        <li><strong>Alexander Helión Baeza</strong> — 3° lugar, categoría 9 años</li>
+      </ul>
+      <p><strong>Combate light contact</strong></p>
+      <ul>
+        <li><strong>Nicolás Ramos</strong> — 1° lugar, categoría adultos</li>
+        <li><strong>Felipe Matamoros</strong> — 3° lugar, categoría adultos</li>
+      </ul>
+      <p>Mención especial para <strong>Felipe Muñoz</strong> y <strong>Nicolás Ramos</strong>, que subieron al podio en dos modalidades distintas, y para los más pequeños del taller, que demostraron que la constancia en el tatami se nota cuando llega la hora de competir.</p>
+      <h4>Gracias, Calbuco</h4>
+      <p>Felicitamos a cada alumno, a sus familias y a todas las escuelas que participaron, y agradecemos a Ramón Morales y a la comunidad de la Escuela Kenpo Calbuco por organizar, una vez más, un torneo de este nivel en el sur del país.</p>
+      <p>Un agradecimiento también a quienes hicieron posible el evento: la <strong>Oficina Municipal de Deportes de Calbuco</strong>, Colegio Estrella de Belén, Imprenta Yunes, July Calzados, Frutería La Calbucana, Farmacia Cruz Verde, After School Isla Encantada y Barbería Estilo Colombiano.</p>
+      <p>Porque el Kenpo no solo se entrena… <strong>se vive</strong>. ¿Quieres ser parte? Encuentra tu escuela más cercana en <a href="#escuelas" class="blog-link-inline" onclick="closeBlogModal()">www.kenpochile.cl</a></p>`
+  },
+  {
     id: 'nueva-web-cornejo-2026', cat: 'Noticias', fecha: '2026-11-08', escuelas: ['cornejo'],
     titulo: 'International Cornejo Kenpo Studio estrena nueva web',
     img: 'img/blog/nueva-web-cornejo-2026/portada-web-thumb.jpg',
