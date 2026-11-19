@@ -1992,6 +1992,30 @@ button.escuela-icon:hover {
   transition: background 0.3s, border-color 0.3s;
 }
 .seminario-modal-close:hover { background: var(--primary); border-color: var(--primary); }
+/* Botón "Compartir" de los modales con URL propia (blog, escuela, maestro, cinturón): copia
+   kenpochile.cl/<tipo>/<id>/, la dirección que sí muestra vista previa en WhatsApp. Se ubica
+   a la izquierda del botón de cerrar. */
+.modal-share-btn {
+  position: absolute; top: 0.8rem; right: 3.4rem; z-index: 7;
+  width: 2.2rem; height: 2.2rem;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(20,16,13,0.75);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: background 0.3s, border-color 0.3s;
+}
+.modal-share-btn[hidden] { display: none; }
+.modal-share-btn:hover, .modal-share-btn:focus-visible { background: var(--primary); border-color: var(--primary); }
+.modal-share-btn .icon { width: 1.05rem; height: 1.05rem; }
+.modal-share-btn.is-copied { background: var(--primary); border-color: var(--primary); }
+.modal-share-btn.is-copied::after {
+  content: attr(data-msg);
+  position: absolute; top: calc(100% + 0.4rem); right: 0;
+  padding: 0.3rem 0.6rem; border-radius: 6px; white-space: nowrap;
+  background: var(--primary); color: #14100D; font-family: inherit; font-size: 0.75rem; font-weight: 600; line-height: 1.2;
+}
 /* Único contenedor con scroll del modal: la portada sube junto con el artículo y la
    galería; solo el título (sticky) queda visible arriba. */
 .seminario-modal-scroll {
@@ -2340,6 +2364,7 @@ button.escuela-icon:hover {
 }
 .escuela-modal.is-open .escuela-modal-content { transform: none; }
 .escuela-modal .lightbox-close { z-index: 7; }
+.escuela-modal .modal-share-btn, .programa-modal .modal-share-btn { top: 1rem; right: 3.6rem; }
 /* Patrón cabecera-que-sube + nombre sticky, como los demás modales del sitio. */
 .escuela-modal-scroll {
   overflow-y: auto;
@@ -3968,6 +3993,7 @@ footer {
   <symbol id="icon-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></symbol>
   <symbol id="icon-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
   <symbol id="icon-video" viewBox="0 0 24 24"><path d="m22 8-6 4 6 4V8Z"/><rect x="2" y="6" width="14" height="12" rx="2"/></symbol>
+  <symbol id="icon-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></symbol>
   <symbol id="icon-clipboard" viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></symbol>
   <symbol id="icon-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></symbol>
   <symbol id="icon-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
@@ -4445,6 +4471,7 @@ footer {
      escuela tenga (historia, horarios, galería, actividades... todos opcionales). -->
 <div id="escuelaModal" class="escuela-modal" role="dialog" aria-modal="true" aria-labelledby="escModalNombre">
   <div class="escuela-modal-content">
+    <button type="button" class="modal-share-btn" id="escShareBtn" onclick="compartirModal(this)" aria-label="Copiar enlace para compartir" title="Copiar enlace para compartir"><svg class="icon"><use href="#icon-share"/></svg></button>
     <button type="button" class="lightbox-close" onclick="closeEscuelaFicha()" aria-label="Cerrar"><svg class="icon"><use href="#icon-x"/></svg></button>
     <!-- Cabecera igual a la tarjeta de la grilla: insignia y foto(s) del director unidas
          por el hilo de luz; ambas clickeables (lightbox / modal de instructor). Debajo,
@@ -4473,6 +4500,7 @@ footer {
 <!-- Modal Programa Técnico -->
 <div id="programaModal" class="programa-modal" role="dialog" aria-modal="true" aria-labelledby="progModalName">
   <div class="programa-modal-content" id="progModalContent">
+    <button type="button" class="modal-share-btn" id="progShareBtn" onclick="compartirModal(this)" aria-label="Copiar enlace para compartir" title="Copiar enlace para compartir"><svg class="icon"><use href="#icon-share"/></svg></button>
     <button type="button" class="lightbox-close" onclick="closeProgramaModal()" aria-label="Cerrar"><svg class="icon"><use href="#icon-x"/></svg></button>
     <!-- Mismo patrón que los modales de seminarios/maestros/blog: la cabecera (cinturón,
          grado y tiempo) sube con el contenido y el nombre del programa queda pegado
@@ -4987,6 +5015,7 @@ footer {
 <!-- Modal biografía de maestro (contenido real de kenpochile.cl/maestros-2) -->
 <div id="maestroModal" class="blog-modal maestro-modal" role="dialog" aria-modal="true" aria-labelledby="maestroModalName">
   <div class="blog-modal-content">
+    <button type="button" class="modal-share-btn" id="maestroShareBtn" onclick="compartirModal(this)" aria-label="Copiar enlace para compartir" title="Copiar enlace para compartir"><svg class="icon"><use href="#icon-share"/></svg></button>
     <button type="button" class="seminario-modal-close" onclick="closeMaestroModal()" aria-label="Cerrar"><svg class="icon"><use href="#icon-x"/></svg></button>
     <!-- Mismo patrón que el modal de seminarios: la portada sube con el contenido y solo
          el nombre del maestro (sticky) queda pegado arriba; el grado va superpuesto al
@@ -5020,6 +5049,7 @@ footer {
 <!-- Modal entrada de blog -->
 <div id="blogModal" class="blog-modal" role="dialog" aria-modal="true" aria-labelledby="blogModalTitle">
   <div class="blog-modal-content">
+    <button type="button" class="modal-share-btn" id="blogShareBtn" onclick="compartirModal(this)" aria-label="Copiar enlace para compartir" title="Copiar enlace para compartir"><svg class="icon"><use href="#icon-share"/></svg></button>
     <button type="button" class="seminario-modal-close" onclick="closeBlogModal()" aria-label="Cerrar"><svg class="icon"><use href="#icon-x"/></svg></button>
     <!-- Portada que sube con el contenido y título sticky arriba; la categoría queda
          superpuesta al pie de la portada. -->
@@ -8418,7 +8448,11 @@ function aplicarHashEscuela() {
   openEscuelaFicha(m[1]);
 }
 window.addEventListener('hashchange', aplicarHashEscuela);
-aplicarHashEscuela();
+// La ficha usa INSTRUCTORES (se declara más abajo con const): llamarla aquí, durante la
+// ejecución del script, lanzaba "Cannot access 'INSTRUCTORES' before initialization" y el
+// enlace #escuela=<id> no abría nada al cargar la página. Se aplica cuando el script terminó.
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', aplicarHashEscuela);
+else aplicarHashEscuela();
 
 // Insignia de la tarjeta ampliada en el lightbox compartido (cierra con Esc, click afuera
 // o el botón ✕, igual que la galería de insignias del pie de la sección).
@@ -11186,6 +11220,8 @@ function openProgramaModal(id) {
   // para los cinturones de color (grado.tipo === 'color'); los grados de cinturón negro
   // no llevan URL propia.
   if (grado.tipo === 'color') history.replaceState(null, '', `#cinturon=${id}`);
+  // Los grados de cinturón negro no tienen URL propia: no hay nada que compartir.
+  document.getElementById('progShareBtn').hidden = grado.tipo !== 'color';
 }
 function closeProgramaModal() {
   const modal = document.getElementById('programaModal');
@@ -11418,6 +11454,43 @@ function aplicarHashCinturon() {
 }
 window.addEventListener('hashchange', aplicarHashCinturon);
 aplicarHashCinturon();
+
+// ── ENLACE PARA COMPARTIR DE LOS MODALES ──
+// La barra de direcciones usa el deep-link con hash (#blog=<id>, #escuela=<id>,
+// #maestro=<id>, #cinturon=<id>), pero WhatsApp, Facebook y Google no leen lo que va después
+// del "#" y muestran siempre la vista previa genérica del sitio. Para compartir, cada modal
+// tiene un botón que copia (o abre el menú "Compartir" del celular con) la dirección real
+// kenpochile.cl/<tipo>/<id>/. Esa página la genera tools/generar-paginas-compartir.mjs al
+// desplegar —con título, resumen e imagen propios— y redirige a este mismo modal.
+function enlaceCompartible() {
+  const m = location.hash.match(/^#(blog|escuela|maestro|cinturon)=([a-z0-9-]+)$/);
+  if (!m) return '';
+  const origen = /^https?:$/.test(location.protocol) ? location.origin : 'https://kenpochile.cl';
+  return `${origen}/${m[1]}/${m[2]}/`;
+}
+async function compartirModal(btn) {
+  const url = enlaceCompartible();
+  if (!url) return;
+  const titulo = (document.querySelector('.blog-modal.open .blog-modal-titulo, .escuela-modal.open .escuela-modal-nombre, .programa-modal.open .programa-modal-name') || {}).textContent || document.title;
+  // En el celular se abre el menú nativo (WhatsApp, Instagram, etc.); en el computador se copia.
+  if (navigator.share && window.matchMedia('(pointer: coarse)').matches) {
+    try { await navigator.share({ title: titulo.trim(), url }); return; }
+    catch (err) { if (err && err.name === 'AbortError') return; }
+  }
+  let ok = false;
+  try { await navigator.clipboard.writeText(url); ok = true; }
+  catch (err) {
+    const ta = document.createElement('textarea');
+    ta.value = url; ta.style.cssText = 'position:fixed;opacity:0';
+    document.body.appendChild(ta); ta.select();
+    try { ok = document.execCommand('copy'); } catch (e) {}
+    ta.remove();
+  }
+  btn.dataset.msg = ok ? '¡Enlace copiado!' : 'No se pudo copiar';
+  btn.classList.add('is-copied');
+  clearTimeout(btn._t);
+  btn._t = setTimeout(() => btn.classList.remove('is-copied'), 2000);
+}
 
 function openBeltChart() {
   lightboxTrigger = document.activeElement;

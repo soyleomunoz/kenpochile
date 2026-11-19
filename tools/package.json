@@ -1,0 +1,9 @@
+{
+  "name": "kenpochile-tools",
+  "private": true,
+  "description": "Herramientas de build de KenpoChile.cl (solo se usan en el despliegue de GitHub Pages)",
+  "type": "module",
+  "dependencies": {
+    "sharp": "^0.34.0"
+  }
+}

@@ -1,0 +1,245 @@
+// Genera, a partir de los datos de index.html, una página "para compartir" por cada modal
+// con URL propia: entradas de blog, escuelas, maestros y cinturones de color.
+//
+// Por qué existe: la landing abre cada modal con un deep-link por hash
+// (kenpochile.cl/#blog=<id>), pero WhatsApp, Facebook, Telegram, etc. NO leen lo que va
+// después del "#": siempre ven el index.html genérico. Estas páginas viven en una ruta
+// real (kenpochile.cl/blog/<id>/), llevan las etiquetas Open Graph propias de cada
+// contenido (título, resumen e imagen) y, para personas, redirigen al modal en la landing.
+//
+// Se ejecuta en el workflow de GitHub Pages justo antes de publicar (ver
+// .github/workflows/pages.yml). Los archivos generados NO se versionan (.gitignore):
+// al añadir una entrada de blog, escuela, maestro o cinturón en index.html, su página
+// aparece sola en el siguiente despliegue.
+//
+// Uso local:  cd tools && npm ci && node generar-paginas-compartir.mjs
+import fs from 'node:fs';
+import path from 'node:path';
+import vm from 'node:vm';
+import { fileURLToPath } from 'node:url';
+import sharp from 'sharp';
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const SITE = 'https://kenpochile.cl';
+const SRC = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+const IMG_RESPALDO = 'img/header/maestro.png';
+
+// ── Lectura de los arreglos de datos de index.html ─────────────────────────────────────
+// Se localiza `const NOMBRE = [ ... ];` contando llaves (respetando strings, plantillas y
+// comentarios) y se evalúa en un contexto aislado. Los identificadores externos que
+// algunos datos referencian (p. ej. ESCUELA_COMUNA_MUNICIPAL) se sustituyen por un stub
+// vacío: aquí solo interesan los campos de texto.
+function extraerLiteral(nombre) {
+  const m = new RegExp(`^const ${nombre}\\s*=\\s*`, 'm').exec(SRC);
+  if (!m) throw new Error(`No se encontró "const ${nombre}" en index.html`);
+  const ini = m.index + m[0].length;
+  const abre = SRC[ini];
+  const cierra = abre === '[' ? ']' : '}';
+  let prof = 0, str = null, esc = false;
+  const plantillas = [];
+  for (let j = ini; j < SRC.length; j++) {
+    const c = SRC[j];
+    if (str) {
+      if (esc) { esc = false; continue; }
+      if (c === '\\') { esc = true; continue; }
+      if (str === '`' && c === '$' && SRC[j + 1] === '{') { plantillas.push(prof); prof++; j++; str = null; continue; }
+      if (c === str) str = null;
+      continue;
+    }
+    if (c === "'" || c === '"' || c === '`') { str = c; continue; }
+    if (c === '/' && SRC[j + 1] === '/') { j = SRC.indexOf('\n', j); continue; }
+    if (c === '/' && SRC[j + 1] === '*') { j = SRC.indexOf('*/', j) + 1; continue; }
+    if (c === '{' || c === '[' || c === '(') prof++;
+    if (c === '}' || c === ']' || c === ')') {
+      prof--;
+      if (c === '}' && plantillas.length && prof === plantillas[plantillas.length - 1]) { plantillas.pop(); str = '`'; continue; }
+      if (prof === 0 && c === cierra) return SRC.slice(ini, j + 1);
+    }
+  }
+  throw new Error(`No se pudo delimitar "const ${nombre}"`);
+}
+
+function leerDatos(nombre) {
+  const literal = extraerLiteral(nombre);
+  const ctx = { encodeURIComponent, CONFIG: {} };
+  for (let i = 0; i < 80; i++) {
+    try {
+      const datos = vm.runInNewContext(`(${literal})`, ctx, { timeout: 3000 });
+      if (!Array.isArray(datos) || !datos.length) throw new Error('vacío');
+      return datos;
+    } catch (e) {
+      const falta = /^(\w+) is not defined/.exec(e.message);
+      if (!falta) throw new Error(`No se pudo evaluar ${nombre}: ${e.message}`);
+      ctx[falta[1]] = new Proxy(function () {}, { get: () => '', apply: () => '' });
+    }
+  }
+  throw new Error(`Demasiados identificadores externos en ${nombre}`);
+}
+
+// ── Utilidades de texto ────────────────────────────────────────────────────────────────
+const ENTIDADES = { '&nbsp;': ' ', '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;': "'", '&laquo;': '«', '&raquo;': '»' };
+function textoPlano(html = '') {
+  return String(html)
+    .replace(/<(script|style)[\s\S]*?<\/\1>/gi, ' ')
+    .replace(/<\/(p|div|li|h\d|br)>|<br\s*\/?>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&[a-z#0-9]+;/gi, m => ENTIDADES[m.toLowerCase()] ?? ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+function recortar(txt, max = 200) {
+  if (txt.length <= max) return txt;
+  const corte = txt.slice(0, max);
+  const sp = corte.lastIndexOf(' ');
+  return corte.slice(0, sp > max * 0.6 ? sp : max).replace(/[\s,;:.\-–—]+$/, '') + '…';
+}
+const esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+// ── Imagen de vista previa ─────────────────────────────────────────────────────────────
+// Cada página lleva su propio JPG de 1200×630: WhatsApp descarta vistas previas con imágenes
+// pesadas (> ~300 KB) y no siempre entiende WebP, y las insignias son cuadradas o
+// transparentes. Se compone la imagen original centrada ("contain") sobre su propio
+// desenfoque oscuro, así no se recorta ni deforma nada.
+const W = 1200, H = 630;
+async function crearImagenOG(origenRel, destinoRel) {
+  const origen = path.join(ROOT, origenRel);
+  if (!fs.existsSync(origen)) return null;
+  const destino = path.join(ROOT, destinoRel);
+  fs.mkdirSync(path.dirname(destino), { recursive: true });
+  const fondo = await sharp(origen).resize(W, H, { fit: 'cover' }).blur(28).modulate({ brightness: 0.45 })
+    .flatten({ background: '#14100D' }).toBuffer();
+  const frente = await sharp(origen).resize(W, H, { fit: 'inside', withoutEnlargement: false }).toBuffer();
+  await sharp(fondo).composite([{ input: frente }]).jpeg({ quality: 84, progressive: true, mozjpeg: true }).toFile(destino);
+  return `${SITE}/${destinoRel}`;
+}
+
+// ── Plantilla de cada página ───────────────────────────────────────────────────────────
+function pagina({ tipo, id, hash, titulo, descripcion, imagen, alt, cuerpoTitulo, cuerpoTexto, boton }) {
+  const url = `${SITE}/${tipo}/${id}/`;
+  const destino = `/#${hash}`;
+  return `<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Página generada por tools/generar-paginas-compartir.mjs — no editar a mano.
+     Lleva las etiquetas Open Graph propias de este contenido (WhatsApp, Facebook y Google
+     no leen lo que va después del # de la landing) y redirige al modal en la landing. -->
+<title>${esc(titulo)} | KenpoChile.cl</title>
+<meta name="description" content="${esc(descripcion)}">
+<link rel="canonical" href="${url}">
+<meta property="og:type" content="${tipo === 'blog' ? 'article' : 'website'}">
+<meta property="og:site_name" content="KenpoChile.cl">
+<meta property="og:locale" content="es_CL">
+<meta property="og:url" content="${url}">
+<meta property="og:title" content="${esc(titulo)}">
+<meta property="og:description" content="${esc(descripcion)}">
+<meta property="og:image" content="${imagen}">
+<meta property="og:image:secure_url" content="${imagen}">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="${W}">
+<meta property="og:image:height" content="${H}">
+<meta property="og:image:alt" content="${esc(alt)}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${esc(titulo)}">
+<meta name="twitter:description" content="${esc(descripcion)}">
+<meta name="twitter:image" content="${imagen}">
+<meta name="theme-color" content="#14100D">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%2314100D' stroke='%23F5A623' stroke-width='3'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='26' font-weight='900' fill='%23F5A623' text-anchor='middle'%3EKC%3C/text%3E%3C/svg%3E">
+<script>location.replace(${JSON.stringify(destino)});</script>
+<noscript><meta http-equiv="refresh" content="0; url=${destino}"></noscript>
+<style>
+  body{margin:0;background:#14100D;color:#e8dccb;font-family:Georgia,serif;display:flex;min-height:100vh;align-items:center;justify-content:center}
+  main{max-width:720px;padding:24px;text-align:center}
+  img{width:100%;height:auto;border-radius:10px}
+  h1{color:#F5A623;font-size:1.5rem;line-height:1.3}
+  a{display:inline-block;margin-top:12px;padding:12px 22px;background:#F5A623;color:#14100D;border-radius:8px;text-decoration:none;font-weight:bold}
+</style>
+</head>
+<body>
+<main>
+  <img src="${imagen}" alt="${esc(alt)}" width="${W}" height="${H}">
+  <h1>${esc(cuerpoTitulo)}</h1>
+  <p>${esc(cuerpoTexto)}</p>
+  <a href="${destino}">${esc(boton)}</a>
+</main>
+</body>
+</html>
+`;
+}
+
+// ── Generación ─────────────────────────────────────────────────────────────────────────
+const LIMPIAR = ['blog', 'escuela', 'maestro', 'cinturon', 'og'];
+for (const d of LIMPIAR) fs.rmSync(path.join(ROOT, d), { recursive: true, force: true });
+
+const entradas = []; // para el sitemap
+let total = 0;
+
+async function emitir(def, origenImg) {
+  const og = (await crearImagenOG(origenImg, `og/${def.tipo}/${def.id}.jpg`))
+    ?? (await crearImagenOG(IMG_RESPALDO, `og/${def.tipo}/${def.id}.jpg`));
+  if (!og) throw new Error(`Sin imagen para ${def.tipo}/${def.id} (${origenImg})`);
+  if (!fs.existsSync(path.join(ROOT, origenImg))) console.warn(`⚠ ${def.tipo}/${def.id}: falta ${origenImg}, se usa la imagen por defecto`);
+  const dir = path.join(ROOT, def.tipo, def.id);
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, 'index.html'), pagina({ ...def, hash: `${def.tipo}=${def.id}`, imagen: og }));
+  entradas.push({ loc: `${SITE}/${def.tipo}/${def.id}/`, lastmod: def.lastmod });
+  total++;
+}
+
+const unicos = (lista, tipo) => {
+  const vistos = new Set();
+  for (const x of lista) {
+    if (!x.id || !/^[a-z0-9-]+$/.test(x.id)) throw new Error(`${tipo}: id inválido "${x.id}"`);
+    if (vistos.has(x.id)) throw new Error(`${tipo}: id repetido "${x.id}"`);
+    vistos.add(x.id);
+  }
+  return lista;
+};
+
+// Blog
+for (const p of unicos(leerDatos('BLOG_POSTS'), 'blog')) {
+  const resumen = textoPlano(p.excerpt) || recortar(textoPlano(p.contenido), 200);
+  await emitir({
+    tipo: 'blog', id: p.id, titulo: p.titulo, descripcion: recortar(resumen, 200), alt: p.titulo,
+    cuerpoTitulo: p.titulo, cuerpoTexto: recortar(resumen, 400), boton: 'Leer la nota completa', lastmod: p.fecha,
+  }, p.imgFull || p.img || IMG_RESPALDO);
+}
+
+// Escuelas
+for (const e of unicos(leerDatos('ESCUELAS'), 'escuela')) {
+  const lugar = [e.lugar || e.comuna, e.region].filter(Boolean).join(', ');
+  const intro = recortar(textoPlano(e.historia), 160);
+  const desc = [`Dirige ${e.director}.`, lugar ? `${lugar}.` : '', intro].filter(Boolean).join(' ');
+  await emitir({
+    tipo: 'escuela', id: e.id, titulo: e.nombre, descripcion: recortar(desc, 200), alt: `Insignia ${e.nombre}`,
+    cuerpoTitulo: e.nombre, cuerpoTexto: recortar(desc, 400), boton: 'Ver la ficha de la escuela',
+  }, `img/escuelas-insignias/${e.insignia}`);
+}
+
+// Maestros
+for (const m of unicos(leerDatos('MAESTROS_BIO'), 'maestro')) {
+  const desc = [m.grado ? `${m.grado}.` : '', recortar(textoPlano(m.bio), 150)].filter(Boolean).join(' ');
+  await emitir({
+    tipo: 'maestro', id: m.id, titulo: m.nombre, descripcion: recortar(desc, 200), alt: m.nombre,
+    cuerpoTitulo: m.nombre, cuerpoTexto: recortar(desc, 400), boton: 'Leer la biografía',
+  }, m.portada);
+}
+
+// Cinturones de color (los grados de cinturón negro no tienen URL propia)
+for (const g of unicos(leerDatos('PROGRAMA_TECNICO'), 'cinturon').filter(g => g.tipo === 'color')) {
+  const desc = `Programa técnico de Kenpo Karate: ${g.grado}${g.tiempo ? `, ${g.tiempo}` : ''}${g.badge ? ` · ${g.badge}` : ''}. Técnicas, sets y teoría.`;
+  await emitir({
+    tipo: 'cinturon', id: g.id, titulo: g.nombre, descripcion: desc, alt: g.nombre,
+    cuerpoTitulo: g.nombre, cuerpoTexto: desc, boton: 'Ver el programa técnico',
+  }, g.img);
+}
+
+// Sitemap: la landing + todas las páginas generadas.
+const urls = [{ loc: `${SITE}/` }, ...entradas.sort((a, b) => a.loc.localeCompare(b.loc))];
+fs.writeFileSync(path.join(ROOT, 'sitemap.xml'),
+  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
+  urls.map(u => `  <url>\n    <loc>${u.loc}</loc>${u.lastmod ? `\n    <lastmod>${u.lastmod}</lastmod>` : ''}\n  </url>\n`).join('') +
+  `</urlset>\n`);
+
+console.log(`✔ ${total} páginas para compartir generadas (blog, escuelas, maestros y cinturones).`);

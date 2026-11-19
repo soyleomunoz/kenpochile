@@ -37,7 +37,26 @@ jobs:
 
       - uses: actions/configure-pages@v5
 
-      # El sitio es estático: se publica el repositorio tal cual, sin build.
+      # Genera una página con vista previa propia (Open Graph) por cada entrada de blog,
+      # escuela, maestro y cinturón de color: kenpochile.cl/blog/<id>/, /escuela/<id>/,
+      # /maestro/<id>/ y /cinturon/<id>/. WhatsApp y Facebook no leen el "#" de los
+      # deep-links (kenpochile.cl/#blog=<id>) y mostrarían la vista previa genérica.
+      # También regenera sitemap.xml. Los archivos no se versionan; ver tools/.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: tools/package-lock.json
+
+      - name: Generar páginas para compartir
+        working-directory: tools
+        run: |
+          npm ci
+          node generar-paginas-compartir.mjs
+          # node_modules no debe viajar al sitio publicado.
+          rm -rf node_modules
+
+      # El resto del sitio es estático: se publica el repositorio tal cual.
       - uses: actions/upload-pages-artifact@v3
         with:
           path: .
