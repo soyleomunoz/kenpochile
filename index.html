@@ -2007,6 +2007,9 @@ button.escuela-icon:hover {
   transition: background 0.3s, border-color 0.3s;
 }
 .modal-share-btn[hidden] { display: none; }
+/* En la tarjeta del blog el botón va en la esquina superior derecha de la portada. */
+.modal-share-btn.blog-card-share { top: 0.6rem; right: 0.6rem; z-index: 3; }
+.blog-img .modal-share-btn .icon { width: 1.05rem; height: 1.05rem; }
 .modal-share-btn:hover, .modal-share-btn:focus-visible { background: var(--primary); border-color: var(--primary); }
 .modal-share-btn .icon { width: 1.05rem; height: 1.05rem; }
 .modal-share-btn.is-copied { background: var(--primary); border-color: var(--primary); }
@@ -7088,6 +7091,7 @@ function blogCardHTML(post, i) {
       <div class="blog-img">
         <svg class="icon"><use href="#${BLOG_CAT_ICON[post.cat]}"/></svg>
         <img src="${post.img}" alt="${post.titulo}" loading="lazy" decoding="async" onerror="this.remove()">
+        <button type="button" class="modal-share-btn blog-card-share" onclick="event.stopPropagation(); compartirEnlace('blog', '${post.id}', this)" aria-label="Copiar enlace de: ${post.titulo}" title="Copiar enlace para compartir"><svg class="icon"><use href="#icon-share"/></svg></button>
       </div>
       <div class="blog-body">
         <div class="blog-meta">${(post.cats || [post.cat]).map(c => `<span class="blog-cat">${c}</span>`).join('')}</div>
@@ -11468,10 +11472,19 @@ function enlaceCompartible() {
   const origen = /^https?:$/.test(location.protocol) ? location.origin : 'https://kenpochile.cl';
   return `${origen}/${m[1]}/${m[2]}/`;
 }
-async function compartirModal(btn) {
+function compartirModal(btn) {
   const url = enlaceCompartible();
   if (!url) return;
   const titulo = (document.querySelector('.blog-modal.open .blog-modal-titulo, .escuela-modal.open .escuela-modal-nombre, .programa-modal.open .programa-modal-name') || {}).textContent || document.title;
+  return compartirURL(url, titulo, btn);
+}
+// Tarjeta del blog: comparte /<tipo>/<id>/ sin abrir el modal.
+function compartirEnlace(tipo, id, btn) {
+  const origen = /^https?:$/.test(location.protocol) ? location.origin : 'https://kenpochile.cl';
+  const post = tipo === 'blog' ? BLOG_POSTS.find(p => p.id === id) : null;
+  return compartirURL(`${origen}/${tipo}/${id}/`, post ? post.titulo : document.title, btn);
+}
+async function compartirURL(url, titulo, btn) {
   // En el celular se abre el menú nativo (WhatsApp, Instagram, etc.); en el computador se copia.
   if (navigator.share && window.matchMedia('(pointer: coarse)').matches) {
     try { await navigator.share({ title: titulo.trim(), url }); return; }
