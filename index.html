@@ -2007,9 +2007,10 @@ button.escuela-icon:hover {
   transition: background 0.3s, border-color 0.3s;
 }
 .modal-share-btn[hidden] { display: none; }
-/* En la tarjeta del blog el botón va en la esquina superior derecha de la portada. */
-.modal-share-btn.blog-card-share { top: 0.6rem; right: 0.6rem; z-index: 3; }
-.blog-img .modal-share-btn .icon { width: 1.05rem; height: 1.05rem; }
+/* En la tarjeta del blog el botón va en la esquina inferior derecha de la tarjeta. */
+.blog-card { position: relative; }
+.modal-share-btn.blog-card-share { top: auto; bottom: 1.1rem; right: 1.1rem; z-index: 3; }
+.modal-share-btn.blog-card-share.is-copied::after { top: auto; bottom: calc(100% + 0.4rem); }
 .modal-share-btn:hover, .modal-share-btn:focus-visible { background: var(--primary); border-color: var(--primary); }
 .modal-share-btn .icon { width: 1.05rem; height: 1.05rem; }
 .modal-share-btn.is-copied { background: var(--primary); border-color: var(--primary); }
@@ -7091,7 +7092,6 @@ function blogCardHTML(post, i) {
       <div class="blog-img">
         <svg class="icon"><use href="#${BLOG_CAT_ICON[post.cat]}"/></svg>
         <img src="${post.img}" alt="${post.titulo}" loading="lazy" decoding="async" onerror="this.remove()">
-        <button type="button" class="modal-share-btn blog-card-share" onclick="event.stopPropagation(); compartirEnlace('blog', '${post.id}', this)" aria-label="Copiar enlace de: ${post.titulo}" title="Copiar enlace para compartir"><svg class="icon"><use href="#icon-share"/></svg></button>
       </div>
       <div class="blog-body">
         <div class="blog-meta">${(post.cats || [post.cat]).map(c => `<span class="blog-cat">${c}</span>`).join('')}</div>
@@ -7099,6 +7099,7 @@ function blogCardHTML(post, i) {
         <div class="blog-excerpt">${post.excerpt}</div>
         <button class="blog-link" onclick="event.stopPropagation(); openBlogModal('${post.id}')">Leer Más →</button>
       </div>
+      <button type="button" class="modal-share-btn blog-card-share" onclick="event.stopPropagation(); compartirEnlace('blog', '${post.id}', this)" aria-label="Copiar enlace de: ${post.titulo}" title="Copiar enlace para compartir"><svg class="icon"><use href="#icon-share"/></svg></button>
     </div>`;
 }
 
