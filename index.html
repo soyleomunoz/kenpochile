@@ -8561,7 +8561,6 @@ function renderEscuelasGridAndPager() {
           <div class="escuela-ciudad"><svg class="icon"><use href="#icon-map-pin"/></svg> ${escuelaUbicacion(e)}</div>
           <div class="escuela-director">Director${partesDirector.length > 1 ? 'es' : ''}: ${directores}${instructorApoyo ? `<br>Instructor: ${instructorApoyo}` : ''}</div>
           ${e.sitioWeb ? `<a class="escuela-web-badge" href="${e.sitioWeb}" target="_blank" rel="noopener" title="Visitar el sitio web de ${e.nombre}"><svg class="icon"><use href="#icon-globe"/></svg> Sitio web ↗</a>` : ''}
-          <button type="button" class="escuela-ficha-link" data-ficha="${e.id}" title="Ver la ficha de ${e.nombre}">Ver ficha completa</button>
           <div class="escuela-card-actions">${acciones}</div>
         </div>
       </div>`;
@@ -8572,9 +8571,6 @@ function renderEscuelasGridAndPager() {
     });
     grid.querySelectorAll('.escuela-icon[data-insignia]').forEach(btn => {
       btn.addEventListener('click', () => openEscuelaInsignia(btn.dataset.insignia, btn));
-    });
-    grid.querySelectorAll('.escuela-ficha-link[data-ficha]').forEach(btn => {
-      btn.addEventListener('click', () => openEscuelaFicha(btn.dataset.ficha, btn));
     });
     // Toda la superficie vacía de la tarjeta también abre la ficha; los controles internos
     // (marcos, director, botones del pie) conservan su acción propia.
