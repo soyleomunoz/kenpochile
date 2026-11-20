@@ -1082,13 +1082,15 @@ button.escuela-icon:hover {
 .escuela-web-badge + .escuela-ficha-link { margin-top: 0; padding-top: 0.75rem; }
 .escuela-ficha-link:hover { color: var(--accent); }
 .escuela-ficha-link:hover::after { transform: translateX(3px); }
-/* Pie de la tarjeta: "Ver Blog" e "Inscribirme" en la misma fila cuando la escuela tiene
-   blog; "Inscribirme" a ancho completo cuando no (.solo). */
+/* Pie de la tarjeta: "Blog" e "Inscribirme" (si la escuela los tiene) se reparten el ancho
+   y el botón Compartir queda siempre al extremo derecho. */
 .escuela-card-actions {
-  display: grid; grid-template-columns: 1fr 1fr;
+  display: flex; align-items: center;
   gap: 0.6rem;
 }
-.escuela-card-actions.solo { grid-template-columns: 1fr; }
+.escuela-card-actions .btn-escuela { flex: 1 1 0; width: auto; min-width: 0; }
+.modal-share-btn.escuela-card-share { position: relative; top: auto; right: auto; flex: 0 0 2.2rem; margin-left: auto; }
+.modal-share-btn.escuela-card-share.is-copied::after { top: auto; bottom: calc(100% + 0.4rem); }
 .btn-escuela {
   display: inline-flex; align-items: center; gap: 0.5rem;
   background: rgba(228,87,46,0.15);
@@ -8543,9 +8545,10 @@ function renderEscuelasGridAndPager() {
       const fotosDirector = conFoto.map(({ inst, foto }) =>
         `<button type="button" class="escuela-icon escuela-icon-inst" data-instructor="${inst.nombre}" title="Conocer a ${inst.nombre}" aria-label="Conocer a ${inst.nombre}"><img src="${foto}" alt="${inst.nombre}"${instructorFotoEncuadre(inst.nombre)} loading="lazy" decoding="async" onerror="this.closest('button').remove()"></button>`
       ).join('');
-      const verBlogBtn = nActividades ? `<button type="button" class="btn-escuela escuela-actividades" onclick="verActividadesEscuela('${e.id}')" title="Ver las actividades de esta escuela en el blog">Ver Blog</button>` : '';
+      const verBlogBtn = nActividades ? `<button type="button" class="btn-escuela escuela-actividades" onclick="verActividadesEscuela('${e.id}')" title="Ver las actividades de esta escuela en el blog">Blog</button>` : '';
       const inscribirmeBtn = e.sinInscripcion ? '' : `<a href="#contacto" class="btn-escuela" data-escuela="${escuelaLabel(e)}">Inscribirme</a>`;
-      const acciones = verBlogBtn + inscribirmeBtn;
+      const compartirBtn = `<button type="button" class="modal-share-btn escuela-card-share" onclick="event.stopPropagation(); compartirEnlace('escuela', '${e.id}', this)" aria-label="Copiar enlace de ${e.nombre}" title="Copiar enlace para compartir"><svg class="icon"><use href="#icon-share"/></svg></button>`;
+      const acciones = verBlogBtn + inscribirmeBtn + compartirBtn;
       return `
       <div class="escuela-card" tabindex="0" style="animation-delay:${i * 50}ms" data-ficha="${e.id}">
         <div class="escuela-card-head${conFoto.length > 1 ? ' duo' : ''}">
@@ -8559,7 +8562,7 @@ function renderEscuelasGridAndPager() {
           <div class="escuela-director">Director${partesDirector.length > 1 ? 'es' : ''}: ${directores}${instructorApoyo ? `<br>Instructor: ${instructorApoyo}` : ''}</div>
           ${e.sitioWeb ? `<a class="escuela-web-badge" href="${e.sitioWeb}" target="_blank" rel="noopener" title="Visitar el sitio web de ${e.nombre}"><svg class="icon"><use href="#icon-globe"/></svg> Sitio web ↗</a>` : ''}
           <button type="button" class="escuela-ficha-link" data-ficha="${e.id}" title="Ver la ficha de ${e.nombre}">Ver ficha completa</button>
-          ${acciones ? `<div class="escuela-card-actions${verBlogBtn && inscribirmeBtn ? '' : ' solo'}">${acciones}</div>` : ''}
+          <div class="escuela-card-actions">${acciones}</div>
         </div>
       </div>`;
     }).join('');
@@ -11497,7 +11500,7 @@ function compartirModal(btn) {
 // Tarjeta del blog o del seminario: comparte /<tipo>/<id>/ sin abrir el modal.
 function compartirEnlace(tipo, id, btn) {
   const origen = /^https?:$/.test(location.protocol) ? location.origin : 'https://kenpochile.cl';
-  const item = tipo === 'blog' ? BLOG_POSTS.find(p => p.id === id) : tipo === 'seminario' ? SEMINARIOS.find(x => String(x.n) === id) : tipo === 'maestro' ? { titulo: (MAESTROS_BIO.find(x => x.id === id) || {}).nombre } : null;
+  const item = tipo === 'blog' ? BLOG_POSTS.find(p => p.id === id) : tipo === 'seminario' ? SEMINARIOS.find(x => String(x.n) === id) : tipo === 'maestro' ? { titulo: (MAESTROS_BIO.find(x => x.id === id) || {}).nombre } : tipo === 'escuela' ? { titulo: (escuelaPorId(id) || {}).nombre } : null;
   return compartirURL(`${origen}/${tipo}/${id}/`, (item && item.titulo) || document.title, btn);
 }
 async function compartirURL(url, titulo, btn) {
