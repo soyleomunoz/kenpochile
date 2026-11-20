@@ -1094,11 +1094,11 @@ button.escuela-icon:hover {
 .escuela-card-links + .escuela-card-actions { margin-top: 0; }
 /* Penúltima fila de la tarjeta: "Blog" primero y luego "Sitio web" (si la escuela lo tiene),
    ambos con la forma de píldora; su margen automático empuja esta fila y la de abajo al fondo. */
-.escuela-card-links { display: flex; align-items: stretch; gap: 0.5rem; margin: auto 0 0.75rem; }
-/* Cada píldora ocupa su parte del ancho completo (mismo ancho que la fila de abajo) y todas
-   miden lo mismo de alto. */
+.escuela-card-links { display: grid; grid-template-columns: 1fr 1fr; align-items: stretch; gap: 0.5rem; margin: auto 0 0.75rem; }
+/* Dos columnas fijas: cada píldora mide siempre media tarjeta (la columna que no se usa
+   queda vacía) y las dos miden lo mismo de alto. */
 .escuela-card-links .escuela-web-badge {
-  flex: 1 1 0; min-width: 0; align-self: stretch;
+  min-width: 0; align-self: stretch;
   justify-content: center; box-sizing: border-box;
   padding: 0.4rem 0.65rem; line-height: 1.2;
 }
