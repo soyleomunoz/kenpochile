@@ -2,11 +2,4 @@
 .agents/
 skills-lock.json
 
-# Páginas para compartir: las genera tools/generar-paginas-compartir.mjs al desplegar
-/blog/
-/escuela/
-/maestro/
-/cinturon/
-/seminario/
-/og/
 node_modules/

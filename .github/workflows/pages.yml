@@ -41,7 +41,7 @@ jobs:
       # escuela, maestro y cinturón de color: kenpochile.cl/blog/<id>/, /escuela/<id>/,
       # /maestro/<id>/ y /cinturon/<id>/. WhatsApp y Facebook no leen el "#" de los
       # deep-links (kenpochile.cl/#blog=<id>) y mostrarían la vista previa genérica.
-      # También regenera sitemap.xml. Los archivos no se versionan; ver tools/.
+      # También regenera sitemap.xml. Los resultados también se versionan (ver tools/).
       - uses: actions/setup-node@v4
         with:
           node-version: 22

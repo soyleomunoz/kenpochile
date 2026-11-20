@@ -8,9 +8,12 @@
 // contenido (título, resumen e imagen) y, para personas, redirigen al modal en la landing.
 //
 // Se ejecuta en el workflow de GitHub Pages justo antes de publicar (ver
-// .github/workflows/pages.yml). Los archivos generados NO se versionan (.gitignore):
-// al añadir una entrada de blog, escuela, maestro o cinturón en index.html, su página
-// aparece sola en el siguiente despliegue.
+// .github/workflows/pages.yml) y SE VERSIONAN sus resultados (blog/, escuela/, maestro/,
+// cinturon/, seminario/, og/ y sitemap.xml): GitHub también lanza el despliegue clásico
+// "pages build and deployment", que publica el repositorio tal cual y puede pisar al del
+// workflow; versionarlos garantiza que las páginas existan gane el que gane.
+// Tras añadir o cambiar una entrada de blog, escuela, maestro, cinturón o seminario en
+// index.html hay que volver a ejecutar el script y subir los archivos generados.
 //
 // Uso local:  cd tools && npm ci && node generar-paginas-compartir.mjs
 import fs from 'node:fs';
