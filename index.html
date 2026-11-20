@@ -1043,7 +1043,8 @@ button.escuela-icon:hover {
    foto (el mismo de esa sección) sin salir de Escuelas. */
 .escuela-card .escuela-nombre { max-height: 2.6em; overflow: hidden; }
 .escuela-nombre-inner { display: block; }
-/* Ubicación, director e instructor: siempre una sola línea (ver setupEscuelaCardMarquee). */
+.escuela-sep { opacity: 0.6; margin: 0 0.15em; }
+/* Ubicación y "Director · Instructor": siempre una sola línea (ver setupEscuelaCardMarquee). */
 .escuela-line { display: block; min-width: 0; overflow: hidden; white-space: nowrap; }
 .escuela-ciudad .escuela-line { flex: 1 1 0; }
 .escuela-line-inner { display: inline-block; white-space: nowrap; vertical-align: top; }
@@ -8635,7 +8636,7 @@ function renderEscuelasGridAndPager() {
         <div class="escuela-card-body">
           <div class="escuela-nombre"><span class="escuela-nombre-inner">${e.nombre}</span></div>
           <div class="escuela-ciudad"><svg class="icon"><use href="#icon-map-pin"/></svg> <span class="escuela-line"><span class="escuela-line-inner">${escuelaUbicacion(e)}</span></span></div>
-          <div class="escuela-director"><div class="escuela-line"><span class="escuela-line-inner">Director${partesDirector.length > 1 ? 'es' : ''}: ${directores}</span></div>${instructorApoyo ? `<div class="escuela-line"><span class="escuela-line-inner">Instructor: ${instructorApoyo}</span></div>` : ''}</div>
+          <div class="escuela-director"><div class="escuela-line"><span class="escuela-line-inner">Director${partesDirector.length > 1 ? 'es' : ''}: ${directores}${instructorApoyo ? ` <span class="escuela-sep">·</span> Instructor: ${instructorApoyo}` : ''}</span></div></div>
           ${verBlogBtn || sitioWebBtn ? `<div class="escuela-card-links">${verBlogBtn}${sitioWebBtn}</div>` : ''}
           <div class="escuela-card-actions">${acciones}</div>
         </div>
