@@ -901,7 +901,7 @@ section { padding: 6rem 2rem; }
 }
 .maestro-info {
   position: absolute; left: 0; right: 0; bottom: 0;
-  padding: 0.8rem 1.2rem 0.6rem;
+  padding: 0.8rem 3.4rem 0.6rem 1.2rem; /* margen derecho: deja libre el botón Compartir */
 }
 .maestro-name {
   font-family: 'Cinzel', serif;
@@ -2011,6 +2011,8 @@ button.escuela-icon:hover {
 .blog-card { position: relative; }
 .modal-share-btn.blog-card-share { top: auto; bottom: 1.1rem; right: 1.1rem; z-index: 3; }
 .modal-share-btn.blog-card-share.is-copied::after { top: auto; bottom: calc(100% + 0.4rem); }
+.modal-share-btn.maestro-card-share { top: auto; bottom: 1rem; right: 1rem; z-index: 4; }
+.modal-share-btn.maestro-card-share.is-copied::after { top: auto; bottom: calc(100% + 0.4rem); }
 .modal-share-btn.seminario-card-share { top: auto; bottom: 1.1rem; right: 1.1rem; z-index: 3; }
 .modal-share-btn.seminario-card-share.is-copied::after { top: auto; bottom: calc(100% + 0.4rem); }
 .seminario-card .seminario-body { padding-right: 3.6rem; }
@@ -4304,6 +4306,7 @@ footer {
           <div class="maestro-name">SGM Ed Parker</div>
           <div class="maestro-grade">Senior Grandmaster. Founder of American Kenpo Karate (Q.E.P.D)</div>
         </div>
+        <button type="button" class="modal-share-btn maestro-card-share" onclick="event.stopPropagation(); compartirEnlace('maestro', 'parker', this)" aria-label="Copiar enlace de la biografía" title="Copiar enlace para compartir"><svg class="icon"><use href="#icon-share"/></svg></button>
       </div>
       <div class="maestro-card reveal reveal-delay-1" onclick="openMaestroBio('pick')">
         <div class="maestro-img">
@@ -4317,6 +4320,7 @@ footer {
           <div class="maestro-name">Michael Robert Pick</div>
           <div class="maestro-grade">10th Degree Black Belt. Senior Teaching Black Belt. Grandmaster</div>
         </div>
+        <button type="button" class="modal-share-btn maestro-card-share" onclick="event.stopPropagation(); compartirEnlace('maestro', 'pick', this)" aria-label="Copiar enlace de la biografía" title="Copiar enlace para compartir"><svg class="icon"><use href="#icon-share"/></svg></button>
       </div>
       <div class="maestro-card reveal reveal-delay-2" onclick="openMaestroBio('petit')">
         <div class="maestro-img">
@@ -4330,6 +4334,7 @@ footer {
           <div class="maestro-name">Arturo Petit</div>
           <div class="maestro-grade">8th Degree Black Belt · Fundador del Kenpo en Chile (Q.E.P.D)</div>
         </div>
+        <button type="button" class="modal-share-btn maestro-card-share" onclick="event.stopPropagation(); compartirEnlace('maestro', 'petit', this)" aria-label="Copiar enlace de la biografía" title="Copiar enlace para compartir"><svg class="icon"><use href="#icon-share"/></svg></button>
       </div>
       <div class="maestro-card reveal reveal-delay-3" onclick="openMaestroBio('schulte')">
         <div class="maestro-img">
@@ -4343,6 +4348,7 @@ footer {
           <div class="maestro-name">Rainer Schulte</div>
           <div class="maestro-grade">10th Degree Black Belt. Vicepresident CKF. Grandmaster</div>
         </div>
+        <button type="button" class="modal-share-btn maestro-card-share" onclick="event.stopPropagation(); compartirEnlace('maestro', 'schulte', this)" aria-label="Copiar enlace de la biografía" title="Copiar enlace para compartir"><svg class="icon"><use href="#icon-share"/></svg></button>
       </div>
       <div class="maestro-card reveal" onclick="openMaestroBio('kelley')">
         <div class="maestro-img">
@@ -4356,6 +4362,7 @@ footer {
           <div class="maestro-name">Sean P. Kelley</div>
           <div class="maestro-grade">10th Degree Black Belt. President CKF. Grandmaster</div>
         </div>
+        <button type="button" class="modal-share-btn maestro-card-share" onclick="event.stopPropagation(); compartirEnlace('maestro', 'kelley', this)" aria-label="Copiar enlace de la biografía" title="Copiar enlace para compartir"><svg class="icon"><use href="#icon-share"/></svg></button>
       </div>
       <div class="maestro-card reveal reveal-delay-1" onclick="openMaestroBio('vidal')">
         <div class="maestro-img">
@@ -4369,6 +4376,7 @@ footer {
           <div class="maestro-name">Roberto Vidal C.</div>
           <div class="maestro-grade">8th Degree Black Belt · Associate Master of the Arts</div>
         </div>
+        <button type="button" class="modal-share-btn maestro-card-share" onclick="event.stopPropagation(); compartirEnlace('maestro', 'vidal', this)" aria-label="Copiar enlace de la biografía" title="Copiar enlace para compartir"><svg class="icon"><use href="#icon-share"/></svg></button>
       </div>
       <div class="maestro-card reveal reveal-delay-2" onclick="openMaestroBio('trejo')">
         <div class="maestro-img">
@@ -4382,6 +4390,7 @@ footer {
           <div class="maestro-name">Frank Trejo</div>
           <div class="maestro-grade">10th Degree Black Belt · Grandmaster (Q.E.P.D)</div>
         </div>
+        <button type="button" class="modal-share-btn maestro-card-share" onclick="event.stopPropagation(); compartirEnlace('maestro', 'trejo', this)" aria-label="Copiar enlace de la biografía" title="Copiar enlace para compartir"><svg class="icon"><use href="#icon-share"/></svg></button>
       </div>
       <div class="maestro-card reveal reveal-delay-3" onclick="openMaestroBio('wallace')">
         <div class="maestro-img">
@@ -4395,6 +4404,7 @@ footer {
           <div class="maestro-name">Bill «Superfoot» Wallace</div>
           <div class="maestro-grade">PKA Champion. Grandmaster</div>
         </div>
+        <button type="button" class="modal-share-btn maestro-card-share" onclick="event.stopPropagation(); compartirEnlace('maestro', 'wallace', this)" aria-label="Copiar enlace de la biografía" title="Copiar enlace para compartir"><svg class="icon"><use href="#icon-share"/></svg></button>
       </div>
       </div>
       <button type="button" class="maestros-carousel-arrow maestros-carousel-next" aria-label="Maestro siguiente">
@@ -11487,8 +11497,8 @@ function compartirModal(btn) {
 // Tarjeta del blog o del seminario: comparte /<tipo>/<id>/ sin abrir el modal.
 function compartirEnlace(tipo, id, btn) {
   const origen = /^https?:$/.test(location.protocol) ? location.origin : 'https://kenpochile.cl';
-  const item = tipo === 'blog' ? BLOG_POSTS.find(p => p.id === id) : tipo === 'seminario' ? SEMINARIOS.find(x => String(x.n) === id) : null;
-  return compartirURL(`${origen}/${tipo}/${id}/`, item ? item.titulo : document.title, btn);
+  const item = tipo === 'blog' ? BLOG_POSTS.find(p => p.id === id) : tipo === 'seminario' ? SEMINARIOS.find(x => String(x.n) === id) : tipo === 'maestro' ? { titulo: (MAESTROS_BIO.find(x => x.id === id) || {}).nombre } : null;
+  return compartirURL(`${origen}/${tipo}/${id}/`, (item && item.titulo) || document.title, btn);
 }
 async function compartirURL(url, titulo, btn) {
   // En el celular se abre el menú nativo (WhatsApp, Instagram, etc.); en el computador se copia.
