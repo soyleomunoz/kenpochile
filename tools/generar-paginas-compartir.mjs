@@ -1,5 +1,5 @@
 // Genera, a partir de los datos de index.html, una página "para compartir" por cada modal
-// con URL propia: entradas de blog, escuelas, maestros y cinturones de color.
+// con URL propia: entradas de blog, escuelas, maestros, cinturones de color y seminarios.
 //
 // Por qué existe: la landing abre cada modal con un deep-link por hash
 // (kenpochile.cl/#blog=<id>), pero WhatsApp, Facebook, Telegram, etc. NO leen lo que va
@@ -169,7 +169,7 @@ function pagina({ tipo, id, hash, titulo, descripcion, imagen, alt, cuerpoTitulo
 }
 
 // ── Generación ─────────────────────────────────────────────────────────────────────────
-const LIMPIAR = ['blog', 'escuela', 'maestro', 'cinturon', 'og'];
+const LIMPIAR = ['blog', 'escuela', 'maestro', 'cinturon', 'seminario', 'og'];
 for (const d of LIMPIAR) fs.rmSync(path.join(ROOT, d), { recursive: true, force: true });
 
 const entradas = []; // para el sitemap
@@ -226,6 +226,15 @@ for (const m of unicos(leerDatos('MAESTROS_BIO'), 'maestro')) {
   }, m.portada);
 }
 
+// Seminarios internacionales (el id es el número del seminario)
+for (const x of unicos(leerDatos('SEMINARIOS').map(x => ({ ...x, id: String(x.n) })), 'seminario')) {
+  const desc = [x.fecha ? `${x.fecha}.` : '', x.lugar ? `${x.lugar}.` : '', x.maestros ? `Con ${x.maestros}.` : '', recortar(textoPlano(x.desc || x.descHtml), 120)].filter(Boolean).join(' ');
+  await emitir({
+    tipo: 'seminario', id: x.id, titulo: x.titulo, descripcion: recortar(desc, 200), alt: x.titulo,
+    cuerpoTitulo: x.titulo, cuerpoTexto: recortar(desc, 400), boton: 'Ver el seminario',
+  }, `img/seminarios/${String(x.n).padStart(2, '0')}/${x.img || 'portada.webp'}`);
+}
+
 // Cinturones de color (los grados de cinturón negro no tienen URL propia)
 for (const g of unicos(leerDatos('PROGRAMA_TECNICO'), 'cinturon').filter(g => g.tipo === 'color')) {
   const desc = `Programa técnico de Kenpo Karate: ${g.grado}${g.tiempo ? `, ${g.tiempo}` : ''}${g.badge ? ` · ${g.badge}` : ''}. Técnicas, sets y teoría.`;
@@ -242,4 +251,4 @@ fs.writeFileSync(path.join(ROOT, 'sitemap.xml'),
   urls.map(u => `  <url>\n    <loc>${u.loc}</loc>${u.lastmod ? `\n    <lastmod>${u.lastmod}</lastmod>` : ''}\n  </url>\n`).join('') +
   `</urlset>\n`);
 
-console.log(`✔ ${total} páginas para compartir generadas (blog, escuelas, maestros y cinturones).`);
+console.log(`✔ ${total} páginas para compartir generadas (blog, escuelas, maestros, cinturones y seminarios).`);

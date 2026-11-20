@@ -2011,6 +2011,9 @@ button.escuela-icon:hover {
 .blog-card { position: relative; }
 .modal-share-btn.blog-card-share { top: auto; bottom: 1.1rem; right: 1.1rem; z-index: 3; }
 .modal-share-btn.blog-card-share.is-copied::after { top: auto; bottom: calc(100% + 0.4rem); }
+.modal-share-btn.seminario-card-share { top: auto; bottom: 1.1rem; right: 1.1rem; z-index: 3; }
+.modal-share-btn.seminario-card-share.is-copied::after { top: auto; bottom: calc(100% + 0.4rem); }
+.seminario-card .seminario-body { padding-right: 3.6rem; }
 .modal-share-btn:hover, .modal-share-btn:focus-visible { background: var(--primary); border-color: var(--primary); }
 .modal-share-btn .icon { width: 1.05rem; height: 1.05rem; }
 .modal-share-btn.is-copied { background: var(--primary); border-color: var(--primary); }
@@ -4994,6 +4997,7 @@ footer {
 
 <div id="seminarioModal" class="seminario-modal" role="dialog" aria-modal="true" aria-labelledby="seminarioModalTitle">
   <div class="seminario-modal-content">
+    <button type="button" class="modal-share-btn" id="seminarioShareBtn" onclick="compartirModal(this)" aria-label="Copiar enlace para compartir" title="Copiar enlace para compartir"><svg class="icon"><use href="#icon-share"/></svg></button>
     <button type="button" class="seminario-modal-close" onclick="closeSeminarioModal()" aria-label="Cerrar"><svg class="icon"><use href="#icon-x"/></svg></button>
     <!-- Todo el modal se desplaza junto: la portada sube con el contenido y solo el
          título queda pegado arriba (sticky). Fecha, maestros y lugar viven superpuestos
@@ -9171,6 +9175,7 @@ function seminarioCardHTML(s) {
         <div class="seminario-maestros"><svg class="icon"><use href="#icon-award"/></svg> <span>${s.maestros}</span></div>
         <div class="seminario-lugar"><svg class="icon"><use href="#icon-map-pin"/></svg> <span>${s.lugar}</span></div>
       </div>
+      <button type="button" class="modal-share-btn seminario-card-share" onclick="event.stopPropagation(); compartirEnlace('seminario', '${s.n}', this)" aria-label="Copiar enlace de: ${s.titulo}" title="Copiar enlace para compartir"><svg class="icon"><use href="#icon-share"/></svg></button>
     </div>`;
 }
 
@@ -11468,7 +11473,7 @@ aplicarHashCinturon();
 // kenpochile.cl/<tipo>/<id>/. Esa página la genera tools/generar-paginas-compartir.mjs al
 // desplegar —con título, resumen e imagen propios— y redirige a este mismo modal.
 function enlaceCompartible() {
-  const m = location.hash.match(/^#(blog|escuela|maestro|cinturon)=([a-z0-9-]+)$/);
+  const m = location.hash.match(/^#(blog|escuela|maestro|cinturon|seminario)=([a-z0-9-]+)$/);
   if (!m) return '';
   const origen = /^https?:$/.test(location.protocol) ? location.origin : 'https://kenpochile.cl';
   return `${origen}/${m[1]}/${m[2]}/`;
@@ -11476,14 +11481,14 @@ function enlaceCompartible() {
 function compartirModal(btn) {
   const url = enlaceCompartible();
   if (!url) return;
-  const titulo = (document.querySelector('.blog-modal.open .blog-modal-titulo, .escuela-modal.open .escuela-modal-nombre, .programa-modal.open .programa-modal-name') || {}).textContent || document.title;
+  const titulo = (document.querySelector('.blog-modal.open .blog-modal-titulo, .seminario-modal.open .seminario-modal-titulo, .escuela-modal.open .escuela-modal-nombre, .programa-modal.open .programa-modal-name') || {}).textContent || document.title;
   return compartirURL(url, titulo, btn);
 }
-// Tarjeta del blog: comparte /<tipo>/<id>/ sin abrir el modal.
+// Tarjeta del blog o del seminario: comparte /<tipo>/<id>/ sin abrir el modal.
 function compartirEnlace(tipo, id, btn) {
   const origen = /^https?:$/.test(location.protocol) ? location.origin : 'https://kenpochile.cl';
-  const post = tipo === 'blog' ? BLOG_POSTS.find(p => p.id === id) : null;
-  return compartirURL(`${origen}/${tipo}/${id}/`, post ? post.titulo : document.title, btn);
+  const item = tipo === 'blog' ? BLOG_POSTS.find(p => p.id === id) : tipo === 'seminario' ? SEMINARIOS.find(x => String(x.n) === id) : null;
+  return compartirURL(`${origen}/${tipo}/${id}/`, item ? item.titulo : document.title, btn);
 }
 async function compartirURL(url, titulo, btn) {
   // En el celular se abre el menú nativo (WhatsApp, Instagram, etc.); en el computador se copia.
@@ -11600,6 +11605,8 @@ function openSeminarioModal(n) {
   modal.querySelector('.seminario-modal-scroll').scrollTop = 0;
   modal.classList.add('open');
   requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add('is-open')));
+  // Deep-link compartible: #seminario=<n> (ej. https://kenpochile.cl/#seminario=12).
+  history.replaceState(null, '', `#seminario=${s.n}`);
 }
 function closeSeminarioModal() {
   const modal = document.getElementById('seminarioModal');
@@ -11607,10 +11614,21 @@ function closeSeminarioModal() {
   modal.classList.remove('is-open');
   setTimeout(() => modal.classList.remove('open'), 220);
   if (seminarioModalTrigger) { seminarioModalTrigger.focus(); seminarioModalTrigger = null; }
+  if (/^#seminario=/.test(location.hash)) history.replaceState(null, '', '#seminarios');
 }
 document.getElementById('seminarioModal').addEventListener('click', function(e) {
   if (e.target === this) closeSeminarioModal();
 });
+// Deep-link compartible: #seminario=<n> abre directamente ese seminario.
+function aplicarHashSeminario() {
+  const m = location.hash.match(/^#seminario=(\d+)$/);
+  if (!m || !SEMINARIOS.some(x => x.n === +m[1])) return;
+  document.getElementById('seminarios').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  openSeminarioModal(+m[1]);
+}
+window.addEventListener('hashchange', aplicarHashSeminario);
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', aplicarHashSeminario);
+else aplicarHashSeminario();
 
 // ── SEO: datos estructurados (usa el mismo CONFIG, sin duplicar el teléfono) ──
 (function injectStructuredData() {
