@@ -57,6 +57,14 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html { scroll-behavior: smooth; font-size: 16px; }
+/* Sin desplazamiento lateral de la página (móvil): elementos absolutos que sobresalen por la
+   derecha (buscadores de sección, tips, etc.) ampliaban el ancho del documento y, al
+   deslizar el dedo hacia los lados, la página se corría dejando un hueco vacío. Se recorta
+   en html y body, y se bloquea el paneo horizontal de la página (los carruseles y listas con
+   su propio scroll horizontal siguen funcionando, y el zoom con dos dedos también). */
+html, body { overflow-x: hidden; overscroll-behavior-x: none; }
+html { touch-action: pan-y pinch-zoom; }
+body { position: relative; width: 100%; }
 
 body {
   background: var(--bg-dark);
