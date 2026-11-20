@@ -1091,7 +1091,10 @@ button.escuela-icon:hover {
 }
 /* El botón "Sitio web" va justo encima de los botones, alineado a la izquierda: su margen
    automático empuja ambos al fondo de la tarjeta. */
-.escuela-web-badge + .escuela-card-actions { margin-top: 0; }
+.escuela-card-links + .escuela-card-actions { margin-top: 0; }
+/* Penúltima fila de la tarjeta: "Blog" primero y luego "Sitio web" (si la escuela lo tiene),
+   ambos con la forma de píldora; su margen automático empuja esta fila y la de abajo al fondo. */
+.escuela-card-links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: auto 0 0.75rem; }
 .escuela-card-actions .btn-escuela { flex: 1 1 0; width: auto; min-width: 0; }
 .modal-share-btn.escuela-card-share { position: relative; top: auto; right: auto; flex: 0 0 2.2rem; margin-left: auto; }
 .modal-share-btn.escuela-card-share.is-copied::after { top: auto; bottom: calc(100% + 0.4rem); }
@@ -1286,7 +1289,8 @@ button.escuela-icon:hover {
 .escuela-web-badge {
   align-self: flex-start;
   display: inline-flex; align-items: center; gap: 0.35rem;
-  margin: auto 0 0.75rem;
+  margin: 0;
+  cursor: pointer;
   padding: 0.22rem 0.65rem;
   border-radius: 50px;
   border: 1px solid rgba(245,166,35,0.35);
@@ -8549,10 +8553,11 @@ function renderEscuelasGridAndPager() {
       const fotosDirector = conFoto.map(({ inst, foto }) =>
         `<button type="button" class="escuela-icon escuela-icon-inst" data-instructor="${inst.nombre}" title="Conocer a ${inst.nombre}" aria-label="Conocer a ${inst.nombre}"><img src="${foto}" alt="${inst.nombre}"${instructorFotoEncuadre(inst.nombre)} loading="lazy" decoding="async" onerror="this.closest('button').remove()"></button>`
       ).join('');
-      const verBlogBtn = nActividades ? `<button type="button" class="btn-escuela escuela-actividades" onclick="verActividadesEscuela('${e.id}')" title="Ver las actividades de esta escuela en el blog">Blog</button>` : '';
+      const verBlogBtn = nActividades ? `<button type="button" class="escuela-web-badge escuela-blog-pill" onclick="verActividadesEscuela('${e.id}')" title="Ver las actividades de esta escuela en el blog"><svg class="icon"><use href="#icon-newspaper"/></svg> Blog</button>` : '';
       const inscribirmeBtn = e.sinInscripcion ? '' : `<a href="#contacto" class="btn-escuela" data-escuela="${escuelaLabel(e)}">Inscribirme</a>`;
       const compartirBtn = `<button type="button" class="modal-share-btn escuela-card-share" onclick="event.stopPropagation(); compartirEnlace('escuela', '${e.id}', this)" aria-label="Copiar enlace de ${e.nombre}" title="Copiar enlace para compartir"><svg class="icon"><use href="#icon-share"/></svg></button>`;
-      const acciones = verBlogBtn + inscribirmeBtn + compartirBtn;
+      const acciones = inscribirmeBtn + compartirBtn;
+      const sitioWebBtn = e.sitioWeb ? `<a class="escuela-web-badge" href="${e.sitioWeb}" target="_blank" rel="noopener" title="Visitar el sitio web de ${e.nombre}"><svg class="icon"><use href="#icon-globe"/></svg> Sitio web ↗</a>` : '';
       return `
       <div class="escuela-card" tabindex="0" style="animation-delay:${i * 50}ms" data-ficha="${e.id}">
         <div class="escuela-card-head${conFoto.length > 1 ? ' duo' : ''}">
@@ -8564,7 +8569,7 @@ function renderEscuelasGridAndPager() {
           <div class="escuela-nombre">${e.nombre}</div>
           <div class="escuela-ciudad"><svg class="icon"><use href="#icon-map-pin"/></svg> ${escuelaUbicacion(e)}</div>
           <div class="escuela-director">Director${partesDirector.length > 1 ? 'es' : ''}: ${directores}${instructorApoyo ? `<br>Instructor: ${instructorApoyo}` : ''}</div>
-          ${e.sitioWeb ? `<a class="escuela-web-badge" href="${e.sitioWeb}" target="_blank" rel="noopener" title="Visitar el sitio web de ${e.nombre}"><svg class="icon"><use href="#icon-globe"/></svg> Sitio web ↗</a>` : ''}
+          ${verBlogBtn || sitioWebBtn ? `<div class="escuela-card-links">${verBlogBtn}${sitioWebBtn}</div>` : ''}
           <div class="escuela-card-actions">${acciones}</div>
         </div>
       </div>`;
