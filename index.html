@@ -1867,9 +1867,6 @@ button.escuela-icon:hover {
 /* El foco por teclado usa el mismo anillo del sitio (outline naranja de la regla
    global), ajustado al radio de la tarjeta; el hover con mouse no muestra anillo. */
 .belt-card:focus-visible { border-radius: 8px; }
-.belt-card { position: relative; }
-.modal-share-btn.belt-card-share { top: 0.5rem; right: 0.5rem; z-index: 3; }
-.modal-share-btn.belt-card-share.is-copied::after { right: 0; }
 .belt-card-img { width: 4.5rem; height: auto; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5)); }
 .belt-card-name { font-family: 'Cinzel', serif; font-size: 0.9rem; font-weight: 700; color: var(--text-main); }
 .belt-card-grade { font-family: 'Cormorant Garamond', serif; font-size: 0.85rem; font-style: italic; color: var(--accent); }
@@ -2433,7 +2430,7 @@ button.escuela-icon:hover {
 }
 .escuela-modal.is-open .escuela-modal-content { transform: none; }
 .escuela-modal .lightbox-close { z-index: 7; }
-.escuela-modal .modal-share-btn, .programa-modal .modal-share-btn { top: 1rem; right: 3.6rem; }
+.escuela-modal .modal-share-btn { top: 1rem; right: 3.6rem; }
 /* Patrón cabecera-que-sube + nombre sticky, como los demás modales del sitio. */
 .escuela-modal-scroll {
   overflow-y: auto;
@@ -4577,7 +4574,6 @@ footer {
 <!-- Modal Programa Técnico -->
 <div id="programaModal" class="programa-modal" role="dialog" aria-modal="true" aria-labelledby="progModalName">
   <div class="programa-modal-content" id="progModalContent">
-    <button type="button" class="modal-share-btn" id="progShareBtn" onclick="compartirModal(this)" aria-label="Copiar enlace para compartir" title="Copiar enlace para compartir"><svg class="icon"><use href="#icon-share"/></svg></button>
     <button type="button" class="lightbox-close" onclick="closeProgramaModal()" aria-label="Cerrar"><svg class="icon"><use href="#icon-x"/></svg></button>
     <!-- Mismo patrón que los modales de seminarios/maestros/blog: la cabecera (cinturón,
          grado y tiempo) sube con el contenido y el nombre del programa queda pegado
@@ -11266,7 +11262,6 @@ function renderProgramaCard(grado) {
     <div class="belt-card-name">${grado.nombre}</div>
     <div class="belt-card-grade">${grado.grado}</div>
     <div class="belt-card-count">${grado.badge}</div>
-    ${grado.tipo === 'color' ? `<button type="button" class="modal-share-btn belt-card-share" onclick="event.stopPropagation(); compartirEnlace('cinturon', '${grado.id}', this)" aria-label="Copiar enlace de: ${grado.nombre}" title="Copiar enlace para compartir"><svg class="icon"><use href="#icon-share"/></svg></button>` : ''}
   </div>`;
 }
 function renderBeltGrids() {
@@ -11334,8 +11329,6 @@ function openProgramaModal(id) {
   // para los cinturones de color (grado.tipo === 'color'); los grados de cinturón negro
   // no llevan URL propia.
   if (grado.tipo === 'color') history.replaceState(null, '', `#cinturon=${id}`);
-  // Los grados de cinturón negro no tienen URL propia: no hay nada que compartir.
-  document.getElementById('progShareBtn').hidden = grado.tipo !== 'color';
 }
 function closeProgramaModal() {
   const modal = document.getElementById('programaModal');
@@ -11571,13 +11564,13 @@ aplicarHashCinturon();
 
 // ── ENLACE PARA COMPARTIR DE LOS MODALES ──
 // La barra de direcciones usa el deep-link con hash (#blog=<id>, #escuela=<id>,
-// #maestro=<id>, #cinturon=<id>), pero WhatsApp, Facebook y Google no leen lo que va después
+// #maestro=<id>, #seminario=<n>), pero WhatsApp, Facebook y Google no leen lo que va después
 // del "#" y muestran siempre la vista previa genérica del sitio. Para compartir, cada modal
 // tiene un botón que copia (o abre el menú "Compartir" del celular con) la dirección real
 // kenpochile.cl/<tipo>/<id>/. Esa página la genera tools/generar-paginas-compartir.mjs al
 // desplegar —con título, resumen e imagen propios— y redirige a este mismo modal.
 function enlaceCompartible() {
-  const m = location.hash.match(/^#(blog|escuela|maestro|cinturon|seminario)=([a-z0-9-]+)$/);
+  const m = location.hash.match(/^#(blog|escuela|maestro|seminario)=([a-z0-9-]+)$/);
   if (!m) return '';
   const origen = /^https?:$/.test(location.protocol) ? location.origin : 'https://kenpochile.cl';
   return `${origen}/${m[1]}/${m[2]}/`;
@@ -11591,7 +11584,7 @@ function compartirModal(btn) {
 // Tarjeta del blog o del seminario: comparte /<tipo>/<id>/ sin abrir el modal.
 function compartirEnlace(tipo, id, btn) {
   const origen = /^https?:$/.test(location.protocol) ? location.origin : 'https://kenpochile.cl';
-  const item = tipo === 'blog' ? BLOG_POSTS.find(p => p.id === id) : tipo === 'seminario' ? SEMINARIOS.find(x => String(x.n) === id) : tipo === 'maestro' ? { titulo: (MAESTROS_BIO.find(x => x.id === id) || {}).nombre } : tipo === 'escuela' ? { titulo: (escuelaPorId(id) || {}).nombre } : tipo === 'cinturon' ? { titulo: (PROGRAMA_TECNICO.find(x => x.id === id) || {}).nombre } : null;
+  const item = tipo === 'blog' ? BLOG_POSTS.find(p => p.id === id) : tipo === 'seminario' ? SEMINARIOS.find(x => String(x.n) === id) : tipo === 'maestro' ? { titulo: (MAESTROS_BIO.find(x => x.id === id) || {}).nombre } : tipo === 'escuela' ? { titulo: (escuelaPorId(id) || {}).nombre } : null;
   return compartirURL(`${origen}/${tipo}/${id}/`, (item && item.titulo) || document.title, btn);
 }
 async function compartirURL(url, titulo, btn) {

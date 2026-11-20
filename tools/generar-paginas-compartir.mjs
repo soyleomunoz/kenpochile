@@ -1,5 +1,5 @@
 // Genera, a partir de los datos de index.html, una página "para compartir" por cada modal
-// con URL propia: entradas de blog, escuelas, maestros, cinturones de color y seminarios.
+// con URL propia: entradas de blog, escuelas, maestros y seminarios.
 //
 // Por qué existe: la landing abre cada modal con un deep-link por hash
 // (kenpochile.cl/#blog=<id>), pero WhatsApp, Facebook, Telegram, etc. NO leen lo que va
@@ -9,10 +9,10 @@
 //
 // Se ejecuta en el workflow de GitHub Pages justo antes de publicar (ver
 // .github/workflows/pages.yml) y SE VERSIONAN sus resultados (blog/, escuela/, maestro/,
-// cinturon/, seminario/, og/ y sitemap.xml): GitHub también lanza el despliegue clásico
+// seminario/, og/ y sitemap.xml): GitHub también lanza el despliegue clásico
 // "pages build and deployment", que publica el repositorio tal cual y puede pisar al del
 // workflow; versionarlos garantiza que las páginas existan gane el que gane.
-// Tras añadir o cambiar una entrada de blog, escuela, maestro, cinturón o seminario en
+// Tras añadir o cambiar una entrada de blog, escuela, maestro o seminario en
 // index.html hay que volver a ejecutar el script y subir los archivos generados.
 //
 // Uso local:  cd tools && npm ci && node generar-paginas-compartir.mjs
@@ -172,7 +172,7 @@ function pagina({ tipo, id, hash, titulo, descripcion, imagen, alt, cuerpoTitulo
 }
 
 // ── Generación ─────────────────────────────────────────────────────────────────────────
-const LIMPIAR = ['blog', 'escuela', 'maestro', 'cinturon', 'seminario', 'og'];
+const LIMPIAR = ['blog', 'escuela', 'maestro', 'cinturon', 'seminario', 'og']; // 'cinturon' se limpia por si quedó de versiones anteriores
 for (const d of LIMPIAR) fs.rmSync(path.join(ROOT, d), { recursive: true, force: true });
 
 const entradas = []; // para el sitemap
@@ -238,15 +238,6 @@ for (const x of unicos(leerDatos('SEMINARIOS').map(x => ({ ...x, id: String(x.n)
   }, `img/seminarios/${String(x.n).padStart(2, '0')}/${x.img || 'portada.webp'}`);
 }
 
-// Cinturones de color (los grados de cinturón negro no tienen URL propia)
-for (const g of unicos(leerDatos('PROGRAMA_TECNICO'), 'cinturon').filter(g => g.tipo === 'color')) {
-  const desc = `Programa técnico de Kenpo Karate: ${g.grado}${g.tiempo ? `, ${g.tiempo}` : ''}${g.badge ? ` · ${g.badge}` : ''}. Técnicas, sets y teoría.`;
-  await emitir({
-    tipo: 'cinturon', id: g.id, titulo: g.nombre, descripcion: desc, alt: g.nombre,
-    cuerpoTitulo: g.nombre, cuerpoTexto: desc, boton: 'Ver el programa técnico',
-  }, g.img);
-}
-
 // Sitemap: la landing + todas las páginas generadas.
 const urls = [{ loc: `${SITE}/` }, ...entradas.sort((a, b) => a.loc.localeCompare(b.loc))];
 fs.writeFileSync(path.join(ROOT, 'sitemap.xml'),
@@ -254,4 +245,4 @@ fs.writeFileSync(path.join(ROOT, 'sitemap.xml'),
   urls.map(u => `  <url>\n    <loc>${u.loc}</loc>${u.lastmod ? `\n    <lastmod>${u.lastmod}</lastmod>` : ''}\n  </url>\n`).join('') +
   `</urlset>\n`);
 
-console.log(`✔ ${total} páginas para compartir generadas (blog, escuelas, maestros, cinturones y seminarios).`);
+console.log(`✔ ${total} páginas para compartir generadas (blog, escuelas, maestros y seminarios).`);
