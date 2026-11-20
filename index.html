@@ -2060,7 +2060,9 @@ button.escuela-icon:hover {
 .modal-share-btn.maestro-card-share.is-copied::after { top: auto; bottom: calc(100% + 0.4rem); }
 .modal-share-btn.seminario-card-share { top: auto; bottom: 1.1rem; right: 1.1rem; z-index: 3; }
 .modal-share-btn.seminario-card-share.is-copied::after { top: auto; bottom: calc(100% + 0.4rem); }
-.seminario-card .seminario-body { padding-right: 3.6rem; }
+/* El título usa todo el ancho (con el margen normal a los lados); solo las dos líneas de abajo
+   dejan libre el botón Compartir de la esquina inferior derecha. */
+.seminario-card .seminario-maestros, .seminario-card .seminario-lugar { margin-right: 2.8rem; }
 .modal-share-btn:hover, .modal-share-btn:focus-visible { background: var(--primary); border-color: var(--primary); }
 .modal-share-btn .icon { width: 1.05rem; height: 1.05rem; }
 .modal-share-btn.is-copied { background: var(--primary); border-color: var(--primary); }
