@@ -1867,6 +1867,9 @@ button.escuela-icon:hover {
 /* El foco por teclado usa el mismo anillo del sitio (outline naranja de la regla
    global), ajustado al radio de la tarjeta; el hover con mouse no muestra anillo. */
 .belt-card:focus-visible { border-radius: 8px; }
+.belt-card { position: relative; }
+.modal-share-btn.belt-card-share { top: 0.5rem; right: 0.5rem; z-index: 3; }
+.modal-share-btn.belt-card-share.is-copied::after { right: 0; }
 .belt-card-img { width: 4.5rem; height: auto; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5)); }
 .belt-card-name { font-family: 'Cinzel', serif; font-size: 0.9rem; font-weight: 700; color: var(--text-main); }
 .belt-card-grade { font-family: 'Cormorant Garamond', serif; font-size: 0.85rem; font-style: italic; color: var(--accent); }
@@ -11263,6 +11266,7 @@ function renderProgramaCard(grado) {
     <div class="belt-card-name">${grado.nombre}</div>
     <div class="belt-card-grade">${grado.grado}</div>
     <div class="belt-card-count">${grado.badge}</div>
+    ${grado.tipo === 'color' ? `<button type="button" class="modal-share-btn belt-card-share" onclick="event.stopPropagation(); compartirEnlace('cinturon', '${grado.id}', this)" aria-label="Copiar enlace de: ${grado.nombre}" title="Copiar enlace para compartir"><svg class="icon"><use href="#icon-share"/></svg></button>` : ''}
   </div>`;
 }
 function renderBeltGrids() {
@@ -11587,7 +11591,7 @@ function compartirModal(btn) {
 // Tarjeta del blog o del seminario: comparte /<tipo>/<id>/ sin abrir el modal.
 function compartirEnlace(tipo, id, btn) {
   const origen = /^https?:$/.test(location.protocol) ? location.origin : 'https://kenpochile.cl';
-  const item = tipo === 'blog' ? BLOG_POSTS.find(p => p.id === id) : tipo === 'seminario' ? SEMINARIOS.find(x => String(x.n) === id) : tipo === 'maestro' ? { titulo: (MAESTROS_BIO.find(x => x.id === id) || {}).nombre } : tipo === 'escuela' ? { titulo: (escuelaPorId(id) || {}).nombre } : null;
+  const item = tipo === 'blog' ? BLOG_POSTS.find(p => p.id === id) : tipo === 'seminario' ? SEMINARIOS.find(x => String(x.n) === id) : tipo === 'maestro' ? { titulo: (MAESTROS_BIO.find(x => x.id === id) || {}).nombre } : tipo === 'escuela' ? { titulo: (escuelaPorId(id) || {}).nombre } : tipo === 'cinturon' ? { titulo: (PROGRAMA_TECNICO.find(x => x.id === id) || {}).nombre } : null;
   return compartirURL(`${origen}/${tipo}/${id}/`, (item && item.titulo) || document.title, btn);
 }
 async function compartirURL(url, titulo, btn) {
