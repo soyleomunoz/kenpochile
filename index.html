@@ -1437,30 +1437,24 @@ button.escuela-icon:hover {
   font-size: 1rem; font-weight: 700; line-height: 1.25;
   color: var(--text-main);
   margin-bottom: 0.4rem;
-  min-height: 2.5em;
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  /* Una sola línea; si no cabe se desplaza (.escuela-line, ver setupEscuelaCardMarquee). */
 }
 .seminario-maestros {
-  display: flex; align-items: flex-start; gap: 0.4rem;
+  display: flex; align-items: center; gap: 0.4rem;
   font-family: 'Rajdhani', sans-serif;
   font-size: 0.78rem; font-weight: 600; line-height: 1.3;
   color: var(--secondary);
   margin-bottom: 0.3rem;
 }
-.seminario-maestros .icon { margin-top: 0.15em; flex-shrink: 0; }
-.seminario-maestros span {
-  min-height: 2.6em;
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-}
+.seminario-maestros .icon { flex-shrink: 0; }
+.seminario-maestros .escuela-line, .seminario-lugar .escuela-line { flex: 1 1 0; min-width: 0; }
 .seminario-lugar {
   display: flex; align-items: center; gap: 0.4rem;
   font-family: 'Rajdhani', sans-serif;
   font-size: 0.78rem; color: var(--text-muted);
 }
 .seminario-lugar .icon { flex-shrink: 0; }
-.seminario-lugar span {
-  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-}
+
 
 /* ── VIDEOS ── */
 /* Trazo: mismo fondo que "Nuestros Instructores". */
@@ -8185,7 +8179,7 @@ function setupTabMarquee(container) {
 // cada render, al cambiar el ancho de la ventana y cuando terminan de cargar las tipografías.
 function setupEscuelaCardMarquee(root) {
   if (!root) return;
-  root.querySelectorAll('.escuela-card .escuela-line').forEach(line => {
+  root.querySelectorAll('.escuela-card .escuela-line, .seminario-card .escuela-line').forEach(line => {
     const inner = line.querySelector('.escuela-line-inner');
     line.classList.remove('is-marquee');
     inner.style.removeProperty('--marquee-distance');
@@ -8219,10 +8213,11 @@ window.addEventListener('resize', () => {
     setupTabMarquee(document.getElementById('comunaChips'));
     setupTabMarquee(document.getElementById('instructorTabs'));
     setupEscuelaCardMarquee(document.getElementById('escuelasGrid'));
+    setupEscuelaCardMarquee(document.getElementById('seminariosGrid'));
   }, 200);
 });
 // Las tipografías web cambian los anchos: se recalcula cuando terminan de cargar.
-document.fonts?.ready.then(() => setupEscuelaCardMarquee(document.getElementById('escuelasGrid')));
+document.fonts?.ready.then(() => { setupEscuelaCardMarquee(document.getElementById('escuelasGrid')); setupEscuelaCardMarquee(document.getElementById('seminariosGrid')); });
 
 function renderPaisTabs() {
   const wrap = document.getElementById('paisTabs');
@@ -9278,9 +9273,9 @@ function seminarioCardHTML(s) {
         <div class="seminario-hover"><span class="seminario-hover-btn">Ver Seminario</span></div>
       </div>
       <div class="seminario-body">
-        <div class="seminario-titulo">${s.titulo}</div>
-        <div class="seminario-maestros"><svg class="icon"><use href="#icon-award"/></svg> <span>${s.maestros}</span></div>
-        <div class="seminario-lugar"><svg class="icon"><use href="#icon-map-pin"/></svg> <span>${s.lugar}</span></div>
+        <div class="seminario-titulo escuela-line"><span class="escuela-line-inner">${s.titulo}</span></div>
+        <div class="seminario-maestros"><svg class="icon"><use href="#icon-award"/></svg> <span class="escuela-line"><span class="escuela-line-inner">${s.maestros}</span></span></div>
+        <div class="seminario-lugar"><svg class="icon"><use href="#icon-map-pin"/></svg> <span class="escuela-line"><span class="escuela-line-inner">${s.lugar}</span></span></div>
       </div>
       <button type="button" class="modal-share-btn seminario-card-share" onclick="event.stopPropagation(); compartirEnlace('seminario', '${s.n}', this)" aria-label="Copiar enlace de: ${s.titulo}" title="Copiar enlace para compartir"><svg class="icon"><use href="#icon-share"/></svg></button>
     </div>`;
@@ -9302,6 +9297,7 @@ function renderSeminariosGridAndPager() {
     empty.style.display = 'none';
     grid.innerHTML = pageItems.map(seminarioCardHTML).join('');
     grid.querySelectorAll('.seminario-card').forEach(makeActivatable);
+    setupEscuelaCardMarquee(grid);
   }
   renderSeminariosPager(totalPages);
 }
