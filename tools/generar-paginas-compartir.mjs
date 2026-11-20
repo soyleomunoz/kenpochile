@@ -238,8 +238,8 @@ for (const x of unicos(leerDatos('SEMINARIOS').map(x => ({ ...x, id: String(x.n)
   }, `img/seminarios/${String(x.n).padStart(2, '0')}/${x.img || 'portada.webp'}`);
 }
 
-// Cinturones de color (los grados de cinturón negro no tienen URL propia)
-for (const g of unicos(leerDatos('PROGRAMA_TECNICO'), 'cinturon').filter(g => g.tipo === 'color')) {
+// Cinturones (de color y negros)
+for (const g of unicos(leerDatos('PROGRAMA_TECNICO'), 'cinturon')) {
   const desc = `Programa técnico de Kenpo Karate: ${g.grado}${g.tiempo ? `, ${g.tiempo}` : ''}${g.badge ? ` · ${g.badge}` : ''}. Técnicas, sets y teoría.`;
   await emitir({
     tipo: 'cinturon', id: g.id, titulo: g.nombre, descripcion: desc, alt: g.nombre,

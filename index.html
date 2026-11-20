@@ -1869,7 +1869,7 @@ button.escuela-icon:hover {
 .belt-card:focus-visible { border-radius: 8px; }
 .belt-card { position: relative; }
 .belt-card-foot { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; width: 100%; margin-top: auto; }
-.belt-card-foot .belt-card-count { margin-top: 0; }
+.belt-card-foot .belt-card-count { margin-top: 0; white-space: nowrap; padding: 0.22rem 0.7rem; }
 /* Mismo botón Compartir que las tarjetas del blog, en la fila inferior: etiqueta a la
    izquierda y Compartir a la derecha. */
 .modal-share-btn.belt-card-share { position: relative; top: auto; right: auto; flex: 0 0 2.2rem; margin-left: auto; z-index: 3; }
@@ -1878,10 +1878,10 @@ button.escuela-icon:hover {
 .belt-card-name { font-family: 'Cinzel', serif; font-size: 0.9rem; font-weight: 700; color: var(--text-main); }
 .belt-card-grade { font-family: 'Cormorant Garamond', serif; font-size: 0.85rem; font-style: italic; color: var(--accent); }
 .belt-card-count {
-  font-family: 'Rajdhani', sans-serif; font-size: 0.65rem; font-weight: 700;
-  letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted);
-  background: rgba(228,87,46,0.12); border: 1px solid rgba(228,87,46,0.25);
-  border-radius: 50px; padding: 0.2rem 0.7rem;
+  font-family: 'Rajdhani', sans-serif; font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent);
+  background: rgba(245,166,35,0.08); border: 1px solid rgba(245,166,35,0.35);
+  border-radius: 50px; padding: 0.22rem 0.85rem;
   margin-top: auto;
 }
 
@@ -11269,7 +11269,7 @@ function renderProgramaCard(grado) {
     <img class="belt-card-img" src="${grado.img}" alt="${grado.nombre}" loading="lazy" decoding="async">
     <div class="belt-card-name">${grado.nombre}</div>
     <div class="belt-card-grade">${grado.grado}</div>
-    <div class="belt-card-foot"><div class="belt-card-count">${grado.badge}</div>${grado.tipo === 'color' ? `<button type="button" class="modal-share-btn belt-card-share" onclick="event.stopPropagation(); compartirEnlace('cinturon', '${grado.id}', this)" aria-label="Copiar enlace de: ${grado.nombre}" title="Copiar enlace para compartir"><svg class="icon"><use href="#icon-share"/></svg></button>` : ''}</div>
+    <div class="belt-card-foot"><div class="belt-card-count">${grado.badge}</div><button type="button" class="modal-share-btn belt-card-share" onclick="event.stopPropagation(); compartirEnlace('cinturon', '${grado.id}', this)" aria-label="Copiar enlace de: ${grado.nombre}" title="Copiar enlace para compartir"><svg class="icon"><use href="#icon-share"/></svg></button></div>
   </div>`;
 }
 function renderBeltGrids() {
@@ -11333,12 +11333,9 @@ function openProgramaModal(id) {
   modal.classList.add('open');
   requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add('is-open')));
   modal.querySelector('.lightbox-close').focus();
-  // Deep-link compartible: #cinturon=<id> (ej. https://kenpochile.cl/#cinturon=azul), solo
-  // para los cinturones de color (grado.tipo === 'color'); los grados de cinturón negro
-  // no llevan URL propia.
-  if (grado.tipo === 'color') history.replaceState(null, '', `#cinturon=${id}`);
-  // Los grados de cinturón negro no tienen URL propia: no hay nada que compartir.
-  document.getElementById('progShareBtn').hidden = grado.tipo !== 'color';
+  // Deep-link compartible: #cinturon=<id> (ej. https://kenpochile.cl/#cinturon=azul o
+  // #cinturon=negro1); aplica a todos los grados, de color y negros.
+  history.replaceState(null, '', `#cinturon=${id}`);
 }
 function closeProgramaModal() {
   const modal = document.getElementById('programaModal');
@@ -11564,7 +11561,7 @@ initCardSearch({
 function aplicarHashCinturon() {
   const m = location.hash.match(/^#cinturon=([a-z0-9-]+)$/);
   if (!m) return;
-  const grado = PROGRAMA_TECNICO.find(g => g.id === m[1] && g.tipo === 'color');
+  const grado = PROGRAMA_TECNICO.find(g => g.id === m[1]);
   if (!grado) return;
   document.getElementById('programa-tecnico').scrollIntoView({ behavior: 'smooth', block: 'start' });
   openProgramaModal(m[1]);
