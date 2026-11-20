@@ -38,8 +38,8 @@ jobs:
       - uses: actions/configure-pages@v5
 
       # Genera una página con vista previa propia (Open Graph) por cada entrada de blog,
-      # escuela, maestro y seminario: kenpochile.cl/blog/<id>/, /escuela/<id>/,
-      # /maestro/<id>/ y /seminario/<n>/. WhatsApp y Facebook no leen el "#" de los
+      # escuela, maestro y cinturón de color: kenpochile.cl/blog/<id>/, /escuela/<id>/,
+      # /maestro/<id>/ y /cinturon/<id>/. WhatsApp y Facebook no leen el "#" de los
       # deep-links (kenpochile.cl/#blog=<id>) y mostrarían la vista previa genérica.
       # También regenera sitemap.xml. Los resultados también se versionan (ver tools/).
       - uses: actions/setup-node@v4
