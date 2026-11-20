@@ -1041,6 +1041,32 @@ button.escuela-icon:hover {
 }
 /* Director con tarjeta en Nuestros Instructores: nombre clickeable que abre su modal de
    foto (el mismo de esa sección) sin salir de Escuelas. */
+.escuela-card .escuela-nombre { max-height: 2.6em; overflow: hidden; }
+.escuela-nombre-inner { display: block; }
+/* Ubicación, director e instructor: siempre una sola línea (ver setupEscuelaCardMarquee). */
+.escuela-line { display: block; min-width: 0; overflow: hidden; white-space: nowrap; }
+.escuela-ciudad .escuela-line { flex: 1 1 0; }
+.escuela-line-inner { display: inline-block; white-space: nowrap; vertical-align: top; }
+/* Cuando no caben, se desplazan de derecha a izquierda (mismo efecto que las etiquetas de
+   región) y el nombre, cuando necesita una 3ª línea, sube para mostrarla en solo 2. */
+.escuela-line.is-marquee .escuela-line-inner,
+.escuela-nombre.is-marquee .escuela-nombre-inner {
+  animation-duration: var(--marquee-duration, 5s);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+.escuela-line.is-marquee .escuela-line-inner { animation-name: tab-marquee; }
+.escuela-nombre.is-marquee .escuela-nombre-inner { animation-name: nombre-marquee; }
+@keyframes nombre-marquee {
+  0%, 15%   { transform: translateY(0); }
+  45%, 65%  { transform: translateY(var(--marquee-y, 0)); }
+  95%, 100% { transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .escuela-line.is-marquee .escuela-line-inner, .escuela-nombre.is-marquee .escuela-nombre-inner { animation: none; }
+  .escuela-line { overflow-x: auto; scrollbar-width: none; }
+  .escuela-card .escuela-nombre { overflow-y: auto; scrollbar-width: none; }
+}
 .escuela-director-link {
   display: inline-flex; align-items: center; gap: 0.4rem;
   vertical-align: middle;
@@ -8132,6 +8158,37 @@ function setupTabMarquee(container) {
     }
   });
 }
+// Tarjetas de escuela: ubicación, director e instructor se mantienen en UNA línea y, si no
+// caben, se desplazan de derecha a izquierda; el nombre admite 2 líneas y, si necesita una
+// 3ª, sube para mostrarla. Misma animación que las etiquetas de región. Se reevalúa tras
+// cada render, al cambiar el ancho de la ventana y cuando terminan de cargar las tipografías.
+function setupEscuelaCardMarquee(root) {
+  if (!root) return;
+  root.querySelectorAll('.escuela-card .escuela-line').forEach(line => {
+    const inner = line.querySelector('.escuela-line-inner');
+    line.classList.remove('is-marquee');
+    inner.style.removeProperty('--marquee-distance');
+    inner.style.removeProperty('--marquee-duration');
+    const overflow = Math.ceil(inner.scrollWidth - line.clientWidth);
+    if (overflow > 2) {
+      inner.style.setProperty('--marquee-distance', `-${overflow + 6}px`);
+      inner.style.setProperty('--marquee-duration', `${Math.max(3.5, overflow / 16)}s`);
+      line.classList.add('is-marquee');
+    }
+  });
+  root.querySelectorAll('.escuela-card .escuela-nombre').forEach(nombre => {
+    const inner = nombre.querySelector('.escuela-nombre-inner');
+    nombre.classList.remove('is-marquee');
+    inner.style.removeProperty('--marquee-y');
+    inner.style.removeProperty('--marquee-duration');
+    const overflow = Math.ceil(inner.offsetHeight - nombre.clientHeight);
+    if (overflow > 2) {
+      inner.style.setProperty('--marquee-y', `-${overflow}px`);
+      inner.style.setProperty('--marquee-duration', '4.5s');
+      nombre.classList.add('is-marquee');
+    }
+  });
+}
 let tabMarqueeResizeTimer = null;
 window.addEventListener('resize', () => {
   clearTimeout(tabMarqueeResizeTimer);
@@ -8140,8 +8197,11 @@ window.addEventListener('resize', () => {
     setupTabMarquee(document.getElementById('regionRow'));
     setupTabMarquee(document.getElementById('comunaChips'));
     setupTabMarquee(document.getElementById('instructorTabs'));
+    setupEscuelaCardMarquee(document.getElementById('escuelasGrid'));
   }, 200);
 });
+// Las tipografías web cambian los anchos: se recalcula cuando terminan de cargar.
+document.fonts?.ready.then(() => setupEscuelaCardMarquee(document.getElementById('escuelasGrid')));
 
 function renderPaisTabs() {
   const wrap = document.getElementById('paisTabs');
@@ -8573,15 +8633,16 @@ function renderEscuelasGridAndPager() {
           ${fotosDirector ? `<div class="escuela-card-head-insts">${fotosDirector}</div>` : ''}
         </div>
         <div class="escuela-card-body">
-          <div class="escuela-nombre">${e.nombre}</div>
-          <div class="escuela-ciudad"><svg class="icon"><use href="#icon-map-pin"/></svg> ${escuelaUbicacion(e)}</div>
-          <div class="escuela-director">Director${partesDirector.length > 1 ? 'es' : ''}: ${directores}${instructorApoyo ? `<br>Instructor: ${instructorApoyo}` : ''}</div>
+          <div class="escuela-nombre"><span class="escuela-nombre-inner">${e.nombre}</span></div>
+          <div class="escuela-ciudad"><svg class="icon"><use href="#icon-map-pin"/></svg> <span class="escuela-line"><span class="escuela-line-inner">${escuelaUbicacion(e)}</span></span></div>
+          <div class="escuela-director"><div class="escuela-line"><span class="escuela-line-inner">Director${partesDirector.length > 1 ? 'es' : ''}: ${directores}</span></div>${instructorApoyo ? `<div class="escuela-line"><span class="escuela-line-inner">Instructor: ${instructorApoyo}</span></div>` : ''}</div>
           ${verBlogBtn || sitioWebBtn ? `<div class="escuela-card-links">${verBlogBtn}${sitioWebBtn}</div>` : ''}
           <div class="escuela-card-actions">${acciones}</div>
         </div>
       </div>`;
     }).join('');
     grid.querySelectorAll('.btn-escuela[data-escuela]').forEach(bindEscuelaCta);
+    setupEscuelaCardMarquee(grid);
     grid.querySelectorAll('.escuela-director-link[data-instructor], .escuela-icon-inst[data-instructor]').forEach(btn => {
       btn.addEventListener('click', () => openInstructorPorNombre(btn.dataset.instructor));
     });
