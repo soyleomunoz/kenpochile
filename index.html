@@ -2281,6 +2281,19 @@ button.escuela-icon:hover {
   background: none; border: none; cursor: pointer;
 }
 .blog-link:hover { gap: 0.8rem; }
+/* "Leer Más" de las tarjetas del blog: mismo estilo de píldora que los botones "Blog" y
+   "Sitio web" de las tarjetas de escuelas (.escuela-web-badge). Los .blog-link dentro del
+   texto de las entradas conservan su estilo de enlace. */
+.blog-body .blog-link {
+  justify-content: center; gap: 0.35rem;
+  padding: 0.22rem 0.85rem;
+  border-radius: 50px;
+  border: 1px solid rgba(245,166,35,0.35);
+  background: rgba(245,166,35,0.08);
+  font-size: 0.7rem; letter-spacing: 0.08em;
+  transition: background 0.3s, border-color 0.3s, color 0.3s;
+}
+.blog-body .blog-link:hover { gap: 0.35rem; background: rgba(245,166,35,0.18); border-color: var(--accent); color: var(--text-main); }
 /* Enlace inline dentro del texto de una entrada (nombres de instructores/escuelas) */
 .blog-link-inline {
   font: inherit; color: var(--accent);
