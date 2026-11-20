@@ -1868,8 +1868,12 @@ button.escuela-icon:hover {
    global), ajustado al radio de la tarjeta; el hover con mouse no muestra anillo. */
 .belt-card:focus-visible { border-radius: 8px; }
 .belt-card { position: relative; }
-.modal-share-btn.belt-card-share { top: 0.5rem; right: 0.5rem; z-index: 3; }
-.modal-share-btn.belt-card-share.is-copied::after { right: 0; }
+.belt-card-foot { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; width: 100%; margin-top: auto; }
+.belt-card-foot .belt-card-count { margin-top: 0; }
+/* Mismo botón Compartir que las tarjetas del blog, en la fila inferior: etiqueta a la
+   izquierda y Compartir a la derecha. */
+.modal-share-btn.belt-card-share { position: relative; top: auto; right: auto; flex: 0 0 2.2rem; margin-left: auto; z-index: 3; }
+.modal-share-btn.belt-card-share.is-copied::after { top: auto; bottom: calc(100% + 0.4rem); }
 .belt-card-img { width: 4.5rem; height: auto; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5)); }
 .belt-card-name { font-family: 'Cinzel', serif; font-size: 0.9rem; font-weight: 700; color: var(--text-main); }
 .belt-card-grade { font-family: 'Cormorant Garamond', serif; font-size: 0.85rem; font-style: italic; color: var(--accent); }
@@ -11265,8 +11269,7 @@ function renderProgramaCard(grado) {
     <img class="belt-card-img" src="${grado.img}" alt="${grado.nombre}" loading="lazy" decoding="async">
     <div class="belt-card-name">${grado.nombre}</div>
     <div class="belt-card-grade">${grado.grado}</div>
-    <div class="belt-card-count">${grado.badge}</div>
-    ${grado.tipo === 'color' ? `<button type="button" class="modal-share-btn belt-card-share" onclick="event.stopPropagation(); compartirEnlace('cinturon', '${grado.id}', this)" aria-label="Copiar enlace de: ${grado.nombre}" title="Copiar enlace para compartir"><svg class="icon"><use href="#icon-share"/></svg></button>` : ''}
+    <div class="belt-card-foot"><div class="belt-card-count">${grado.badge}</div>${grado.tipo === 'color' ? `<button type="button" class="modal-share-btn belt-card-share" onclick="event.stopPropagation(); compartirEnlace('cinturon', '${grado.id}', this)" aria-label="Copiar enlace de: ${grado.nombre}" title="Copiar enlace para compartir"><svg class="icon"><use href="#icon-share"/></svg></button>` : ''}</div>
   </div>`;
 }
 function renderBeltGrids() {
