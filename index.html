@@ -10,12 +10,12 @@
 <meta property="og:description" content="Kenpo Karate auténtico en Chile. Disciplina, respeto y defensa personal bajo la guía de maestros certificados.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kenpochile.cl">
-<meta property="og:image" content="https://kenpochile.cl/img/header/maestro.png">
+<meta property="og:image" content="https://kenpochile.cl/og-image.jpg">
 <meta property="og:locale" content="es_CL">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="KenpoChile.cl | International Vidal Kenpo Studio">
 <meta name="twitter:description" content="Kenpo Karate auténtico en Chile. Disciplina, respeto y defensa personal bajo la guía de maestros certificados.">
-<meta name="twitter:image" content="https://kenpochile.cl/img/header/maestro.png">
+<meta name="twitter:image" content="https://kenpochile.cl/og-image.jpg">
 <meta name="theme-color" content="#14100D">
 <link rel="canonical" href="https://kenpochile.cl/">
 <meta name="robots" content="index, follow">
@@ -7179,7 +7179,7 @@ function blogCardHTML(post, i) {
         <div class="blog-meta">${(post.cats || [post.cat]).map(c => `<span class="blog-cat">${c}</span>`).join('')}</div>
         <div class="blog-title">${post.titulo}</div>
         <div class="blog-excerpt">${post.excerpt}</div>
-        <button class="blog-link" onclick="event.stopPropagation(); openBlogModal('${post.id}')">Leer Más →</button>
+        <a class="blog-link" href="blog/${post.id}/" onclick="event.stopPropagation(); if (event.ctrlKey || event.metaKey || event.shiftKey) return; event.preventDefault(); openBlogModal('${post.id}')">Leer Más →</a>
       </div>
       <button type="button" class="modal-share-btn blog-card-share" onclick="event.stopPropagation(); compartirEnlace('blog', '${post.id}', this)" aria-label="Copiar enlace de: ${post.titulo}" title="Copiar enlace para compartir"><svg class="icon"><use href="#icon-share"/></svg></button>
     </div>`;
