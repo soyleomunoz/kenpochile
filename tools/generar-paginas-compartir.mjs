@@ -177,6 +177,9 @@ function pagina({ tipo, id, hash, titulo, descripcion, imagen, alt, cuerpoTitulo
 }
 
 // ── Página completa de cada entrada de blog ────────────────────────────────────────────
+// Botón Compartir (menú: copiar, Instagram, Facebook, WhatsApp y correo), el mismo de la landing.
+const COMPARTIR = (/<!-- ═══ GestixPro · Compartir[\s\S]*?<!-- ═══ fin GestixPro · Compartir ═══ -->/.exec(SRC) || [''])[0];
+const ICONO_COMPARTIR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg>';
 const FUENTES = (/<style id="local-fonts">[\s\S]*?<\/style>/.exec(SRC) || [''])[0].replace(/url\(assets\//g, 'url(/assets/');
 const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 const fechaLarga = iso => { const [a, m, d] = String(iso).split('-').map(Number); return a && m && d ? `${d} de ${MESES[m - 1]} de ${a}` : ''; };
@@ -195,6 +198,7 @@ function contenidoEstatico(html) {
 }
 function paginaBlog(p, todos, imagen) {
   const url = `${SITE}/blog/${p.id}/`;
+  const boton = COMPARTIR ? `<button type="button" class="gx-share-btn" data-gx-compartir data-url="${url}" data-titulo="${esc(p.titulo)}" aria-label="Compartir este artículo" title="Compartir">${ICONO_COMPARTIR}</button>` : '';
   const cats = p.cats || [p.cat];
   const resumen = textoPlano(p.excerpt) || recortar(textoPlano(p.contenido), 200);
   const portada = abs(p.imgFull || p.img || IMG_RESPALDO);
@@ -260,7 +264,8 @@ main{max-width:800px;margin:0 auto;padding:26px 20px 50px}
 .crumbs{font-size:.95rem;color:var(--mu);margin-bottom:16px}.crumbs a{color:var(--mu)}
 .cat{display:inline-block;font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);border:1px solid var(--bd);background:var(--card);padding:4px 12px;border-radius:999px;margin-right:6px}
 h1{font-family:'Cinzel',serif;font-size:clamp(1.6rem,4vw,2.3rem);line-height:1.25;color:var(--ac);margin:14px 0 8px}
-.meta{color:var(--mu);font-size:1rem;margin:0 0 20px}.dek{font-size:1.15rem;color:var(--mu)}
+.meta{color:var(--mu);font-size:1rem;margin:0}.metarow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 20px}
+.share{display:flex;align-items:center;gap:12px;margin:26px 0 0;padding-top:16px;border-top:1px solid var(--bd);font-weight:700;color:var(--ac)}.dek{font-size:1.15rem;color:var(--mu)}
 .cover img{border-radius:16px;width:100%;margin-bottom:20px}
 .afiches{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:16px;margin:0 0 24px}.afiches strong{display:block;color:var(--ac);margin-bottom:10px}.afiches img{margin:0 auto 10px;border-radius:10px;max-height:900px;width:auto}
 article h4{font-family:'Cinzel',serif;color:var(--ac);font-size:1.3rem;margin:30px 0 8px}article p{margin:0 0 16px}article ul{padding-left:22px}article strong{color:#fff}
@@ -281,16 +286,18 @@ footer{border-top:1px solid var(--bd);color:var(--mu);font-size:.95rem;padding:2
   <article>
     ${cats.map(c => `<span class="cat">${esc(c)}</span>`).join('')}
     <h1>${esc(p.titulo)}</h1>
-    <p class="meta">KenpoChile.cl${p.fecha ? ` · <time datetime="${p.fecha}">${fechaLarga(p.fecha)}</time>` : ''}</p>
+    <div class="metarow"><p class="meta">KenpoChile.cl${p.fecha ? ` · <time datetime="${p.fecha}">${fechaLarga(p.fecha)}</time>` : ''}</p>${boton}</div>
     <figure class="cover" style="margin:0"><img src="${portada}" alt="${esc(p.titulo)}" fetchpriority="high"></figure>
     ${afiches ? `<div class="afiches"><strong>Afiches del evento</strong>${afiches}</div>` : ''}
     ${contenidoEstatico(p.contenido)}
+    ${boton ? `<div class="share"><span>Comparte este artículo</span>${boton}</div>` : ''}
   </article>
   ${galeria ? `<section class="galeria" aria-label="Galería"><h2>Galería</h2><div>${galeria}</div></section>` : ''}
   <section class="box" aria-label="Encuentra tu escuela"><h2>¿Quieres entrenar Kenpo?</h2><p>Hay escuelas de la federación a lo largo de Chile. Encuentra la más cercana y agenda tu clase.</p><a class="btn" href="/#escuelas">Ver escuelas</a></section>
   ${relacionados.length ? `<section class="more" aria-label="Más artículos"><h2>Más de ${esc(cats[0])}</h2><ul>${relacionados.map(x => `<li><a href="/blog/${x.id}/">${esc(x.titulo)}</a></li>`).join('')}</ul></section>` : ''}
   <p><a href="/#blogs">← Volver al blog</a></p>
 </main>
+${COMPARTIR}
 <footer><div class="in"><span>© ${new Date().getFullYear()} KenpoChile.cl · International Vidal Kenpo Studio</span><span>Desarrollado por <a href="https://gestixpro.cl/" target="_blank" rel="noopener">GestixPro</a></span></div></footer>
 </body>
 </html>

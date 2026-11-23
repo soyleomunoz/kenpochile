@@ -62,7 +62,8 @@ main{max-width:800px;margin:0 auto;padding:26px 20px 50px}
 .crumbs{font-size:.95rem;color:var(--mu);margin-bottom:16px}.crumbs a{color:var(--mu)}
 .cat{display:inline-block;font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);border:1px solid var(--bd);background:var(--card);padding:4px 12px;border-radius:999px;margin-right:6px}
 h1{font-family:'Cinzel',serif;font-size:clamp(1.6rem,4vw,2.3rem);line-height:1.25;color:var(--ac);margin:14px 0 8px}
-.meta{color:var(--mu);font-size:1rem;margin:0 0 20px}.dek{font-size:1.15rem;color:var(--mu)}
+.meta{color:var(--mu);font-size:1rem;margin:0}.metarow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 20px}
+.share{display:flex;align-items:center;gap:12px;margin:26px 0 0;padding-top:16px;border-top:1px solid var(--bd);font-weight:700;color:var(--ac)}.dek{font-size:1.15rem;color:var(--mu)}
 .cover img{border-radius:16px;width:100%;margin-bottom:20px}
 .afiches{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:16px;margin:0 0 24px}.afiches strong{display:block;color:var(--ac);margin-bottom:10px}.afiches img{margin:0 auto 10px;border-radius:10px;max-height:900px;width:auto}
 article h4{font-family:'Cinzel',serif;color:var(--ac);font-size:1.3rem;margin:30px 0 8px}article p{margin:0 0 16px}article ul{padding-left:22px}article strong{color:#fff}
@@ -83,18 +84,182 @@ footer{border-top:1px solid var(--bd);color:var(--mu);font-size:.95rem;padding:2
   <article>
     <span class="cat">Noticias</span>
     <h1>Relanzamiento del libro «Yo nunca dejé de quererme, siempre mujer»</h1>
-    <p class="meta">KenpoChile.cl · <time datetime="2022-08-25">25 de agosto de 2022</time></p>
+    <div class="metarow"><p class="meta">KenpoChile.cl · <time datetime="2022-08-25">25 de agosto de 2022</time></p><button type="button" class="gx-share-btn" data-gx-compartir data-url="https://kenpochile.cl/blog/libro-siempre-mujer/" data-titulo="Relanzamiento del libro «Yo nunca dejé de quererme, siempre mujer»" aria-label="Compartir este artículo" title="Compartir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg></button></div>
     <figure class="cover" style="margin:0"><img src="/img/blog/libro-siempre-mujer/portada-full.jpeg" alt="Relanzamiento del libro «Yo nunca dejé de quererme, siempre mujer»" fetchpriority="high"></figure>
     
     
       <p>El Centro Cultural de La Moneda y Fundación Integra lanzan con éxito el libro <strong>«Yo nunca dejé de quererme, siempre mujer»</strong>, en el cual nuestra profesora <strong>María Elena Araya</strong> forma parte de esta iniciativa que recopila 71 testimonios de trabajadoras de la fundación Integra. Este lanzamiento contó con la participación especial de la primera dama, Irina Karamanos, y de la directora ejecutiva de la fundación, Claudia Lagos.</p>
       <p><em>«En 1995 ingresé a la Fundación, jefa de hogar y madre de dos hijos; siempre quise compartir con los niños el Karate, comenzando en el año 2010, y en 2017 empezaron a entrenar con el maestro Roberto Vidal. Hasta fueron convidados a exhibir su trabajo ante las autoridades de Fundación Integra e invitados de todo Chile, y lo hicieron muy bien. ¡Estábamos tan felices! Quedamos tremendamente agradecidas por este reconocimiento y con la convicción de que el trabajo bien hecho y a conciencia siempre tiene buenos frutos.»</em></p>
+    <div class="share"><span>Comparte este artículo</span><button type="button" class="gx-share-btn" data-gx-compartir data-url="https://kenpochile.cl/blog/libro-siempre-mujer/" data-titulo="Relanzamiento del libro «Yo nunca dejé de quererme, siempre mujer»" aria-label="Compartir este artículo" title="Compartir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg></button></div>
   </article>
   
   <section class="box" aria-label="Encuentra tu escuela"><h2>¿Quieres entrenar Kenpo?</h2><p>Hay escuelas de la federación a lo largo de Chile. Encuentra la más cercana y agenda tu clase.</p><a class="btn" href="/#escuelas">Ver escuelas</a></section>
   <section class="more" aria-label="Más artículos"><h2>Más de Noticias</h2><ul><li><a href="/blog/copa-calbuco-2026/">19° Torneo Abierto de Artes Marciales – Copa Calbuco 2026: nueve podios para el Taller de Kenpo Karate de Maipú</a></li><li><a href="/blog/nueva-web-cornejo-2026/">International Cornejo Kenpo Studio estrena nueva web</a></li><li><a href="/blog/open-class-maipu-2026/">Open Class de Artes Marciales en Maipú</a></li><li><a href="/blog/taller-defensa-personal-penalolen-2026/">Talleres de Kenpo Karate en Peñalolén: nuevo programa comunal de defensa personal</a></li></ul></section>
   <p><a href="/#blogs">← Volver al blog</a></p>
 </main>
+<!-- ═══ GestixPro · Compartir (menú compacto: copiar, Instagram, Facebook, WhatsApp, correo) ═══
+     Uso: cualquier botón con  onclick="gxCompartir(this, URL, TÍTULO)"  o con los atributos
+     data-gx-compartir data-url="..." data-titulo="..."  (si falta data-url usa la página actual).
+     data-url="auto": usa el último artículo abierto (window.gxArticuloActual), que se registra
+     solo al hacer clic en cualquier enlace a blog/... o en la tarjeta que lo contiene.
+     El menú se dibuja sobre el body con posición fija, así funciona dentro de modales. -->
+<style id="gx-compartir-css">
+.gx-share-btn{width:2.2rem;height:2.2rem;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;border:1px solid rgba(128,128,128,.35);background:rgba(255,255,255,.92);color:#1d1d1f;cursor:pointer;padding:0;flex:0 0 auto;transition:transform .15s,background .2s,color .2s}
+.gx-share-btn:hover,.gx-share-btn:focus-visible,.gx-share-btn[aria-expanded="true"]{background:#1d1d1f;color:#fff}
+.gx-share-btn svg{width:1.05rem;height:1.05rem}
+.gx-share-pop,.gx-share-tip{margin:0;inset:auto;border:0;overflow:visible}
+.gx-share-pop{position:fixed;z-index:2147483000;display:flex;align-items:center;gap:6px;padding:7px 8px;border-radius:999px;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,.22),0 0 0 1px rgba(0,0,0,.06);opacity:0;transform:translateY(4px) scale(.96);transition:opacity .15s,transform .15s;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+.gx-share-pop.on{opacity:1;transform:none}
+.gx-share-pop a,.gx-share-pop button{width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;border:0;padding:0;margin:0;cursor:pointer;color:#fff;text-decoration:none;transition:transform .15s,filter .15s;position:relative}
+.gx-share-pop a:hover,.gx-share-pop button:hover,.gx-share-pop a:focus-visible,.gx-share-pop button:focus-visible{transform:translateY(-2px);filter:brightness(1.08)}
+.gx-share-pop :focus-visible{outline:2px solid #1d1d1f;outline-offset:2px}
+.gx-share-pop svg{width:16px;height:16px;fill:currentColor}
+.gx-share-pop .gx-copy{background:#5f6368}.gx-share-pop .gx-ig{background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fd5949 45%,#d6249f 60%,#285AEB 90%)}
+.gx-share-pop .gx-fb{background:#1877F2}.gx-share-pop .gx-wa{background:#25D366}.gx-share-pop .gx-mail{background:#EA4335}
+.gx-share-tip{position:fixed;z-index:2147483001;background:#1d1d1f;color:#fff;font:600 12px/1.3 system-ui,sans-serif;padding:6px 10px;border-radius:8px;max-width:260px;text-align:center;pointer-events:none;opacity:0;transition:opacity .15s}
+.gx-share-tip.on{opacity:1}
+@media (prefers-reduced-motion:reduce){.gx-share-pop,.gx-share-pop a,.gx-share-pop button{transition:none}}
+</style>
+<script id="gx-compartir-js">
+(function(){
+  if (window.gxCompartir) return;
+  var I = {
+    share:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg>',
+    copy:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.6 13.4a1 1 0 0 1 0-1.4l3.4-3.4a1 1 0 1 1 1.4 1.4L12 13.4a1 1 0 0 1-1.4 0zM7.1 21a4.1 4.1 0 0 1-2.9-7l2.8-2.8a1 1 0 1 1 1.4 1.4l-2.8 2.8a2.1 2.1 0 0 0 3 3l2.8-2.8a1 1 0 1 1 1.4 1.4L10 19.8A4.1 4.1 0 0 1 7.1 21zm9.3-7.4a1 1 0 0 1-.7-1.7l2.8-2.8a2.1 2.1 0 0 0-3-3l-2.8 2.8a1 1 0 1 1-1.4-1.4L14 4.2a4.1 4.1 0 0 1 5.8 5.8l-2.8 2.8a1 1 0 0 1-.6.8z"/></svg>',
+    ig:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7.3A4.7 4.7 0 1 0 16.7 12 4.7 4.7 0 0 0 12 7.3zm0 7.7a3 3 0 1 1 3-3 3 3 0 0 1-3 3zm6-7.9a1.1 1.1 0 1 1-1.1-1.1A1.1 1.1 0 0 1 18 7.1zM21.9 8.2a5.4 5.4 0 0 0-1.5-3.9 5.5 5.5 0 0 0-3.9-1.5C15 2.7 9 2.7 7.5 2.8a5.5 5.5 0 0 0-3.9 1.5 5.5 5.5 0 0 0-1.5 3.9C2 9.7 2 15.7 2.1 17.2a5.4 5.4 0 0 0 1.5 3.9 5.5 5.5 0 0 0 3.9 1.5c1.5.1 7.5.1 9 0a5.4 5.4 0 0 0 3.9-1.5 5.5 5.5 0 0 0 1.5-3.9c.1-1.5.1-7.5 0-9zm-2 10.6a3 3 0 0 1-1.7 1.7c-1.2.5-4 .4-5.2.4s-4.1.1-5.2-.4a3 3 0 0 1-1.7-1.7c-.5-1.2-.4-4-.4-5.2s-.1-4.1.4-5.2a3 3 0 0 1 1.7-1.7c1.2-.5 4-.4 5.2-.4s4.1-.1 5.2.4a3 3 0 0 1 1.7 1.7c.5 1.2.4 4 .4 5.2s.1 4.1-.4 5.2z"/></svg>',
+    fb:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 13.5h2.5l1-4H14v-2c0-1 0-2 2-2h1.5V2.1A28 28 0 0 0 14.6 2C11.9 2 10 3.7 10 6.7v2.8H7v4h3V22h4z"/></svg>',
+    wa:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1s-.5-.1-.7.2-.8 1-1 1.2-.4.2-.7.1a8.2 8.2 0 0 1-2.4-1.5 9 9 0 0 1-1.7-2.1c-.2-.3 0-.5.1-.6l.5-.5.3-.5a.6.6 0 0 0 0-.5c0-.1-.7-1.6-.9-2.2s-.5-.5-.7-.5h-.6a1.1 1.1 0 0 0-.8.4 3.4 3.4 0 0 0-1 2.5 5.9 5.9 0 0 0 1.2 3.1 13.5 13.5 0 0 0 5.2 4.6c.7.3 1.3.5 1.7.6a4.2 4.2 0 0 0 1.9.1 3.2 3.2 0 0 0 2.1-1.5 2.6 2.6 0 0 0 .2-1.5c-.1-.1-.3-.2-.6-.3zM12 21.8a9.9 9.9 0 0 1-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4a9.8 9.8 0 1 1 8.3 4.6zm8.4-18.2A11.8 11.8 0 0 0 1.9 17.8L.2 24l6.3-1.7A11.8 11.8 0 0 0 12 23.7 11.9 11.9 0 0 0 20.4 3.6z"/></svg>',
+    mail:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4.2-8 5-8-5V6l8 5 8-5z"/></svg>'
+  };
+  window.gxIconoCompartir = I.share;
+  var pop = null, tip = null, origen = null, tTip;
+  function cerrar(volverFoco){
+    if (!pop) return;
+    try { if (pop.hidePopover) pop.hidePopover(); } catch (e) {}
+    pop.remove(); pop = null;
+    document.removeEventListener('click', fuera, true);
+    document.removeEventListener('keydown', teclas, true);
+    window.removeEventListener('scroll', reubicar, true);
+    window.removeEventListener('resize', reubicar);
+    if (origen) { origen.setAttribute('aria-expanded', 'false'); if (volverFoco) origen.focus(); }
+  }
+  function fuera(e){ if (pop && !pop.contains(e.target) && e.target !== origen && !origen.contains(e.target)) cerrar(false); }
+  function teclas(e){
+    if (e.key === 'Escape') { e.stopPropagation(); e.preventDefault(); cerrar(true); return; }
+    if (!pop || !/^Arrow(Left|Right)$/.test(e.key)) return;
+    var it = [].slice.call(pop.querySelectorAll('a,button')), i = it.indexOf(document.activeElement);
+    if (i < 0) return;
+    e.preventDefault();
+    it[(i + (e.key === 'ArrowRight' ? 1 : it.length - 1)) % it.length].focus();
+  }
+  function reubicar(){
+    if (!pop || !origen) return;
+    var r = origen.getBoundingClientRect(), w = pop.offsetWidth, h = pop.offsetHeight, m = 8;
+    var top = r.bottom + m;
+    if (top + h > window.innerHeight - m) top = r.top - h - m;
+    var left = r.left + r.width / 2 - w / 2;
+    left = Math.max(m, Math.min(left, window.innerWidth - w - m));
+    pop.style.top = Math.max(m, top) + 'px'; pop.style.left = left + 'px';
+  }
+  function aviso(texto){
+    if (!tip) { tip = document.createElement('div'); tip.className = 'gx-share-tip'; tip.setAttribute('role', 'status'); document.body.appendChild(tip); }
+    tip.textContent = texto;
+    capaSuperior(tip);
+    var r = (origen || document.body).getBoundingClientRect();
+    tip.style.left = '-9999px'; tip.classList.add('on');
+    var w = tip.offsetWidth, top = r.top - tip.offsetHeight - 10;
+    if (top < 8) top = r.bottom + 10;
+    tip.style.top = top + 'px';
+    tip.style.left = Math.max(8, Math.min(r.left + r.width / 2 - w / 2, window.innerWidth - w - 8)) + 'px';
+    clearTimeout(tTip); tTip = setTimeout(function(){ tip.classList.remove('on'); }, 2600);
+  }
+  function copiar(url){
+    function viejo(){
+      var ta = document.createElement('textarea'); ta.value = url; ta.setAttribute('readonly', '');
+      ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0'; document.body.appendChild(ta); ta.select();
+      var ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+      ta.remove(); return Promise.resolve(ok);
+    }
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(url).then(function(){ return true; }, viejo);
+    return viejo();
+  }
+  // Los <dialog> abiertos con showModal() quedan en la "capa superior" del navegador: el menú
+  // también debe ir ahí (API popover) para no quedar escondido detrás del modal.
+  function capaSuperior(el){
+    if (!el.showPopover) return;
+    el.setAttribute('popover', 'manual');
+    try { if (el.matches(':popover-open')) el.hidePopover(); el.showPopover(); } catch (e) {}
+  }
+  function abrir(u){ window.open(u, '_blank', 'noopener,noreferrer,width=640,height=560'); }
+  window.gxCompartir = function(btn, url, titulo){
+    if (btn && btn.preventDefault) { btn.preventDefault(); btn = btn.currentTarget; }
+    var act = window.gxArticuloActual || {};
+    if (url === 'auto') { url = act.url || location.href; titulo = titulo || act.titulo; }
+    url = url || (btn && btn.getAttribute('data-url')) || (document.querySelector('link[rel=canonical]') || {}).href || location.href;
+    try { url = new URL(url, location.href).href; } catch (e) {}
+    titulo = (titulo || (btn && btn.getAttribute('data-titulo')) || document.title || '').trim();
+    if (pop && origen === btn) { cerrar(true); return; }
+    cerrar(false);
+    origen = btn; btn.setAttribute('aria-expanded', 'true'); btn.setAttribute('aria-haspopup', 'true');
+    var u = encodeURIComponent(url), t = encodeURIComponent(titulo);
+    pop = document.createElement('div');
+    pop.className = 'gx-share-pop'; pop.setAttribute('role', 'group'); pop.setAttribute('aria-label', 'Compartir');
+    pop.innerHTML =
+      '<button type="button" class="gx-copy" data-a="copy" title="Copiar enlace" aria-label="Copiar enlace">' + I.copy + '</button>' +
+      '<button type="button" class="gx-ig" data-a="ig" title="Compartir en Instagram" aria-label="Compartir en Instagram">' + I.ig + '</button>' +
+      '<a class="gx-fb" href="https://www.facebook.com/sharer/sharer.php?u=' + u + '" target="_blank" rel="noopener" title="Compartir en Facebook" aria-label="Compartir en Facebook">' + I.fb + '</a>' +
+      '<a class="gx-wa" href="https://api.whatsapp.com/send?text=' + t + '%20' + u + '" target="_blank" rel="noopener" title="Compartir por WhatsApp" aria-label="Compartir por WhatsApp">' + I.wa + '</a>' +
+      '<a class="gx-mail" href="mailto:?subject=' + t + '&body=' + t + '%0A%0A' + u + '" title="Compartir por correo" aria-label="Compartir por correo">' + I.mail + '</a>';
+    document.body.appendChild(pop);
+    capaSuperior(pop);
+    pop.addEventListener('click', function(e){
+      var el = e.target.closest('a,button'); if (!el) return;
+      e.stopPropagation();
+      var a = el.getAttribute('data-a');
+      if (el.classList.contains('gx-fb')) { e.preventDefault(); abrir(el.href); cerrar(false); return; }
+      if (!a) { setTimeout(function(){ cerrar(false); }, 50); return; }
+      if (a === 'copy') { copiar(url).then(function(ok){ aviso(ok ? '¡Enlace copiado!' : 'No se pudo copiar el enlace'); }); cerrar(true); }
+      if (a === 'ig') {
+        // Instagram no permite compartir enlaces desde la web: en el celular se abre el menú
+        // del sistema (donde aparece Instagram); en el computador se copia el enlace.
+        if (navigator.share && window.matchMedia('(pointer: coarse)').matches) {
+          cerrar(false); navigator.share({ title: titulo, url: url }).catch(function(){});
+        } else {
+          copiar(url).then(function(ok){ aviso(ok ? 'Enlace copiado: pégalo en tu historia, publicación o mensaje de Instagram' : 'No se pudo copiar el enlace'); });
+          cerrar(true);
+        }
+      }
+    });
+    reubicar();
+    requestAnimationFrame(function(){ if (pop) pop.classList.add('on'); });
+    pop.querySelector('button').focus({ preventScroll: true });
+    setTimeout(function(){
+      document.addEventListener('click', fuera, true);
+      document.addEventListener('keydown', teclas, true);
+      window.addEventListener('scroll', reubicar, true);
+      window.addEventListener('resize', reubicar);
+    }, 0);
+  };
+  // Recuerda el artículo que se está abriendo (para los modales que se llenan dinámicamente)
+  document.addEventListener('click', function(e){
+    if (!e.target.closest || e.target.closest('.gx-share-pop,[data-gx-compartir]')) return;
+    var a = e.target.closest('a[href*="blog/"]');
+    var caja = e.target.closest('article,li,[class*="card"],[class*="post"],[class*="nota"]');
+    if (!a && caja) a = caja.querySelector('a[href*="blog/"]');
+    if (!a) return;
+    caja = a.closest('article,li,[class*="card"],[class*="post"],[class*="nota"]');
+    var h = caja && caja.querySelector('h2,h3,h4');
+    window.gxArticuloActual = { url: a.href, titulo: (h ? h.textContent : a.textContent).trim() };
+  }, true);
+  document.addEventListener('click', function(e){
+    var b = e.target.closest && e.target.closest('[data-gx-compartir]');
+    if (!b) return;
+    e.preventDefault(); e.stopPropagation();
+    window.gxCompartir(b, b.getAttribute('data-url'), b.getAttribute('data-titulo'));
+  });
+})();
+</script>
+<!-- ═══ fin GestixPro · Compartir ═══ -->
 <footer><div class="in"><span>© 2026 KenpoChile.cl · International Vidal Kenpo Studio</span><span>Desarrollado por <a href="https://gestixpro.cl/" target="_blank" rel="noopener">GestixPro</a></span></div></footer>
 </body>
 </html>
