@@ -122,12 +122,18 @@ footer{border-top:1px solid var(--bd);color:var(--mu);font-size:.95rem;padding:2
 <!-- ═══ GestixPro · Compartir (menú compacto: copiar, Instagram, Facebook, WhatsApp, correo) ═══
      Uso: cualquier botón con  onclick="gxCompartir(this, URL, TÍTULO)"  o con los atributos
      data-gx-compartir data-url="..." data-titulo="..."  (si falta data-url usa la página actual).
+     Tarjetas del blog: gxTarjetas('selector') agrega el botón a cada tarjeta (también a las
+     que se creen después con JS), con la URL del enlace blog/... de la tarjeta y su título.
+     Colores: definir en :root --gx-bg, --gx-fg, --gx-bg-hover y --gx-fg-hover con la marca.
      data-url="auto": usa el último artículo abierto (window.gxArticuloActual), que se registra
      solo al hacer clic en cualquier enlace a blog/... o en la tarjeta que lo contiene.
      El menú se dibuja sobre el body con posición fija, así funciona dentro de modales. -->
+<style id="gx-compartir-tema">:root{--gx-bg:#E4572E;--gx-fg:#14100D;--gx-bg-hover:#F5A623;--gx-fg-hover:#14100D}</style>
 <style id="gx-compartir-css">
-.gx-share-btn{width:2.2rem;height:2.2rem;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;border:1px solid rgba(128,128,128,.35);background:rgba(255,255,255,.92);color:#1d1d1f;cursor:pointer;padding:0;flex:0 0 auto;transition:transform .15s,background .2s,color .2s}
-.gx-share-btn:hover,.gx-share-btn:focus-visible,.gx-share-btn[aria-expanded="true"]{background:#1d1d1f;color:#fff}
+.gx-share-btn{width:2.2rem;height:2.2rem;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;border:0;background:var(--gx-bg,#1d1d1f);color:var(--gx-fg,#fff);cursor:pointer;padding:0;flex:0 0 auto;box-shadow:0 2px 8px rgba(0,0,0,.18);transition:transform .15s,background .2s,color .2s}
+.gx-share-btn:hover,.gx-share-btn:focus-visible,.gx-share-btn[aria-expanded="true"]{background:var(--gx-bg-hover,#444);color:var(--gx-fg-hover,#fff);transform:scale(1.06)}
+.gx-share-btn:focus-visible{outline:2px solid var(--gx-bg,#1d1d1f);outline-offset:2px}
+.gx-share-card{position:absolute;right:var(--gx-card-x,14px);bottom:var(--gx-card-y,14px);z-index:3;width:2.1rem;height:2.1rem}
 .gx-share-btn svg{width:1.05rem;height:1.05rem}
 .gx-share-pop,.gx-share-tip{margin:0;inset:auto;border:0;overflow:visible}
 .gx-share-pop{position:fixed;z-index:2147483000;display:flex;align-items:center;gap:6px;padding:7px 8px;border-radius:999px;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,.22),0 0 0 1px rgba(0,0,0,.06);opacity:0;transform:translateY(4px) scale(.96);transition:opacity .15s,transform .15s;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
@@ -262,9 +268,34 @@ footer{border-top:1px solid var(--bd);color:var(--mu);font-size:.95rem;padding:2
       window.addEventListener('resize', reubicar);
     }, 0);
   };
+  // Botón Compartir en las tarjetas del blog
+  function enTarjeta(card){
+    if (card.querySelector(':scope > .gx-share-card')) return;
+    var a = card.matches('a[href*="blog/"]') ? card : card.querySelector('a[href*="blog/"]');
+    if (!a) return;
+    var h = card.querySelector('h2,h3,h4');
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'gx-share-btn gx-share-card';
+    b.setAttribute('aria-label', 'Compartir' + (h ? ': ' + h.textContent.trim() : ' este artículo'));
+    b.title = 'Compartir'; b.innerHTML = I.share;
+    var parar = function(e){ e.stopPropagation(); };
+    b.addEventListener('click', function(e){
+      e.preventDefault(); e.stopPropagation();
+      window.gxCompartir(b, a.getAttribute('href'), h ? h.textContent : '');
+    });
+    b.addEventListener('keydown', parar); b.addEventListener('pointerdown', parar); b.addEventListener('mousedown', parar);
+    if (getComputedStyle(card).position === 'static') card.style.position = 'relative';
+    card.appendChild(b);
+  }
+  window.gxTarjetas = function(selector){
+    var poner = function(){ [].forEach.call(document.querySelectorAll(selector), enTarjeta); };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', poner); else poner();
+    var t; new MutationObserver(function(){ clearTimeout(t); t = setTimeout(poner, 60); })
+      .observe(document.documentElement, { childList: true, subtree: true });
+  };
   // Recuerda el artículo que se está abriendo (para los modales que se llenan dinámicamente)
   document.addEventListener('click', function(e){
-    if (!e.target.closest || e.target.closest('.gx-share-pop,[data-gx-compartir]')) return;
+    if (!e.target.closest || e.target.closest('.gx-share-pop,[data-gx-compartir],.gx-share-card')) return;
     var a = e.target.closest('a[href*="blog/"]');
     var caja = e.target.closest('article,li,[class*="card"],[class*="post"],[class*="nota"]');
     if (!a && caja) a = caja.querySelector('a[href*="blog/"]');
