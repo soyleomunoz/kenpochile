@@ -34,6 +34,9 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Historial completo para comparar el sitemap con el del push anterior (IndexNow).
+          fetch-depth: 0
 
       - uses: actions/configure-pages@v5
 
@@ -63,3 +66,10 @@ jobs:
 
       - id: deployment
         uses: actions/deploy-pages@v4
+
+      # Avisa a Bing y demás buscadores IndexNow (Bing alimenta a ChatGPT y Copilot)
+      # qué URLs son nuevas o cambiaron, comparando el sitemap recién generado con el
+      # del push anterior. Si falla, no tumba el despliegue.
+      - name: Avisar a buscadores (IndexNow)
+        continue-on-error: true
+        run: python3 tools/indexnow.py --desde "${{ github.event.before || 'HEAD~1' }}"
