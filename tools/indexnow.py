@@ -16,6 +16,7 @@ import xml.etree.ElementTree as ET
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 NS = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9"}
 ENDPOINT = "https://api.indexnow.org/indexnow"
+UA = "Mozilla/5.0 (compatible; GestixPro-IndexNow/1.0; +https://gestixpro.cl)"
 
 
 def leer_sitemap(xml):
@@ -92,16 +93,25 @@ def main():
         return
     ubicacion = f"{base}{k}.txt"
     # La clave tiene que estar publicada antes de avisar: Bing la descarga para validar.
+    # Algunos sitios detrás de Cloudflare bloquean a los servidores de GitHub; en ese
+    # caso se avisa igual (Bingbot sí puede leer la clave).
     fin = time.time() + a.esperar
     while True:
         try:
-            with urllib.request.urlopen(ubicacion + f"?t={int(time.time())}", timeout=20) as r:
+            pide = urllib.request.Request(ubicacion + f"?t={int(time.time())}",
+                                          headers={"User-Agent": UA})
+            with urllib.request.urlopen(pide, timeout=20) as r:
                 if r.read().decode().strip() == k:
                     break
+        except urllib.error.HTTPError as e:
+            if e.code in (403, 503) and e.headers.get("server", "").lower() == "cloudflare":
+                print("Cloudflare no deja comprobar la clave desde GitHub; se avisa igual.")
+                break
         except Exception:
             pass
         if time.time() > fin:
-            sys.exit(f"La clave aún no responde en {ubicacion}; reintenta luego.")
+            print(f"Aviso: la clave no respondió en {ubicacion}; se envía igual.")
+            break
         time.sleep(15)
     # Margen para que GitHub Pages termine de publicar las páginas nuevas.
     time.sleep(30)
@@ -109,7 +119,8 @@ def main():
     cuerpo = json.dumps({"host": host, "key": k, "keyLocation": ubicacion,
                          "urlList": urls[:10000]}).encode()
     req = urllib.request.Request(ENDPOINT, data=cuerpo, method="POST",
-                                 headers={"Content-Type": "application/json; charset=utf-8"})
+                                 headers={"Content-Type": "application/json; charset=utf-8",
+                                          "User-Agent": UA})
     try:
         with urllib.request.urlopen(req, timeout=30) as r:
             estado = r.status
